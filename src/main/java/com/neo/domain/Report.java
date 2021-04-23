@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serializable;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -13,6 +14,7 @@ import lombok.Data;
  */
 @TableName(value = "report")
 @Data
+@AllArgsConstructor
 public class Report implements Serializable {
     /**
      * 实验报告UUID

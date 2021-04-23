@@ -1,8 +1,12 @@
 package com.neo.controller;
 
 import com.neo.domain.Files;
+import com.neo.domain.Report;
+import com.neo.domain.Student;
 import com.neo.exception.LargeFileException;
 import com.neo.service.FilesService;
+import com.neo.service.ReportService;
+import com.neo.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +30,12 @@ public class UploadController {
 
     @Autowired
     FilesService fs;
+
+    @Autowired
+    StudentService ss;
+
+    @Autowired
+    ReportService rs;
 
     @GetMapping("/")
     public String index() {
@@ -52,13 +62,22 @@ public class UploadController {
         }
 
         try {
+            String studentId = "20191603140005";
+            Student byId = ss.getById(studentId);
+            System.out.println(byId);
+
             // 取得文件并以Bytes方式保存
             byte[] bytes = file.getBytes();
             if (bytes.length > MAX_UPLOAD_SIZE) {
                 throw new LargeFileException(MAX_UPLOAD_SIZE);
             }
             String uuid = UUID.randomUUID().toString();
-            fs.save(new Files(uuid, file.getOriginalFilename(), file.getContentType(), bytes));
+            rs.save(new Report(uuid,
+                    file.getOriginalFilename(),
+                    file.getContentType(),
+                    studentId,
+                    "038e584a-6de6-4d5d-a3aa-347f761412c3",
+                    bytes));
             redirectAttributes.addFlashAttribute("message",
                     "文件'" + file.getOriginalFilename() + "'上传成功!");
 
