@@ -22,7 +22,6 @@ public class UploadController {
     /**
      * 保存文件到指定目录
      */
-//    private static final String UPLOADED_FOLDER = "E://temp//";
     private static final Long MAX_UPLOAD_SIZE = 20971520L;
 
     @Autowired
@@ -55,13 +54,6 @@ public class UploadController {
         try {
             // 取得文件并以Bytes方式保存
             byte[] bytes = file.getBytes();
-//            Path dir = Paths.get(UPLOADED_FOLDER);
-//            Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
-            // 如果存储的目标文件夹不存在则创建
-//            if (!java.nio.file.Files.exists(dir)) {
-//                java.nio.file.Files.createDirectories(dir);
-//            }
-//            java.nio.file.Files.write(path, bytes);
             if (bytes.length > MAX_UPLOAD_SIZE) {
                 throw new LargeFileException(MAX_UPLOAD_SIZE);
             }

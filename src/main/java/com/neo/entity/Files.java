@@ -8,10 +8,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * <p>
- *
- * </p>
- *
  * @author Berg
  * @since 2021-04-21
  */
