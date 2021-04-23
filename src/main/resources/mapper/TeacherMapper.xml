@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neo.mapper.TeacherMapper">
+
+    <resultMap id="BaseResultMap" type="com.neo.domain.Teacher">
+        <id property="tno" column="tno" jdbcType="VARCHAR"/>
+        <result property="tname" column="tname" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--    <sql id="Base_Column_List">-->
+    <!--        tno,tname,password-->
+    <!--    </sql>-->
+</mapper>

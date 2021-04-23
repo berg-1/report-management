@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neo.mapper.CommentsMapper">
+
+    <resultMap id="BaseResultMap" type="com.neo.domain.Comments">
+        <id property="commentId" column="comment_id" jdbcType="INTEGER"/>
+        <result property="commentReport" column="comment_report" jdbcType="VARCHAR"/>
+        <result property="comment" column="comment" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--    <sql id="Base_Column_List">-->
+    <!--        comment_id,comment_report,comment-->
+    <!--    </sql>-->
+</mapper>

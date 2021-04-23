@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neo.mapper.TemplateMapper">
+
+    <resultMap id="BaseResultMap" type="com.neo.domain.Template">
+        <result property="templateId" column="template_id" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="VARCHAR"/>
+        <result property="templateTeacher" column="template_teacher" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--    <sql id="Base_Column_List">-->
+    <!--        template_id,name,type,-->
+    <!--        template_teacher,data-->
+    <!--    </sql>-->
+</mapper>
