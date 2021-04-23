@@ -1,6 +1,6 @@
 package com.neo.service.impl;
 
-import com.neo.entity.Files;
+import com.neo.domain.Files;
 import com.neo.mapper.FilesMapper;
 import com.neo.service.FilesService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

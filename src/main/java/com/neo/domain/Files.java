@@ -1,4 +1,4 @@
-package com.neo.entity;
+package com.neo.domain;
 
 import java.io.Serializable;
 

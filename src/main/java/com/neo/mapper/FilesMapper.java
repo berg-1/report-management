@@ -1,6 +1,6 @@
 package com.neo.mapper;
 
-import com.neo.entity.Files;
+import com.neo.domain.Files;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**

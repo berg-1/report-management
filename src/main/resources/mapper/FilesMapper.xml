@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.neo.mapper.FilesMapper">
-    <resultMap type="com.neo.entity.Files" id="file">
+    <resultMap type="com.neo.domain.Files" id="file">
         <id column="id" property="id"/>
 
         <id column="data" property="data" typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>

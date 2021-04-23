@@ -1,6 +1,6 @@
 package com.neo.service;
 
-import com.neo.entity.Files;
+import com.neo.domain.Files;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**

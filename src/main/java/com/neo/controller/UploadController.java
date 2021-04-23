@@ -1,6 +1,6 @@
 package com.neo.controller;
 
-import com.neo.entity.Files;
+import com.neo.domain.Files;
 import com.neo.exception.LargeFileException;
 import com.neo.service.FilesService;
 import org.springframework.beans.factory.annotation.Autowired;
