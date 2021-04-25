@@ -11,6 +11,7 @@ import javax.servlet.annotation.WebListener;
  * @author Berg
  */
 @Configuration
+@WebListener
 public class WebConfig implements WebMvcConfigurer {
 
     @Override
@@ -19,6 +20,6 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(new LoginInterceptor())
                 .addPathPatterns("/**")
                 .excludePathPatterns("/", "/favicon.ico", "/login", "/css/**",
-                        "/js/**", "/fonts/**", "/images/**");
+                        "/js/**", "/fonts/**", "/images/**", "/error", "/instances");
     }
 }
