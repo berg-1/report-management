@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -41,6 +42,11 @@ public class Report implements Serializable {
      * 实验报告对应的模板
      */
     private String reportTemplate;
+
+    /**
+     * 上传时间
+     */
+    private Date uploadTime;
 
     /**
      * 文件数据

@@ -34,30 +34,30 @@ public class IndexController {
         return "login";
     }
 
+    /**
+     * 登录认证
+     *
+     * @param user    登录用户,包含用户名和密码
+     * @param session session
+     * @param model   model
+     * @return 验证完毕, 跳转页面
+     */
     @PostMapping("/login")
     public String main(Student user, HttpSession session, Model model) {
         Student id = ss.getById(user.getSno());
-        if (id != null) {
+        if (id != null && (id.getPassword().equals(user.getPassword()))) {
             System.out.println("是学生");
             session.setAttribute("loginUser", id);
-        } else if (ts.getById(user.getSno()) != null) {
+            return "redirect:/main";
+        } else if (ts.getById(user.getSno()) != null && (ts.getById(user.getSno()).getPassword().equals(user.getPassword()))) {
             System.out.println("是老师");
             session.setAttribute("loginUser", ts.getById(user.getSno()));
+            return "redirect:/main";
         } else {
-            System.out.println("请输入正确的用户名");
+            model.addAttribute("msg", "账号或密码错误");
+            // 登录失败,回到登录页
+            return "login";
         }
-
-//        if (StringUtils.hasLength(user.getUsername()) && "123456".equals(user.getPassword())) {
-//            // 保存登录成功的用户
-//            session.setAttribute("loginUser", user);
-//            // 登录成功, 重定向到main.html页面  重定向防止表单重复提交
-//            return "redirect:/main";
-//        } else {
-//            model.addAttribute("msg", "账号或密码错误");
-//            // 登录失败,回到登录页
-//            return "login";
-//        }
-        return "login";
     }
 
 }

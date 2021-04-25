@@ -15,23 +15,23 @@ import lombok.Data;
 @Data
 public class Student implements Serializable {
     /**
-     *
+     * 学号
      */
     @TableId
     private String sno;
 
     /**
-     *
+     * 姓名
      */
     private String name;
 
     /**
-     *
+     * 密码
      */
-    private Integer password;
+    private String password;
 
     /**
-     *
+     * 所在班级
      */
     private String classId;
 
