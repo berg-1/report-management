@@ -1,8 +1,6 @@
 package com.neo.controller;
 
-import com.neo.domain.Files;
 import com.neo.domain.Report;
-import com.neo.domain.Student;
 import com.neo.exception.LargeFileException;
 import com.neo.service.FilesService;
 import com.neo.service.ReportService;
@@ -36,11 +34,6 @@ public class UploadController {
 
     @Autowired
     ReportService rs;
-
-    @GetMapping("/")
-    public String index() {
-        return "upload";
-    }
 
     /**
      * 处理upload请求,返回uploadStatus.html

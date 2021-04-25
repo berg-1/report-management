@@ -2,7 +2,6 @@ package com.neo.domain;
 
 import java.io.Serializable;
 
-import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,7 +13,6 @@ import lombok.EqualsAndHashCode;
 @Data
 @AllArgsConstructor
 @EqualsAndHashCode()
-@ApiModel(value = "Files对象")
 public class Files implements Serializable {
 
     private static final long serialVersionUID = 1L;
