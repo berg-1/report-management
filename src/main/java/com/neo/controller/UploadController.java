@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -68,6 +69,7 @@ public class UploadController {
                     file.getContentType(),
                     studentId,
                     templateId,
+                    new Date(),
                     bytes));
             redirectAttributes.addFlashAttribute("message",
                     "文件'" + file.getOriginalFilename() + "'上传成功!");

@@ -1,6 +1,7 @@
 package com.neo.controller;
 
 import com.neo.domain.Student;
+import com.neo.domain.Teacher;
 import com.neo.service.StudentService;
 import com.neo.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,16 +49,29 @@ public class IndexController {
         if (id != null && (id.getPassword().equals(user.getPassword()))) {
             System.out.println("是学生");
             session.setAttribute("loginUser", id);
-            return "redirect:/main";
+            return "redirect:/mainStudent";
         } else if (ts.getById(user.getSno()) != null && (ts.getById(user.getSno()).getPassword().equals(user.getPassword()))) {
             System.out.println("是老师");
             session.setAttribute("loginUser", ts.getById(user.getSno()));
-            return "redirect:/main";
+            return "redirect:/mainTeacher";
         } else {
             model.addAttribute("msg", "账号或密码错误");
             // 登录失败,回到登录页
             return "login";
         }
+    }
+
+    @GetMapping(value = {"mainStudent", "mainStudent.html"})
+    public String studentPage(Model model) {
+        Student student = (Student) model.getAttribute("loginUser");
+
+        return "main_student";
+    }
+
+    @GetMapping(value = {"mainTeacher", "mainTeacher.html"})
+    public String teacherPage(Model model) {
+        Teacher teacher = (Teacher) model.getAttribute("loginUser");
+        return "main_student";
     }
 
 }

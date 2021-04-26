@@ -26,7 +26,6 @@ public class LoginInterceptor implements HandlerInterceptor {
         HttpSession session = request.getSession();
         Object loginUser = session.getAttribute("loginUser");
         if (loginUser != null) {
-            System.out.println("loginUser 不是null!");
             return true;
         } else {
             String uri = request.getRequestURI();
