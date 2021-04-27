@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="generator.mapper.ReportMapper">
+<mapper namespace="com.neo.mapper.ReportMapper">
 
-    <resultMap id="BaseResultMap" type="generator.domain.Report">
+    <resultMap id="BaseResultMap" type="com.neo.domain.Report">
         <id property="rid" column="rid" jdbcType="VARCHAR"/>
         <result property="filename" column="filename" jdbcType="VARCHAR"/>
         <result property="type" column="type" jdbcType="VARCHAR"/>
@@ -13,9 +13,5 @@
         <result property="uploadTime" column="upload_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
-    <sql id="Base_Column_List">
-        rid,filename,type,
-        uploader,report_template,upload_time,
-        data
-    </sql>
+
 </mapper>

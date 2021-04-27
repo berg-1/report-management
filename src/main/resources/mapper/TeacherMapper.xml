@@ -9,7 +9,6 @@
         <result property="tname" column="tname" jdbcType="VARCHAR"/>
         <result property="password" column="password" jdbcType="VARCHAR"/>
     </resultMap>
-
     <!--    <sql id="Base_Column_List">-->
     <!--        tno,tname,password-->
     <!--    </sql>-->
