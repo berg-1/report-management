@@ -61,17 +61,12 @@
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
-                    <!--                    <li>-->
-                    <!--                        <form class="navbar-form navbar-left" role="search">-->
-                    <!--                            <div class="form-group">-->
-                    <!--                                <input type="text" class="form-control" placeholder="Search">-->
-                    <!--                            </div>-->
-                    <!--                        </form>-->
-                    <!--                    </li>-->
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <img alt=""
-                                                                                         src="images/photos/user-avatar.png">
-                            John Doe <b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <img alt="" src="images/photos/user-avatar.png">
+                            <span th:text="${session.loginUser.tname}">John Doe</span>
+                            <b class="caret"></b>
+                        </a>
                         <ul class="dropdown-menu">
                             <li><a href="#">Profile</a></li>
                             <li><a href="#">Settings</a></li>
@@ -92,8 +87,8 @@
                     <header class="panel-heading">
                         Editable Table
                         <span class="tools pull-right">
-                        <a href="javascript:;" class="fa fa-chevron-down"></a>
-                        <a href="javascript:;" class="fa fa-times"></a>
+                        <a href="javascript:" class="fa fa-chevron-down"></a>
+                        <a href="javascript:" class="fa fa-times"></a>
                      </span>
                     </header>
                     <div class="panel-body">
@@ -109,12 +104,13 @@
                             <table class="table table-striped table-hover table-bordered" id="editable-sample">
                                 <thead>
                                 <tr>
-                                    <th>Template ID</th>
-                                    <th>Name</th>
-                                    <th>Points</th>
-                                    <th>Status</th>
-                                    <th>Edit</th>
-                                    <th>Delete</th>
+                                    <th>#</th>
+                                    <th>模板ID</th>
+                                    <th>模板名</th>
+                                    <th>上传者</th>
+                                    <th>编辑</th>
+                                    <th>删除</th>
+                                    <th>下载</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -125,6 +121,9 @@
                                     <td th:text="${template.templateTeacher}" class="center">Trident</td>
                                     <td><a class="edit" href="#">Edit</a></td>
                                     <td><a class="delete" href="#">Delete</a></td>
+                                    <td><a th:href="@{/downloadTemplate(id=${template.templateId})}">
+                                        <span class="fa fa-download">下载</span></a>
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -169,6 +168,5 @@
 
 <!--common scripts for all pages-->
 <script src="js/scripts.js"></script>
-
 </body>
 </html>
