@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
@@ -26,6 +27,7 @@ public class StudentController {
      * @return 跳转到教师页面
      */
     @GetMapping(value = {"mainStudent", "mainStudent.html"})
+    @ResponseBody
     public String studentPage(HttpSession session, Model model) {
         Student student = (Student) session.getAttribute("loginUser");
 

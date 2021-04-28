@@ -119,8 +119,8 @@
                                     <td th:text="${template.templateId}">Trident</td>
                                     <td th:text="${template.name}">Trident</td>
                                     <td th:text="${template.templateTeacher}" class="center">Trident</td>
-                                    <td><a class="edit" href="#">Edit</a></td>
-                                    <td><a class="delete" href="#">Delete</a></td>
+                                    <td><a th:class="edit" href="#">Edit</a></td>
+                                    <td><a th:class="delete" href="#">Delete</a></td>
                                     <td><a th:href="@{/downloadTemplate(id=${template.templateId})}">
                                         <span class="fa fa-download">下载</span></a>
                                     </td>
@@ -166,7 +166,8 @@
 <!-- Placed js at the end of the document so the pages load faster -->
 <div th:replace="common::#common_script"></div>
 
-<!--common scripts for all pages-->
-<script src="js/scripts.js"></script>
+<!--script for editable table-->
+<script th:src="@{/js/editable-table.js}"></script>
+
 </body>
 </html>
