@@ -1,24 +1,22 @@
 package com.neo.domain;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
 
-import lombok.Data;
-
 /**
  * @author Berg
+ * @TableName template
  */
 @TableName(value = "template")
 @Data
 public class Template implements Serializable {
     /**
-     * 模板UUID
+     * 模板ID
      */
-    @TableId
     private String templateId;
 
     /**
@@ -37,7 +35,12 @@ public class Template implements Serializable {
     private String templateTeacher;
 
     /**
-     * 截止日期,最后期限
+     * 写这个作业班级的id
+     */
+    private String classId;
+
+    /**
+     * DEADLINE
      */
     private Date deadline;
 

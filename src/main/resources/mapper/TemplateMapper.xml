@@ -9,6 +9,8 @@
         <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="type" column="type" jdbcType="VARCHAR"/>
         <result property="templateTeacher" column="template_teacher" jdbcType="VARCHAR"/>
+        <result property="classId" column="class_id" jdbcType="VARCHAR"/>
         <result property="deadline" column="deadline" jdbcType="TIMESTAMP"/>
     </resultMap>
+
 </mapper>
