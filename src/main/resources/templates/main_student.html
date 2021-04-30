@@ -8,15 +8,7 @@
     <link rel="shortcut icon" href="#" type="image/png">
 
     <title>学生页面</title>
-
-    <link href="css/style.css" rel="stylesheet">
-    <link href="css/style-responsive.css" rel="stylesheet">
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-    <script src="/static/js/html5shiv.js"></script>
-    <script src="/static/js/respond.min.js"></script>
-    <![endif]-->
+    <link th:replace="common::common_header">
 </head>
 
 <body class="horizontal-menu-page">
@@ -68,13 +60,6 @@
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <form class="navbar-form navbar-left" role="search">
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Search">
-                            </div>
-                        </form>
-                    </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <img alt="" src="images/photos/user-avatar.png">
@@ -95,7 +80,81 @@
 
     <!--body wrapper start-->
     <div class="wrapper">
-        Body contents goes here
+        <div class="wrapper">
+            <div class="row">
+                <div class="col-sm-12">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            Editable Table
+                            <span class="tools pull-right">
+                        <a href="javascript:" class="fa fa-chevron-down"></a>
+                        <a href="javascript:" class="fa fa-times"></a>
+                     </span>
+                        </header>
+                        <div class="panel-body">
+                            <div class="adv-table editable-table ">
+                                <div class="clearfix">
+                                    <div class="btn-group">
+                                        <button id="editable-sample_new" class="btn btn-primary">
+                                            Add New <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="space15"></div>
+                                <table class="table table-striped table-hover table-bordered" id="editable-sample">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>课程</th>
+                                        <th>实验名称</th>
+                                        <th>教师</th>
+                                        <th>状态</th>
+                                        <th>编辑</th>
+                                        <th>删除</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <!--                                    <tr class="gradeX" th:each="template, stat:${templates.records}">-->
+                                    <!--                                        <td th:text="${stat.count}">Trident</td>-->
+                                    <!--                                        <td th:text="${template.templateId}">Trident</td>-->
+                                    <!--                                        <td th:text="${template.name}">Trident</td>-->
+                                    <!--                                        <td th:text="${template.templateTeacher}" class="center">Trident</td>-->
+                                    <!--                                        <td><a th:class="edit" href="#">Edit</a></td>-->
+                                    <!--                                        <td><a th:class="delete" href="#">Delete</a></td>-->
+                                    <!--                                        <td><a th:href="@{/downloadTemplate(id=${template.templateId})}">-->
+                                    <!--                                            <span class="fa fa-download">下载</span></a>-->
+                                    <!--                                        </td>-->
+                                    <!--                                    </tr>-->
+                                    </tbody>
+                                </table>
+                                <div class="row-fluid">
+                                    <div class="span6">
+                                        <div class="dataTables_info" id="dynamic-table_info">当前第
+                                            [[${templates.current}]]
+                                            页,共 [[${templates.pages}]] 页 [[${templates.total}]] 条记录
+                                        </div>
+                                    </div>
+                                    <div class="span6">
+                                        <div class="dataTables_paginate paging_bootstrap pagination">
+                                            <ul>
+                                                <li th:class="${templates.hasPrevious?'prev':'prev disabled'}"><a
+                                                        href="#">←
+                                                    Previous</a></li>
+                                                <li th:class="${num==templates.current?'active':''}"
+                                                    th:each="num:${#numbers.sequence(1,templates.pages)}"><a
+                                                        th:href="@{/mainTeacher(pn=${num})}">[[${num}]]</a></li>
+                                                <li th:class="${templates.hasNext?'next':'next disabled'}"><a href="#">Next
+                                                    → </a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
     </div>
     <!--body wrapper end-->
 
@@ -108,19 +167,10 @@
 </section>
 
 <!-- Placed js at the end of the document so the pages load faster -->
-<script src="js/jquery-1.10.2.min.js"></script>
-<script src="js/jquery-ui-1.9.2.custom.min.js"></script>
-<script src="js/jquery-migrate-1.2.1.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/modernizr.min.js"></script>
-<script src="js/jquery.nicescroll.js"></script>
-
-<!--common scripts for all pages-->
-<script src="js/scripts.js"></script>
+<div th:replace="common::#common_script"></div>
 
 <!--script for editable table-->
-<script src="static/js/editable-table.js"></script>
-
+<script th:src="@{/js/editable-table.js}"></script>
 
 </body>
 </html>
