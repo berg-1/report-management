@@ -1,6 +1,7 @@
 package com.neo.domain;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -17,6 +18,7 @@ public class Template implements Serializable {
     /**
      * 模板ID
      */
+    @TableId
     private String templateId;
 
     /**
