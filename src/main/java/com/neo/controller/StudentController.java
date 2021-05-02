@@ -52,9 +52,7 @@ public class StudentController {
      * @return 跳转到教师页面
      */
     @GetMapping(value = {"mainStudent", "mainStudent.html"})
-    public String studentPage(@RequestParam(value = "pn", defaultValue = "1") Integer pn,
-                              HttpSession session,
-                              Model model) {
+    public String studentPage(HttpSession session, Model model) {
         Student student = (Student) session.getAttribute("loginUser");
         String classId = student.getClassId();
         QueryWrapper<Template> wrapper = new QueryWrapper<>();
@@ -63,19 +61,16 @@ public class StudentController {
         List<Template> submitted = new ArrayList<>();
         List<Template> unsubmitted = new ArrayList<>();
         for (Template template : templates) {
-            System.out.println(template.getTemplateId());
             QueryWrapper<Report> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("rid", template.getTemplateId())
+            queryWrapper.eq("report_template", template.getTemplateId())
                     .eq("uploader", student.getSno());
             Integer integer = reportMapper.selectCount(queryWrapper);
             template.setData(null);
             template.setClassId(classesService.getById(template.getClassId()).getName());
             template.setTemplateTeacher(teacherService.getById(template.getTemplateTeacher()).getTname());
             if (integer > 0) {
-                System.out.println("已提交该模板");
                 submitted.add(template);
             } else {
-                System.out.println("未提交模板");
                 unsubmitted.add(template);
             }
         }

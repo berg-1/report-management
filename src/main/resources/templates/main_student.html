@@ -95,7 +95,7 @@
                                     </td>
                                     <td style="width: 20%">
                                         <form method="POST"
-                                              th:action="@{/uploadReport(templateId=${template.templateId})}"
+                                              th:action="@{/uploadReport(templateId=${template.templateId}, studentId=${session.loginUser.sno})}"
                                               enctype="multipart/form-data">
                                             <label>
                                                 <input type="file" name="file" accept=".docx, .doc, .pdf">
@@ -152,8 +152,13 @@
                                     <td><a th:href="@{/downloadTemplate(id=${template.templateId})}">
                                         <span class="fa fa-download">下载</span></a>
                                     </td>
-                                    <td><a th:href="@{/downloadTemplate(id=${template.templateId})}">
-                                        <span class="fa fa-download">下载</span></a>
+                                    <td style="width: 20%">
+                                        <a th:href="@{/downloadTemplate(id=${template.templateId})}">
+                                            <span class="fa fa-download">下载</span></a>
+                                        <div th:if="${success != null && template.templateId == messageId}">
+                                                <span th:text="${success}" class="fa fa-check-circle-o"
+                                                      style="color: #4169E1"></span>
+                                        </div>
                                     </td>
                                 </tr>
                                 </tbody>

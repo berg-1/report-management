@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.UUID;
 
@@ -52,7 +51,7 @@ public class ReportController {
                     templateId,
                     new Date(),
                     bytes));
-            redirectAttributes.addFlashAttribute("message",
+            redirectAttributes.addFlashAttribute("success",
                     "文件'" + file.getOriginalFilename() + "'上传成功!");
 
         } catch (LargeFileException largeFileException) {
@@ -60,12 +59,9 @@ public class ReportController {
                     "文件过大,上传失败!请将文件控制在%dMB内!",
                     largeFileException.getMaxSize() / 1048576
             ));
-        } catch (IOException s) {
+        } catch (Exception s) {
             redirectAttributes.addFlashAttribute("message", "上传失败!");
             s.printStackTrace();
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("message", e.toString());
-            e.printStackTrace();
         }
         return "redirect:mainStudent";
     }
