@@ -25,7 +25,7 @@ public class ReportController {
     /**
      * 最大上传限制
      */
-    private static final Long MAX_UPLOAD_SIZE = 20971520L;
+    private static final Long MAX_UPLOAD_SIZE = 2 * 10 * 1024 * 1024L;
 
     @PostMapping("/uploadReport")
     public String singleFileUpload(@RequestParam(value = "file") MultipartFile file,
@@ -53,7 +53,6 @@ public class ReportController {
                     bytes));
             redirectAttributes.addFlashAttribute("success",
                     "文件'" + file.getOriginalFilename() + "'上传成功!");
-
         } catch (LargeFileException largeFileException) {
             redirectAttributes.addFlashAttribute("message", String.format(
                     "文件过大,上传失败!请将文件控制在%dMB内!",

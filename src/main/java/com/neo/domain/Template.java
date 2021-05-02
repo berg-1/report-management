@@ -3,6 +3,7 @@ package com.neo.domain;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -14,6 +15,7 @@ import java.util.Date;
  */
 @TableName(value = "template")
 @Data
+@AllArgsConstructor
 public class Template implements Serializable {
     /**
      * 模板ID
