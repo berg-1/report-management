@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
@@ -51,17 +50,19 @@ public class TeacherController {
                               Model model) {
         Teacher teacher = (Teacher) session.getAttribute("loginUser");
         QueryWrapper<Template> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("template_teacher", teacher.getTno());
-        Page<Template> userPage = new Page<>(pn, 5);
+        queryWrapper.select("template_id", "name", "type", "template_teacher", "class_id", "deadline").
+                eq("template_teacher", teacher.getTno());
+        Page<Template> userPage = new Page<>(pn, 10);
         // 分页查询结果
         Page<Template> templates = templateService.page(userPage, queryWrapper);
         for (Template record : templates.getRecords()) {
+            record.setData(null);
             record.setTemplateTeacher(String.format("%s(%s)", record.getTemplateTeacher(), teacher.getTname()));
         }
 
         // 查询教师所教班级
         QueryWrapper<ClassesCourse> classesCourseQueryWrapper = new QueryWrapper<>();
-        classesCourseQueryWrapper.eq("teacher_id", "20001101110002");
+        classesCourseQueryWrapper.eq("teacher_id", teacher.getTno());
         List<ClassesCourse> classesCourses = classesCourseMapper.selectList(classesCourseQueryWrapper);
         ArrayList<Classes> classes = new ArrayList<>();
         for (ClassesCourse classesCourse : classesCourses) {
@@ -73,13 +74,6 @@ public class TeacherController {
         // 添加classes到model
         model.addAttribute("classes", classes);
         return "main_teacher";
-    }
-
-    public void getTeacherClasses(String tno) {
-        QueryWrapper<ClassesCourse> classesCourseQueryWrapper = new QueryWrapper<>();
-        classesCourseQueryWrapper.eq("teacher_id", tno);
-        List<ClassesCourse> classesCourses = classesCourseMapper.selectList(classesCourseQueryWrapper);
-        classesCourses.forEach(System.out::println);
     }
 
 }

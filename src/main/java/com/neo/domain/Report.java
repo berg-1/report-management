@@ -9,6 +9,7 @@ import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author Berg
@@ -16,6 +17,7 @@ import lombok.Data;
 @TableName(value = "report")
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class Report implements Serializable {
     /**
      * 实验报告UUID

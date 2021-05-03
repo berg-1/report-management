@@ -1,7 +1,6 @@
 package com.neo.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.neo.domain.Classes;
 import com.neo.domain.Report;
 import com.neo.domain.Student;
@@ -56,7 +55,8 @@ public class StudentController {
         Student student = (Student) session.getAttribute("loginUser");
         String classId = student.getClassId();
         QueryWrapper<Template> wrapper = new QueryWrapper<>();
-        wrapper.eq("class_id", classId);
+        wrapper.select("template_id", "name", "type", "template_teacher", "class_id", "deadline").
+                eq("class_id", classId);
         List<Template> templates = templateMapper.selectList(wrapper);
         List<Template> submitted = new ArrayList<>();
         List<Template> unsubmitted = new ArrayList<>();
@@ -65,7 +65,6 @@ public class StudentController {
             queryWrapper.eq("report_template", template.getTemplateId())
                     .eq("uploader", student.getSno());
             Integer integer = reportMapper.selectCount(queryWrapper);
-            template.setData(null);
             template.setClassId(classesService.getById(template.getClassId()).getName());
             template.setTemplateTeacher(teacherService.getById(template.getTemplateTeacher()).getTname());
             if (integer > 0) {
