@@ -132,8 +132,8 @@
                                             <div>
                                                 <label for="class">布置班级</label>
                                                 <select id="class" name="class" class="form-control m-bot15">
-                                                    <option th:each="c:${classes}" th:value="${c.getCid()}"
-                                                            th:text="${c.name}">Option 1
+                                                    <option th:each="c:${classes.keySet()}" th:value="${classes.get(c)}"
+                                                            th:text="${c}">Option 1
                                                     </option>
                                                 </select>
                                             </div>

@@ -42,7 +42,7 @@ public class TemplateController {
                                    RedirectAttributes redirectAttributes) {
         if (file.isEmpty()) {
             redirectAttributes.addFlashAttribute("message", "请选择文件再上传!");
-            return "redirect:mainStudent";
+            return "redirect:mainTeacher";
         }
         try {
             // 取得文件并以Bytes方式保存

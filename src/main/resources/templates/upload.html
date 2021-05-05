@@ -3,18 +3,9 @@
 <body>
 
 <h1>Spring Boot file upload example</h1>
-
 <form method="POST" action="/upload" enctype="multipart/form-data">
-    <input type="file" name="file"/><br/><br/>
+    <input type="file" name="file" accept=".docx, .doc, .pdf, .txt"/><br/><br/>
     <input type="submit" value="Submit"/>
 </form>
-<br/>
-<br/>
-<form method="POST" action="/upload" enctype="multipart/form-data">
-    <input type="file" name="file" accept=".docx, .doc, .pdf"/><br/><br/>
-    <input type="submit" value="Submit"/>
-</form>
-
-
 </body>
 </html>

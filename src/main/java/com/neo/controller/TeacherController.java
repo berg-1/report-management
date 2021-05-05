@@ -9,6 +9,7 @@ import com.neo.domain.Template;
 import com.neo.mapper.ClassesCourseMapper;
 import com.neo.mapper.TemplateMapper;
 import com.neo.service.ClassesService;
+import com.neo.service.CourseService;
 import com.neo.service.TemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,8 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Berg
@@ -37,6 +37,9 @@ public class TeacherController {
 
     @Autowired
     ClassesService classesService;
+
+    @Autowired
+    CourseService courseService;
 
     /**
      * @param pn      查询第几页的数据, 默认值为1
@@ -64,15 +67,23 @@ public class TeacherController {
         QueryWrapper<ClassesCourse> classesCourseQueryWrapper = new QueryWrapper<>();
         classesCourseQueryWrapper.eq("teacher_id", teacher.getTno());
         List<ClassesCourse> classesCourses = classesCourseMapper.selectList(classesCourseQueryWrapper);
-        ArrayList<Classes> classes = new ArrayList<>();
+        HashMap<String, String> classesStringHashMap = new HashMap<>();
+
         for (ClassesCourse classesCourse : classesCourses) {
-            classes.add(classesService.getById(classesCourse.getClassId()));
+            String id = classesCourse.getClassId();  // 教的班级的id
+            String courseId = classesCourse.getCourseId(); // 教的课程id
+            String name = String.format("%s %s", classesService.getById(id).getName(), courseService.getById(courseId).getName());
+            classesStringHashMap.put(name, id);
+        }
+
+        for (String s : classesStringHashMap.keySet()) {
+            System.out.println(s + classesStringHashMap.get(s));
         }
 
         // 添加page信息到model
         model.addAttribute("templates", templates);
         // 添加classes到model
-        model.addAttribute("classes", classes);
+        model.addAttribute("classes", classesStringHashMap);
         return "main_teacher";
     }
 
