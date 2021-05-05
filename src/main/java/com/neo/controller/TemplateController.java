@@ -1,13 +1,18 @@
 package com.neo.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.neo.domain.Report;
 import com.neo.domain.Template;
 import com.neo.exception.LargeFileException;
 import com.neo.mapper.ClassesMapper;
+import com.neo.mapper.ReportMapper;
+import com.neo.service.ReportService;
 import com.neo.service.TemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +33,12 @@ public class TemplateController {
     @Autowired
     ClassesMapper classesMapper;
 
+    @Autowired
+    ReportService reportService;
+
+    @Autowired
+    ReportMapper reportMapper;
+
     /**
      * 最大上传限制
      */
@@ -37,6 +48,7 @@ public class TemplateController {
     public String singleFileUpload(@RequestParam(value = "file") MultipartFile file,
                                    @RequestParam(value = "tno", defaultValue = "undefined") String tno,
                                    @RequestParam(value = "class", defaultValue = "undefined") String cid,
+                                   @RequestParam(value = "courseId", defaultValue = "undefined") String courseId,
                                    @RequestParam(value = "deadline")
                                    @DateTimeFormat(pattern = "yyyy-MM-dd") Date deadline,
                                    RedirectAttributes redirectAttributes) {
@@ -58,7 +70,8 @@ public class TemplateController {
                     tno,
                     cid,
                     deadline,
-                    bytes));
+                    bytes
+            ));
             redirectAttributes.addFlashAttribute("success",
                     "文件'" + file.getOriginalFilename() + "'上传成功!");
         } catch (LargeFileException largeFileException) {
@@ -70,6 +83,15 @@ public class TemplateController {
             redirectAttributes.addFlashAttribute("message", "上传失败!");
             s.printStackTrace();
         }
+        return "redirect:mainTeacher";
+    }
+
+    @GetMapping("/deleteTemplate")
+    String deleteTemplate(@RequestParam(value = "templateId") String templateId) {
+        QueryWrapper<Report> reportQueryWrapper = new QueryWrapper<>();
+        reportQueryWrapper.eq("report_template", templateId);
+        reportMapper.delete(reportQueryWrapper);
+        templateService.removeById(templateId);
         return "redirect:mainTeacher";
     }
 

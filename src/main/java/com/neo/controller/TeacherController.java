@@ -60,6 +60,7 @@ public class TeacherController {
         Page<Template> templates = templateService.page(userPage, queryWrapper);
         for (Template record : templates.getRecords()) {
             record.setData(null);
+            record.setClassId(classesService.getById(record.getClassId()).getName());
             record.setTemplateTeacher(String.format("%s(%s)", record.getTemplateTeacher(), teacher.getTname()));
         }
 
