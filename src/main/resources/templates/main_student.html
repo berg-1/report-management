@@ -139,6 +139,7 @@
                                     <th>截止日期</th>
                                     <th>下载模板</th>
                                     <th>下载你的实验报告</th>
+                                    <th>删除</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -158,6 +159,10 @@
                                                 <span th:text="${success}" class="fa fa-check-circle-o"
                                                       style="color: #4169E1"></span>
                                         </div>
+                                    </td>
+                                    <td>
+                                        <a th:href="@{/deleteReport(templateId=${template.templateId},studentId=${session.loginUser.sno})}">
+                                            <span class="fa fa-trash-o">删除</span></a>
                                     </td>
                                 </tr>
                                 </tbody>

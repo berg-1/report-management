@@ -1,10 +1,12 @@
 package com.neo.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.neo.domain.Report;
 import com.neo.exception.LargeFileException;
 import com.neo.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -64,5 +66,18 @@ public class ReportController {
         }
         return "redirect:mainStudent";
     }
+
+    @GetMapping("/deleteReport")
+    String deleteTemplate(@RequestParam("templateId") String templateId,
+                          @RequestParam("studentId") String studentId) {
+        QueryWrapper<Report> reportQueryWrapper = new QueryWrapper<>();
+        reportQueryWrapper.eq("report_template", templateId);
+        QueryWrapper<Report> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("report_template", templateId)
+                .eq("uploader", studentId);
+        reportService.remove(queryWrapper);
+        return "redirect:mainStudent";
+    }
+
 
 }
