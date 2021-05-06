@@ -2,6 +2,7 @@ package com.neo.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.neo.domain.Report;
+import com.neo.domain.Student;
 import com.neo.domain.Template;
 import com.neo.mapper.ReportMapper;
 import com.neo.service.ReportService;
@@ -12,12 +13,19 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * @author Berg
@@ -75,6 +83,7 @@ public class DownloadController {
         Report report = getReportById(reportId);
         return getResponseEntity(report);
     }
+
 
     public Report getReportById(String rid) {
         return reportMapper.selectById(rid);

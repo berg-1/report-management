@@ -13,12 +13,17 @@ import com.neo.service.TemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.*;
 import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * @author Berg
@@ -106,7 +111,6 @@ public class TeacherController {
                                 Model model) {
         className = getClassIdByName(className);
         List<Student> students = getClassStudents(className);
-//        List<Student> submitted = new ArrayList<>();
         HashMap<Student, Report> submitted = new HashMap<>();
         List<Student> unSubmitted = new ArrayList<>();
         for (Student student : students) {
@@ -114,15 +118,71 @@ public class TeacherController {
             Report report = getReportByTemplateIdAndStudentId(templateId, student.getSno());
             if (report != null) {
                 submitted.put(student, report);
-//                submitted.add(student);
             } else {
                 unSubmitted.add(student);
             }
         }
         model.addAttribute("submitted", submitted);
         model.addAttribute("unSubmitted", unSubmitted);
+        model.addAttribute("templateId", templateId);
+        model.addAttribute("classId", className);
         return "stat_page";
     }
+
+    @GetMapping("/export")
+    public void exportedMd(@RequestParam(value = "templateId") String templateId,
+                           @RequestParam(value = "classId") String classId,
+                           HttpServletResponse response) {
+        ArrayList<Report> reports = new ArrayList<>();
+        List<Student> students = getClassStudents(classId);
+        for (Student student : students) {
+            student.setClassId(getClassNameById(student.getClassId()));
+            Report report = getReportByTemplateIdAndStudentId(templateId, student.getSno());
+            if (report != null) {
+                reports.add(report);
+            }
+        }
+        //生成zip文件存放位置
+        long timeMillis = System.currentTimeMillis();
+        String strZipPath = "D:/markdowm/" + timeMillis + ".zip";
+        File file = new File("D:/markdowm/");
+        //文件存放位置目录不存在就创建
+        if (!file.isDirectory() && !file.exists()) {
+            file.mkdirs();
+        }
+        try {
+            //通过response的outputStream输出文件
+            ServletOutputStream outputStream = response.getOutputStream();
+            ZipOutputStream out = new ZipOutputStream(new FileOutputStream(strZipPath));
+            for (Report report : reports) {
+                out.putNextEntry(new ZipEntry(report.getFilename()));
+                // 读入需要下载的文件的内容，打包到zip文件
+                out.write(report.getData());
+                out.closeEntry();
+            }
+            out.close();
+            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(strZipPath));
+            //将输入流的数据拷贝到输入流输出
+            FileCopyUtils.copy(bis, outputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //删除文件或者文件夹下所有文件
+        removeDir(file);
+    }
+
+    private void removeDir(File dir) {
+        File[] files = dir.listFiles();
+        assert files != null;
+        for (File file : files) {
+            if (file.isDirectory()) {
+                removeDir(file);
+            } else {
+                file.delete();
+            }
+        }
+    }
+
 
     /**
      * 返回一个班的所有学生信息

@@ -66,7 +66,10 @@
             <div class="col-sm-12">
                 <section class="panel">
                     <header class="panel-heading">
-                        已提交实验报告学生
+                        已提交实验报告学生<span th:text="'('+${submitted.size()}+'人)'"></span>
+                        <a class="btn btn-success" type="button" style="margin-left: 3px;"
+                           th:href="@{/export(templateId=${templateId},classId=${classId})}">
+                            <span class="fa fa-download "></span>&nbsp;批量下载</a>
                         <span class="tools pull-right">
                         <a href="javascript:" class="fa fa-chevron-down"></a>
                         <a href="javascript:" class="fa fa-times"></a>
@@ -85,6 +88,7 @@
                                     <th>实验报告名</th>
                                     <th>上传日期</th>
                                     <th>下载此实验报告</th>
+                                    <!--<th>预览</th>-->
                                     <!--<th>评语</th>-->
                                 </tr>
                                 </thead>
@@ -114,7 +118,7 @@
             <div class="col-sm-12">
                 <section class="panel">
                     <header class="panel-heading">
-                        未提交实验报告学生
+                        未提交实验报告学生<span th:text="'('+${unSubmitted.size()}+'人)'"></span>
                         <span class="tools pull-right">
                         <a href="javascript:" class="fa fa-chevron-down"></a>
                         <a href="javascript:" class="fa fa-times"></a>
@@ -163,5 +167,7 @@
 
 <!--script for editable table-->
 <script th:src="@{/js/editable-table.js}"></script>
+
+<script type="text/javascript" th:src="@{/js/jquery.media.js}"></script>
 </body>
 </html>
