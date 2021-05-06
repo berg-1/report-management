@@ -36,12 +36,11 @@ public class DownloadController {
     ReportMapper reportMapper;
 
     @RequestMapping("/downloadTemplate")
-    public ResponseEntity<byte[]> downloadTemplate(@RequestParam("id") String id) throws UnsupportedEncodingException {
+    public ResponseEntity<byte[]> downloadTemplate(@RequestParam("id") String id) {
         log.info("下载文件:id={}", id);
         Template template = templateService.getById(id);
         byte[] bytes = template.getData();
         String fileName = template.getName();
-
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", template.getType() + ";charset=utf-8");
         headers.setContentDispositionFormData("attachment",
@@ -53,13 +52,13 @@ public class DownloadController {
 
     @RequestMapping("/downloadReport")
     public ResponseEntity<byte[]> downloadReport(@RequestParam("templateId") String templateId,
-                                                 @RequestParam("studentId") String studentId,
-                                                 HttpSession session) {
-        log.info("下载文件:id={}", templateId);
-        QueryWrapper<Report> reportQueryWrapper = new QueryWrapper<>();
-        reportQueryWrapper.eq("uploader", studentId)
-                .eq("report_template", templateId);
-        Report report = reportMapper.selectOne(reportQueryWrapper);
+                                                 @RequestParam("studentId") String studentId) {
+        Report report = getReportByTemplateIdAndStudentId(templateId, studentId);
+
+        return getResponseEntity(report);
+    }
+
+    private ResponseEntity<byte[]> getResponseEntity(Report report) {
         byte[] bytes = report.getData();
         String fileName = report.getFilename();
         HttpHeaders headers = new HttpHeaders();
@@ -67,8 +66,25 @@ public class DownloadController {
         headers.setContentDispositionFormData("attachment",
                 new String(fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1));
         headers.setContentLength(bytes.length);
-
         return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
+    }
+
+    @RequestMapping("/downloadReportById")
+    public ResponseEntity<byte[]> downloadReport(@RequestParam("reportId") String reportId) {
+        log.info("下载文件:id={}", reportId);
+        Report report = getReportById(reportId);
+        return getResponseEntity(report);
+    }
+
+    public Report getReportById(String rid) {
+        return reportMapper.selectById(rid);
+    }
+
+    public Report getReportByTemplateIdAndStudentId(String templateId, String studentId) {
+        QueryWrapper<Report> reportQueryWrapper = new QueryWrapper<>();
+        reportQueryWrapper.eq("uploader", studentId)
+                .eq("report_template", templateId);
+        return reportMapper.selectOne(reportQueryWrapper);
     }
 
 }

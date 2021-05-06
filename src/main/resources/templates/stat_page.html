@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="ThemeBucket">
+    <link rel="shortcut icon" href="#" type="image/png">
+    <title>实验提交详情页面</title>
+    <link th:replace="common::common_header">
+    <style>
+        th, td {
+            width: 10%;
+        }
+    </style>
+
+</head>
+<body class="horizontal-menu-page">
+
+<section>
+
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">
+                    <img src="images/logo.png" alt="">
+                </a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a th:href="@{/mainTeacher}">Dashboard</a></li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <img alt="" src="images/photos/user-avatar.png">
+                            <span th:text="${session.loginUser.tname}">John Doe</span>
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Profile</a></li>
+                            <li><a href="#">Settings</a></li>
+                            <li><a href="#">Log Out</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+
+
+    <!--body wrapper start-->
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-sm-12">
+                <section class="panel">
+                    <header class="panel-heading">
+                        已提交实验报告学生
+                        <span class="tools pull-right">
+                        <a href="javascript:" class="fa fa-chevron-down"></a>
+                        <a href="javascript:" class="fa fa-times"></a>
+                     </span>
+                    </header>
+                    <div class="panel-body">
+                        <div class="adv-table editable-table ">
+                            <div class="space15"></div>
+                            <table class="table table-striped table-hover table-bordered" id="editable-sample">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>学号</th>
+                                    <th>姓名</th>
+                                    <th>班级</th>
+                                    <th>实验报告名</th>
+                                    <th>上传日期</th>
+                                    <th>下载此实验报告</th>
+                                    <!--<th>评语</th>-->
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr class="gradeX" th:each="entry, stat:${submitted}">
+                                    <td th:text="${stat.count}">Trident</td>
+                                    <td th:text="${entry.key.sno}">Trident</td>
+                                    <td th:text="${entry.key.name}">Trident</td>
+                                    <td th:text="${entry.key.classId}">Trident</td>
+                                    <td th:text="${entry.value.filename}" class="center">Trident</td>
+                                    <td th:text="${#dates.format(entry.value.uploadTime,'yyyy-MM-dd HH:mm')}"
+                                        class="center">Trident
+                                    </td>
+                                    <td class="center">
+                                        <a th:href="@{/downloadReportById(reportId=${entry.value.rid})}">
+                                            <span class="fa fa-download">下载</span></a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <section class="panel">
+                    <header class="panel-heading">
+                        未提交实验报告学生
+                        <span class="tools pull-right">
+                        <a href="javascript:" class="fa fa-chevron-down"></a>
+                        <a href="javascript:" class="fa fa-times"></a>
+                     </span>
+                    </header>
+                    <div class="panel-body">
+                        <div class="adv-table editable-table ">
+                            <div class="space15"></div>
+                            <table class="table table-striped table-hover table-bordered" id="editable-sample">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>学号</th>
+                                    <th>姓名</th>
+                                    <th>班级</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr class="gradeX" th:each="student, stat:${unSubmitted}">
+                                    <td th:text="${stat.count}">Trident</td>
+                                    <td th:text="${student.sno}" class="center">Trident</td>
+                                    <td th:text="${student.name}">Trident</td>
+                                    <td th:text="${student.classId}">Trident</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <!--body wrapper end-->
+
+    <!--footer section start-->
+    <footer class="sticky-footer">
+        Footer contents goes here
+    </footer>
+    <!--footer section end-->
+
+</section>
+
+
+<!-- Placed js at the end of the document so the pages load faster -->
+<div th:replace="common::#common_script"></div>
+
+<!--script for editable table-->
+<script th:src="@{/js/editable-table.js}"></script>
+</body>
+</html>

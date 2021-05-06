@@ -59,7 +59,7 @@ public class StudentController {
                 eq("class_id", classId);
         List<Template> templates = templateMapper.selectList(wrapper);
         List<Template> submitted = new ArrayList<>();
-        List<Template> unsubmitted = new ArrayList<>();
+        List<Template> unSubmitted = new ArrayList<>();
         for (Template template : templates) {
             QueryWrapper<Report> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("report_template", template.getTemplateId())
@@ -70,11 +70,11 @@ public class StudentController {
             if (integer > 0) {
                 submitted.add(template);
             } else {
-                unsubmitted.add(template);
+                unSubmitted.add(template);
             }
         }
         model.addAttribute("submitted", submitted);
-        model.addAttribute("unsubmitted", unsubmitted);
+        model.addAttribute("unsubmitted", unSubmitted);
         return "main_student";
     }
 

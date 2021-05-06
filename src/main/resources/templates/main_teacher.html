@@ -133,7 +133,7 @@
                                                 <label for="class">布置班级</label>
                                                 <select id="class" name="class" class="form-control m-bot15">
                                                     <option th:each="c:${classes.keySet()}" th:value="${classes.get(c)}"
-                                                            th:text="${c}">Option 1
+                                                            th:text="${c}">Option
                                                     </option>
                                                 </select>
                                             </div>
@@ -172,8 +172,12 @@
                                 </thead>
                                 <tbody>
                                 <tr class="gradeX" th:each="template, stat:${templates.records}">
-                                    <td th:text="${stat.count}">Trident</td>
-                                    <td th:text="${template.name}">Trident</td>
+                                    <td th:text="${stat.count+1}">Trident</td>
+                                    <td>
+                                        <a th:text="${template.name}"
+                                           th:href="@{/stats(templateId=${template.templateId},classId=${template.classId})}">
+                                        </a>
+                                    </td>
                                     <td th:text="${template.templateTeacher}" class="center">Trident</td>
                                     <td th:text="${#dates.format(template.deadline,'yyyy-MM-dd HH:mm')}"></td>
                                     <td th:text="${template.classId}">需上传班级</td>
@@ -196,13 +200,14 @@
                                 <div class="span6">
                                     <div class="dataTables_paginate paging_bootstrap pagination">
                                         <ul>
-                                            <li th:class="${templates.hasPrevious?'prev':'prev disabled'}"><a href="#">←
-                                                Previous</a></li>
+                                            <li th:class="${templates.hasPrevious?'prev':'prev disabled'}">
+                                                <a th:href="@{/mainTeacher(pn=(${templates.current}-1))}">← 上一页</a></li>
                                             <li th:class="${num==templates.current?'active':''}"
                                                 th:each="num:${#numbers.sequence(1,templates.pages)}"><a
                                                     th:href="@{/mainTeacher(pn=${num})}">[[${num}]]</a></li>
-                                            <li th:class="${templates.hasNext?'next':'next disabled'}"><a href="#">Next
-                                                → </a></li>
+                                            <li th:class="${templates.hasNext?'next':'next disabled'}">
+                                                <a th:href="@{/mainTeacher(pn=(${templates.current}+1))}">下一页 → </a>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
