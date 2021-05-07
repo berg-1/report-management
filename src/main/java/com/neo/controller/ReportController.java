@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.neo.domain.Report;
 import com.neo.exception.LargeFileException;
 import com.neo.service.ReportService;
+import com.neo.service.TemplateService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,11 +21,14 @@ import java.util.UUID;
  * @author Berg
  */
 @Controller
+@Slf4j
 public class ReportController {
 
     @Autowired
     ReportService reportService;
 
+    @Autowired
+    TemplateService templateService;
     /**
      * 最大上传限制
      */
@@ -46,15 +51,21 @@ public class ReportController {
                 throw new LargeFileException(MAX_UPLOAD_SIZE);
             }
             String uuid = UUID.randomUUID().toString();
+            Date uploadDate = new Date();
             reportService.save(new Report(uuid,
                     file.getOriginalFilename(),
                     file.getContentType(),
                     studentId,
                     templateId,
-                    new Date(),
+                    uploadDate,
                     bytes));
-            redirectAttributes.addFlashAttribute("success",
-                    "文件'" + file.getOriginalFilename() + "'上传成功!");
+            if (uploadDate.after(getDeadLineByTemplateId(templateId))) {
+                log.info("学生提交时间超出截至日期!id={},templateId={}", studentId, templateId);
+                redirectAttributes.addFlashAttribute("message", "上传成功,但已过截至日期!");
+            } else {
+                redirectAttributes.addFlashAttribute("success",
+                        "文件'" + file.getOriginalFilename() + "'上传成功!");
+            }
         } catch (LargeFileException largeFileException) {
             redirectAttributes.addFlashAttribute("message", String.format(
                     "文件过大,上传失败!请将文件控制在%dMB内!",
@@ -65,6 +76,11 @@ public class ReportController {
             s.printStackTrace();
         }
         return "redirect:mainStudent";
+    }
+
+    private Date getDeadLineByTemplateId(String templateId) {
+        System.out.println(templateId);
+        return templateService.getById(templateId).getDeadline();
     }
 
     @GetMapping("/deleteReport")

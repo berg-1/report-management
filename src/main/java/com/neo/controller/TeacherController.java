@@ -10,6 +10,7 @@ import com.neo.mapper.TemplateMapper;
 import com.neo.service.ClassesService;
 import com.neo.service.CourseService;
 import com.neo.service.TemplateService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +22,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -28,6 +30,7 @@ import java.util.zip.ZipOutputStream;
 /**
  * @author Berg
  */
+@Slf4j
 @Controller
 public class TeacherController {
 
@@ -142,13 +145,19 @@ public class TeacherController {
                 reports.add(report);
             }
         }
-        //生成zip文件存放位置
-        long timeMillis = System.currentTimeMillis();
-        String strZipPath = "D:/markdowm/" + timeMillis + ".zip";
-        File file = new File("D:/markdowm/");
+        //生成zip文件名 去掉templateName的后缀名
+        String className = getClassNameById(classId);
+        String templateName = getTemplateNameById(templateId);
+        String zipName = String.format("%s %s.zip", className, templateName.substring(0, templateName.lastIndexOf('.')));
+        String strZipPath = "D:/实验报告下载/" + zipName;
+        File file = new File("D:/实验报告下载/");
         //文件存放位置目录不存在就创建
         if (!file.isDirectory() && !file.exists()) {
-            file.mkdirs();
+            if (file.mkdirs()) {
+                log.info("创建文件夹:{}", file);
+            } else {
+                log.info("文件夹{}创建失败", file);
+            }
         }
         try {
             //通过response的outputStream输出文件
@@ -162,6 +171,9 @@ public class TeacherController {
             }
             out.close();
             BufferedInputStream bis = new BufferedInputStream(new FileInputStream(strZipPath));
+            response.setContentType("application/x-msdownload");
+            response.setHeader("Content-disposition", "attachment; filename="
+                    + new String(zipName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1));
             //将输入流的数据拷贝到输入流输出
             FileCopyUtils.copy(bis, outputStream);
         } catch (IOException e) {
@@ -171,6 +183,21 @@ public class TeacherController {
         removeDir(file);
     }
 
+    /**
+     * 根据模板Id,返回模板名字
+     *
+     * @param id 模板id
+     * @return 模板id所对应的名字
+     */
+    private String getTemplateNameById(String id) {
+        return templateService.getById(id).getName();
+    }
+
+    /**
+     * 删除目录下的所有文件
+     *
+     * @param dir 删除目录
+     */
     private void removeDir(File dir) {
         File[] files = dir.listFiles();
         assert files != null;
@@ -178,7 +205,11 @@ public class TeacherController {
             if (file.isDirectory()) {
                 removeDir(file);
             } else {
-                file.delete();
+                if (file.delete()) {
+                    log.info("删除文件{}", file.getName());
+                } else {
+                    log.info("删除文件{}失败", file.getName());
+                }
             }
         }
     }
@@ -216,9 +247,17 @@ public class TeacherController {
         return classesService.getOne(new QueryWrapper<Classes>().eq("name", className)).getCid();
     }
 
+    /**
+     * 根据模板Id和学生Id来定位学生提交的报告
+     *
+     * @param templateId 模板Id
+     * @param studentId  学生Id
+     * @return 模板Id和学生Id所对应的实验报告
+     */
     public Report getReportByTemplateIdAndStudentId(String templateId, String studentId) {
         QueryWrapper<Report> reportQueryWrapper = new QueryWrapper<>();
-        reportQueryWrapper.eq("report_template", templateId)
+        reportQueryWrapper.select("rid", "filename", "type", "uploader", "report_template", "upload_time")
+                .eq("report_template", templateId)
                 .eq("uploader", studentId);
         return reportMapper.selectOne(reportQueryWrapper);
     }

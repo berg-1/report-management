@@ -30,15 +30,15 @@ import java.util.zip.ZipOutputStream;
 /**
  * @author Berg
  */
-@Controller
 @Slf4j
+@Controller
 public class DownloadController {
 
     @Autowired
     TemplateService templateService;
 
-    @Autowired
-    ReportService reportService;
+//    @Autowired
+//    ReportService reportService;
 
     @Autowired
     ReportMapper reportMapper;

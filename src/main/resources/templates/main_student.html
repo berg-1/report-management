@@ -159,6 +159,10 @@
                                                 <span th:text="${success}" class="fa fa-check-circle-o"
                                                       style="color: #4169E1"></span>
                                         </div>
+                                        <div th:if="${message != null && template.templateId == messageId}">
+                                                <span th:text="${message}" class="fa fa-check-circle-o"
+                                                      style="color: red"></span>
+                                        </div>
                                     </td>
                                     <td>
                                         <a th:href="@{/deleteReport(templateId=${template.templateId},studentId=${session.loginUser.sno})}">
