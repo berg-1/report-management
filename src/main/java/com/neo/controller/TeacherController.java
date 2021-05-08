@@ -132,10 +132,17 @@ public class TeacherController {
         return "stat_page";
     }
 
+    /**
+     * 批量导出一个班的实验报告 -> D:/实验报告下载/班级名 实验模板名.zip
+     *
+     * @param templateId 模板id
+     * @param classId    班级id
+     * @param response   返回
+     */
     @GetMapping("/export")
-    public void exportedMd(@RequestParam(value = "templateId") String templateId,
-                           @RequestParam(value = "classId") String classId,
-                           HttpServletResponse response) {
+    public void exportedReportsInZip(@RequestParam(value = "templateId") String templateId,
+                                     @RequestParam(value = "classId") String classId,
+                                     HttpServletResponse response) {
         ArrayList<Report> reports = new ArrayList<>();
         List<Student> students = getClassStudents(classId);
         for (Student student : students) {
@@ -148,7 +155,9 @@ public class TeacherController {
         //生成zip文件名 去掉templateName的后缀名
         String className = getClassNameById(classId);
         String templateName = getTemplateNameById(templateId);
+        // 压缩文件的名字
         String zipName = String.format("%s %s.zip", className, templateName.substring(0, templateName.lastIndexOf('.')));
+        // 压缩文件下载的位置/缓存位置
         String strZipPath = "D:/实验报告下载/" + zipName;
         File file = new File("D:/实验报告下载/");
         //文件存放位置目录不存在就创建

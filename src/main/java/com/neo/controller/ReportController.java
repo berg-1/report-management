@@ -34,6 +34,15 @@ public class ReportController {
      */
     private static final Long MAX_UPLOAD_SIZE = 2 * 10 * 1024 * 1024L;
 
+    /**
+     * 上传一个Report实体到数据库
+     *
+     * @param file               文件数据 -> MultipartFile
+     * @param studentId          上传者id
+     * @param templateId         模板id
+     * @param redirectAttributes 重定向传值需要
+     * @return mian_student.html
+     */
     @PostMapping("/uploadReport")
     public String singleFileUpload(@RequestParam(value = "file") MultipartFile file,
                                    @RequestParam(value = "studentId", defaultValue = "undefined") String studentId,
@@ -83,6 +92,13 @@ public class ReportController {
         return templateService.getById(templateId).getDeadline();
     }
 
+    /**
+     * 根据模板id和学生id删除实验报告
+     *
+     * @param templateId 模板id
+     * @param studentId  上传者id
+     * @return main_student.html
+     */
     @GetMapping("/deleteReport")
     String deleteTemplate(@RequestParam("templateId") String templateId,
                           @RequestParam("studentId") String studentId) {

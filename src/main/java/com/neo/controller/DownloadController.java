@@ -43,6 +43,12 @@ public class DownloadController {
     @Autowired
     ReportMapper reportMapper;
 
+    /**
+     * 下载模板
+     *
+     * @param id 根据id下载模板
+     * @return 模板文件
+     */
     @RequestMapping("/downloadTemplate")
     public ResponseEntity<byte[]> downloadTemplate(@RequestParam("id") String id) {
         log.info("下载文件:id={}", id);
@@ -54,18 +60,66 @@ public class DownloadController {
         headers.setContentDispositionFormData("attachment",
                 new String(fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1));
         headers.setContentLength(bytes.length);
-
         return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
     }
 
+    /**
+     * 根据模板id和学生id下载实验报告
+     *
+     * @param templateId 实验报告id
+     * @param studentId  学生id
+     * @return 实验报告文件
+     */
     @RequestMapping("/downloadReport")
     public ResponseEntity<byte[]> downloadReport(@RequestParam("templateId") String templateId,
                                                  @RequestParam("studentId") String studentId) {
         Report report = getReportByTemplateIdAndStudentId(templateId, studentId);
-
         return getResponseEntity(report);
     }
 
+    /**
+     * 根据实验报告id下载实验报告
+     *
+     * @param reportId id
+     * @return 实验报告文件
+     */
+    @RequestMapping("/downloadReportById")
+    public ResponseEntity<byte[]> downloadReport(@RequestParam("reportId") String reportId) {
+        log.info("下载文件:id={}", reportId);
+        Report report = getReportById(reportId);
+        return getResponseEntity(report);
+    }
+
+    /**
+     * 根据id返回实验报告实体
+     *
+     * @param rid report id
+     * @return Report实体
+     */
+    public Report getReportById(String rid) {
+        return reportMapper.selectById(rid);
+    }
+
+    /**
+     * 根据模板id和学生id返回实验报告实体
+     *
+     * @param templateId 实验报告id
+     * @param studentId  学生id
+     * @return Report实体
+     */
+    public Report getReportByTemplateIdAndStudentId(String templateId, String studentId) {
+        QueryWrapper<Report> reportQueryWrapper = new QueryWrapper<>();
+        reportQueryWrapper.eq("uploader", studentId)
+                .eq("report_template", templateId);
+        return reportMapper.selectOne(reportQueryWrapper);
+    }
+
+    /**
+     * 工具方法,获取根据Report实体返回ResponseEntity
+     *
+     * @param report Report实体
+     * @return ResponseEntity
+     */
     private ResponseEntity<byte[]> getResponseEntity(Report report) {
         byte[] bytes = report.getData();
         String fileName = report.getFilename();
@@ -75,25 +129,6 @@ public class DownloadController {
                 new String(fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1));
         headers.setContentLength(bytes.length);
         return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
-    }
-
-    @RequestMapping("/downloadReportById")
-    public ResponseEntity<byte[]> downloadReport(@RequestParam("reportId") String reportId) {
-        log.info("下载文件:id={}", reportId);
-        Report report = getReportById(reportId);
-        return getResponseEntity(report);
-    }
-
-
-    public Report getReportById(String rid) {
-        return reportMapper.selectById(rid);
-    }
-
-    public Report getReportByTemplateIdAndStudentId(String templateId, String studentId) {
-        QueryWrapper<Report> reportQueryWrapper = new QueryWrapper<>();
-        reportQueryWrapper.eq("uploader", studentId)
-                .eq("report_template", templateId);
-        return reportMapper.selectOne(reportQueryWrapper);
     }
 
 }

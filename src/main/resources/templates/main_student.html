@@ -44,9 +44,9 @@
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="#">Profile</a></li>
-                            <li><a href="#">Settings</a></li>
-                            <li><a href="#">Log Out</a></li>
+                            <!--<li><a href="#">Profile</a></li>-->
+                            <li><a th:href="@{/changePasswd(id=${session.loginUser.sno})}">修改密码</a></li>
+                            <li><a th:href="@{/logout}">退出登录</a></li>
                         </ul>
                     </li>
                 </ul>

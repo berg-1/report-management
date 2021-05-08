@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>修改密码</title>
+    <link th:replace="common::common_header">
+    <script>
+        function validate() {
+            const pwd1 = document.getElementById("passwd_new").value;
+            const pwd2 = document.getElementById("passwd_retry").value;
+            <!-- 对比两次输入的密码 -->
+            if (pwd1 === pwd2) {
+                document.getElementById("notice").innerHTML = "<span class='fa fa-check-circle-o' style='color: #4169E1'> 密码相同</span>";
+                document.getElementById("submit").disabled = false;
+            } else {
+                document.getElementById("notice").innerHTML = "<span style='color: red'>请输入相同的密码</span>";
+                document.getElementById("submit").disabled = true;
+            }
+        }
+    </script>
+</head>
+<body class="login-body">
+
+<div class="container">
+
+    <form class="form-signin" th:action="@{/updatePasswd}" method="post">
+        <div class="form-signin-heading text-center">
+            <h1 class="sign-title">修改你的密码</h1>
+            <img src="images/login-logo.png" alt=""/>
+        </div>
+
+
+        <div class="login-wrap">
+            <p> Enter your account details below</p>
+            <label style="color:red" th:text="${msg}"></label>
+            <input required type="text" name="userId" autofocus="" placeholder="用户名" class="form-control"
+                   th:value="${id}">
+            <input required type="password" name="passwd" placeholder="原密码" class="form-control">
+            <input required type="password" id="passwd_new" name="passwdNew" onkeyup="validate()" placeholder="新密码"
+                   class="form-control">
+            <span id="notice"></span>
+            <input required type="password" id="passwd_retry" name="passwd_retry" onkeyup="validate()"
+                   placeholder="重新输入密码"
+                   class="form-control">
+            <button type="submit" class="btn btn-lg btn-login btn-block" id="submit">
+                <i class="fa fa-check"></i>
+            </button>
+
+            <div class="registration">
+                Already Registered.
+                <a th:href="@{/login}" class="">
+                    Login
+                </a>
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<!-- Placed js at the end of the document so the pages load faster -->
+<div th:replace="common::#common_script"></div>
+
+<!--script for editable table-->
+<script th:src="@{/js/editable-table.js}"></script>
+</body>
+</html>

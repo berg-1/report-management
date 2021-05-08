@@ -44,11 +44,22 @@ public class TemplateController {
      */
     private static final Long MAX_UPLOAD_SIZE = 2 * 10 * 1024 * 1024L;
 
+    /**
+     * 上传实验报告模板Template实体
+     * 将Template实体上传到数据库
+     *
+     * @param file               文件数据 -> MultipartFile
+     * @param tno                上传教师id
+     * @param cid                班级id
+     * @param courseId           课程id
+     * @param deadline           截止日期
+     * @param redirectAttributes 重定向传值需要
+     * @return main_teacher.html
+     */
     @PostMapping("/uploadTemplate")
     public String singleFileUpload(@RequestParam(value = "file") MultipartFile file,
                                    @RequestParam(value = "tno", defaultValue = "undefined") String tno,
                                    @RequestParam(value = "class", defaultValue = "undefined") String cid,
-                                   @RequestParam(value = "courseId", defaultValue = "undefined") String courseId,
                                    @RequestParam(value = "deadline")
                                    @DateTimeFormat(pattern = "yyyy-MM-dd") Date deadline,
                                    RedirectAttributes redirectAttributes) {
@@ -86,6 +97,12 @@ public class TemplateController {
         return "redirect:mainTeacher";
     }
 
+    /**
+     * 根据实验报告id删除实验报告
+     *
+     * @param templateId 实验报告id
+     * @return main_teacher.html
+     */
     @GetMapping("/deleteTemplate")
     String deleteTemplate(@RequestParam(value = "templateId") String templateId) {
         QueryWrapper<Report> reportQueryWrapper = new QueryWrapper<>();
