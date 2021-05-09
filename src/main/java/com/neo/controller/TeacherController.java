@@ -147,7 +147,7 @@ public class TeacherController {
         List<Student> students = getClassStudents(classId);
         for (Student student : students) {
             student.setClassId(getClassNameById(student.getClassId()));
-            Report report = getReportByTemplateIdAndStudentId(templateId, student.getSno());
+            Report report = getReportByTemplateIdAndStudentIdWithData(templateId, student.getSno());
             if (report != null) {
                 reports.add(report);
             }
@@ -173,7 +173,13 @@ public class TeacherController {
             ServletOutputStream outputStream = response.getOutputStream();
             ZipOutputStream out = new ZipOutputStream(new FileOutputStream(strZipPath));
             for (Report report : reports) {
-                out.putNextEntry(new ZipEntry(report.getFilename()));
+                log.info("下载,报告名:{}", report.getFilename());
+                String filename = String.format("%s.%s.%s%s",
+                        templateName.substring(0, templateName.lastIndexOf('.')),
+                        report.getUploader().substring(12),
+                        getStudentNameById(report.getUploader()),
+                        report.getFilename().substring(report.getFilename().lastIndexOf('.')));
+                out.putNextEntry(new ZipEntry(filename));
                 // 读入需要下载的文件的内容，打包到zip文件
                 out.write(report.getData());
                 out.closeEntry();
@@ -272,6 +278,22 @@ public class TeacherController {
     }
 
     /**
+     * 根据模板Id和学生Id来定位学生提交的报告
+     *
+     * @param templateId 模板Id
+     * @param studentId  学生Id
+     * @return 模板Id和学生Id所对应的实验报告
+     */
+    public Report getReportByTemplateIdAndStudentIdWithData(String templateId, String studentId) {
+        QueryWrapper<Report> reportQueryWrapper = new QueryWrapper<>();
+        reportQueryWrapper.select("rid", "filename", "type", "data", "uploader", "report_template", "upload_time")
+                .eq("report_template", templateId)
+                .eq("uploader", studentId);
+        return reportMapper.selectOne(reportQueryWrapper);
+    }
+
+
+    /**
      * 根据学生id和模板id获取学生提交的实验报告
      *
      * @param studentId  学生id
@@ -284,6 +306,10 @@ public class TeacherController {
                 .eq("uploader", studentId)
                 .eq("report_template", templateId);
         return reportMapper.selectOne(reportQueryWrapper);
+    }
+
+    public String getStudentNameById(String id) {
+        return studentMapper.selectById(id).getName();
     }
 
 }

@@ -51,7 +51,6 @@ public class TemplateController {
      * @param file               文件数据 -> MultipartFile
      * @param tno                上传教师id
      * @param cid                班级id
-     * @param courseId           课程id
      * @param deadline           截止日期
      * @param redirectAttributes 重定向传值需要
      * @return main_teacher.html
