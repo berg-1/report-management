@@ -65,13 +65,15 @@ public class UploadController {
                 throw new LargeFileException(MAX_UPLOAD_SIZE);
             }
             String uuid = UUID.randomUUID().toString();
+            Date uploadDate = new Date();
             rs.save(new Report(uuid,
                     file.getOriginalFilename(),
                     file.getContentType(),
                     studentId,
                     templateId,
                     new Date(),
-                    bytes));
+                    bytes,
+                    uploadDate.before(new Date())));
             redirectAttributes.addFlashAttribute("message",
                     "文件'" + file.getOriginalFilename() + "'上传成功!");
 

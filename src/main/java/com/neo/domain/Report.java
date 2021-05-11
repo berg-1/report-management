@@ -55,6 +55,11 @@ public class Report implements Serializable {
      */
     private byte[] data;
 
+    /**
+     * 是否迟交
+     */
+    private boolean status;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

@@ -73,7 +73,6 @@ public class TeacherController {
         // 分页查询结果
         Page<Template> templates = templateService.page(userPage, queryWrapper);
         for (Template record : templates.getRecords()) {
-            record.setData(null);
             record.setClassId(classesService.getById(record.getClassId()).getName());
             record.setTemplateTeacher(String.format("%s(%s)", record.getTemplateTeacher(), teacher.getTname()));
         }
@@ -97,7 +96,7 @@ public class TeacherController {
         model.addAttribute("templates", templates);
         // 添加classes到model
         model.addAttribute("classes", classesStringHashMap);
-        return "main_teacher";
+        return "new_main_teacher";
     }
 
     /**
@@ -308,6 +307,12 @@ public class TeacherController {
         return reportMapper.selectOne(reportQueryWrapper);
     }
 
+    /**
+     * 根据学生id获取学生姓名
+     *
+     * @param id 学生id
+     * @return 学生id对应的学生姓名
+     */
     public String getStudentNameById(String id) {
         return studentMapper.selectById(id).getName();
     }

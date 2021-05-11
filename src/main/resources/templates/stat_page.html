@@ -87,7 +87,8 @@
                                     <th>班级</th>
                                     <th>实验报告名</th>
                                     <th>上传日期</th>
-                                    <th>下载此实验报告</th>
+                                    <th>提交状态</th>
+                                    <!--<th>下载此实验报告</th>-->
                                     <!--<th>预览</th>-->
                                     <!--<th>评语</th>-->
                                 </tr>
@@ -102,10 +103,16 @@
                                     <td th:text="${#dates.format(entry.value.uploadTime,'yyyy-MM-dd HH:mm')}"
                                         class="center">Trident
                                     </td>
-                                    <td class="center">
-                                        <a th:href="@{/downloadReportById(reportId=${entry.value.rid})}">
-                                            <span class="fa fa-download">下载</span></a>
+                                    <td th:if="${!entry.value.status}">
+                                        <span class="label label-success label-mini">按时</span>
                                     </td>
+                                    <td th:if="${entry.value.status}">
+                                        <span class="label label-danger label-mini">迟交</span>
+                                    </td>
+                                    <!--                                    <td class="center">-->
+                                    <!--                                        <a th:href="@{/downloadReportById(reportId=${entry.value.rid})}">-->
+                                    <!--                                            <span class="fa fa-download">下载</span></a>-->
+                                    <!--                                    </td>-->
                                 </tr>
                                 </tbody>
                             </table>

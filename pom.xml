@@ -9,16 +9,20 @@
     <packaging>jar</packaging>
     <version>1.0</version>
 
+    <properties>
+        <bootstrap.version>4.0.0-2</bootstrap.version>
+        <webjars-locator.version>0.30</webjars-locator.version>
+        <lombok.version>1.18.2</lombok.version>
+        <java.version>1.8</java.version>
+    </properties>
+
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.4.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-
-    <properties>
-        <java.version>1.8</java.version>
-    </properties>
 
     <dependencies>
         <dependency>
@@ -59,6 +63,18 @@
         </dependency>
 
         <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>bootstrap</artifactId>
+            <version>${bootstrap.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>webjars-locator</artifactId>
+            <version>${webjars-locator.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
@@ -72,6 +88,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <fork>true</fork>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>

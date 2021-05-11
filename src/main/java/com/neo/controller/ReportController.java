@@ -67,7 +67,8 @@ public class ReportController {
                     studentId,
                     templateId,
                     uploadDate,
-                    bytes));
+                    bytes,
+                    uploadDate.before(getTemplateDeadlineById(templateId))));
             if (uploadDate.after(getDeadLineByTemplateId(templateId))) {
                 log.info("学生提交时间超出截至日期!id={},templateId={}", studentId, templateId);
                 redirectAttributes.addFlashAttribute("message", "上传成功,但已过截至日期!");
@@ -109,6 +110,10 @@ public class ReportController {
                 .eq("uploader", studentId);
         reportService.remove(queryWrapper);
         return "redirect:mainStudent";
+    }
+
+    Date getTemplateDeadlineById(String id) {
+        return templateService.getById(id).getDeadline();
     }
 
 

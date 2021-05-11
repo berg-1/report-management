@@ -10,3 +10,11 @@ spring:
     url: jdbc:mysql://localhost:3306/report?serverTimezone=GMT%2B8&characterEncoding=UTF-8  # 设置字符编码utf-8
     driver-class-name: com.mysql.cj.jdbc.Driver  # tomcat 8.0+
     sql-script-encoding: UTF-8
+
+  thymeleaf:
+    cache: false  # 页面修改后立即生效，关闭缓存，立即刷新
+  devtools:
+    restart:
+      enabled: true  # 热部署生效
+      additional-paths: src/java/main  # 设置需要重启的目录
+      exclude: static/**,public/**,WEB-INF/**
