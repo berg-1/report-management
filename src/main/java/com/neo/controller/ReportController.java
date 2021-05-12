@@ -2,9 +2,9 @@ package com.neo.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.neo.domain.Report;
+import com.neo.domain.Template;
 import com.neo.exception.LargeFileException;
-import com.neo.service.ReportService;
-import com.neo.service.TemplateService;
+import com.neo.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
 import java.util.UUID;
 
@@ -30,6 +34,14 @@ public class ReportController {
     @Autowired
     TemplateService templateService;
 
+    @Autowired
+    ClassesService classesService;
+
+    @Autowired
+    CourseService courseService;
+
+    @Autowired
+    StudentService studentService;
 
     /**
      * 最大上传限制
@@ -62,17 +74,38 @@ public class ReportController {
                 throw new LargeFileException(MAX_UPLOAD_SIZE);
             }
             String uuid = UUID.randomUUID().toString();
+            String fileName = file.getOriginalFilename();
+            Template template = getTemplateNoData(templateId);
+            String courseId = template.getCourseId();
+            String classId = template.getClassId();
+            String templateName = template.getName();
             Date uploadDate = new Date();
+            boolean isLate = uploadDate.before(template.getDeadline());
             reportService.save(new Report(uuid,
-                    file.getOriginalFilename(),
+                    fileName,
                     file.getContentType(),
                     studentId,
                     templateId,
-                    getTemplateCourseByTemplateId(templateId),
+                    courseId,
                     uploadDate,
                     bytes,
-                    uploadDate.before(getDeadLineByTemplateId(templateId))));
-            if (uploadDate.after(getDeadLineByTemplateId(templateId))) {
+                    isLate));
+            String savePath = getSavePath(courseId, classId, templateName, studentId);
+            File saveFolderPath = new File(savePath.substring(0, savePath.lastIndexOf("/")));
+            if (!saveFolderPath.isDirectory() && !saveFolderPath.exists()) {
+                boolean mkdirs = saveFolderPath.mkdirs();
+                if (mkdirs) {
+                    log.info("创建文件夹:{}", file);
+                } else {
+                    log.info("文件夹{}创建失败", file);
+                }
+            }
+            Path path = Paths.get(savePath);
+            Files.write(path, bytes);
+            redirectAttributes.addFlashAttribute("message",
+                    "You successfully uploaded '" + file.getOriginalFilename() + "'");
+            log.info("保存文件{}", savePath);
+            if (!isLate) {
                 log.info("学生提交时间超出截至日期!id={},templateId={}", studentId, templateId);
                 redirectAttributes.addFlashAttribute("message", "上传成功,但已过截至日期!");
             } else {
@@ -91,12 +124,65 @@ public class ReportController {
         return "redirect:mainStudent";
     }
 
+    /**
+     * 根据模板Id获取一个没有数据的模板对象
+     *
+     * @param templateId template id
+     * @return Template实体
+     */
+    private Template getTemplateNoData(String templateId) {
+        QueryWrapper<Template> wrapper = new QueryWrapper<>();
+        wrapper.select("template_id", "name", "type", "template_teacher", "class_id", "course_id", "deadline")
+                .eq("template_id", templateId);
+        return templateService.getOne(wrapper);
+    }
+
+    private String getClassIdByTemplateId(String templateId) {
+        QueryWrapper<Template> wrapper = new QueryWrapper<>();
+        wrapper.select("template_id", "class_id")
+                .eq("template_id", templateId);
+        return templateService.getOne(wrapper).getClassId();
+    }
+
     private Date getDeadLineByTemplateId(String templateId) {
-        return templateService.getById(templateId).getDeadline();
+        QueryWrapper<Template> wrapper = new QueryWrapper<>();
+        wrapper.select("template_id", "deadline")
+                .eq("template_id", templateId);
+        return templateService.getOne(wrapper).getDeadline();
     }
 
     private String getTemplateCourseByTemplateId(String templateId) {
+        QueryWrapper<Template> wrapper = new QueryWrapper<>();
+        wrapper.select("template_id", "courseId")
+                .eq("template_id", templateId);
         return templateService.getById(templateId).getCourseId();
+    }
+
+    private String getTemplateNameByTemplateId(String templateId) {
+        QueryWrapper<Template> wrapper = new QueryWrapper<>();
+        wrapper.select("template_id", "name")
+                .eq("template_id", templateId);
+        return templateService.getOne(wrapper).getName();
+    }
+
+
+    /**
+     * 保存文件的路径
+     *
+     * @param courseId     课程id
+     * @param classId      班级id
+     * @param templateName 实验名
+     * @param studentId    学生id
+     * @return 返回保存文件的路径 -> ./课程名/班级名/实验名/学号.姓名.pdf
+     */
+    private String getSavePath(String courseId, String classId, String templateName, String studentId) {
+
+        return String.format("./%s/%s/%s/%s.%s.pdf",
+                courseService.getById(courseId).getName(),
+                classesService.getById(classId).getName(),
+                templateName.substring(0, templateName.lastIndexOf(".")),
+                studentId.substring(12),
+                studentService.getById(studentId).getName());
     }
 
     /**

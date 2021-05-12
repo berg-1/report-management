@@ -37,11 +37,8 @@ public class DownloadController {
     @Autowired
     TemplateService templateService;
 
-//    @Autowired
-//    ReportService reportService;
-
     @Autowired
-    ReportMapper reportMapper;
+    ReportService reportService;
 
     /**
      * 下载模板
@@ -97,7 +94,7 @@ public class DownloadController {
      * @return Report实体
      */
     public Report getReportById(String rid) {
-        return reportMapper.selectById(rid);
+        return reportService.getById(rid);
     }
 
     /**
@@ -111,7 +108,7 @@ public class DownloadController {
         QueryWrapper<Report> reportQueryWrapper = new QueryWrapper<>();
         reportQueryWrapper.eq("uploader", studentId)
                 .eq("report_template", templateId);
-        return reportMapper.selectOne(reportQueryWrapper);
+        return reportService.getById(reportQueryWrapper);
     }
 
     /**

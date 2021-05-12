@@ -7,9 +7,7 @@ import com.neo.mapper.ClassesCourseMapper;
 import com.neo.mapper.ReportMapper;
 import com.neo.mapper.StudentMapper;
 import com.neo.mapper.TemplateMapper;
-import com.neo.service.ClassesService;
-import com.neo.service.CourseService;
-import com.neo.service.TemplateService;
+import com.neo.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,13 +33,10 @@ import java.util.zip.ZipOutputStream;
 public class TeacherController {
 
     @Autowired
-    TemplateMapper tm;
-
-    @Autowired
     TemplateService templateService;
 
     @Autowired
-    ClassesCourseMapper classesCourseMapper;
+    ClassesCourseService classesCourseService;
 
     @Autowired
     ClassesService classesService;
@@ -50,10 +45,10 @@ public class TeacherController {
     CourseService courseService;
 
     @Autowired
-    ReportMapper reportMapper;
+    ReportService reportService;
 
     @Autowired
-    StudentMapper studentMapper;
+    StudentService studentService;
 
     /**
      * @param pn      查询第几页的数据, 默认值为1
@@ -80,7 +75,9 @@ public class TeacherController {
         // 查询教师所教班级
         QueryWrapper<ClassesCourse> classesCourseQueryWrapper = new QueryWrapper<>();
         classesCourseQueryWrapper.eq("teacher_id", teacher.getTno());
-        List<ClassesCourse> classesCourses = classesCourseMapper.selectList(classesCourseQueryWrapper);
+
+        List<ClassesCourse> classesCourses = classesCourseService.list(classesCourseQueryWrapper);
+        ;
         HashMap<String, String> classesStringHashMap = new HashMap<>();
         for (ClassesCourse classesCourse : classesCourses) {
             // 教的班级的id
@@ -113,7 +110,7 @@ public class TeacherController {
                                 Model model) {
         className = getClassIdByName(className);
         List<Student> students = getClassStudents(className);
-        HashMap<Student, Report> submitted = new HashMap<>();
+        HashMap<Student, Report> submitted = new HashMap<>(16);
         List<Student> unSubmitted = new ArrayList<>();
         for (Student student : students) {
             student.setClassId(getClassNameById(student.getClassId()));
@@ -188,7 +185,7 @@ public class TeacherController {
             response.setContentType("application/x-msdownload");
             response.setHeader("Content-disposition", "attachment; filename="
                     + new String(zipName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1));
-            //将输入流的数据拷贝到输入流输出
+            // 将输入流的数据拷贝到输入流输出
             FileCopyUtils.copy(bis, outputStream);
         } catch (IOException e) {
             e.printStackTrace();
@@ -238,7 +235,7 @@ public class TeacherController {
     public List<Student> getClassStudents(String classId) {
         QueryWrapper<Student> studentQueryWrapper = new QueryWrapper<>();
         studentQueryWrapper.eq("class_id", classId);
-        return studentMapper.selectList(studentQueryWrapper);
+        return studentService.list(studentQueryWrapper);
     }
 
     /**
@@ -273,7 +270,7 @@ public class TeacherController {
         reportQueryWrapper.select("rid", "filename", "type", "uploader", "report_template", "upload_time")
                 .eq("report_template", templateId)
                 .eq("uploader", studentId);
-        return reportMapper.selectOne(reportQueryWrapper);
+        return reportService.getOne(reportQueryWrapper);
     }
 
     /**
@@ -288,7 +285,7 @@ public class TeacherController {
         reportQueryWrapper.select("rid", "filename", "type", "data", "uploader", "report_template", "upload_time")
                 .eq("report_template", templateId)
                 .eq("uploader", studentId);
-        return reportMapper.selectOne(reportQueryWrapper);
+        return reportService.getOne(reportQueryWrapper);
     }
 
 
@@ -304,7 +301,7 @@ public class TeacherController {
         reportQueryWrapper.select("rid", "filename", "type", "uploader", "report_template", "upload_time")
                 .eq("uploader", studentId)
                 .eq("report_template", templateId);
-        return reportMapper.selectOne(reportQueryWrapper);
+        return reportService.getOne(reportQueryWrapper);
     }
 
     /**
@@ -314,7 +311,7 @@ public class TeacherController {
      * @return 学生id对应的学生姓名
      */
     public String getStudentNameById(String id) {
-        return studentMapper.selectById(id).getName();
+        return studentService.getById(id).getName();
     }
 
 }

@@ -5,8 +5,6 @@ import com.neo.domain.Classes;
 import com.neo.domain.Report;
 import com.neo.domain.Student;
 import com.neo.domain.Template;
-import com.neo.mapper.ReportMapper;
-import com.neo.mapper.TemplateMapper;
 import com.neo.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,10 +33,10 @@ public class StudentController {
     ClassesService classesService;
 
     @Autowired
-    TemplateMapper templateMapper;
+    TemplateService templateService;
 
     @Autowired
-    ReportMapper reportMapper;
+    ReportService reportService;
 
     @Autowired
     TeacherService teacherService;
@@ -57,14 +55,14 @@ public class StudentController {
         QueryWrapper<Template> wrapper = new QueryWrapper<>();
         wrapper.select("template_id", "name", "type", "template_teacher", "class_id", "deadline").
                 eq("class_id", classId);
-        List<Template> templates = templateMapper.selectList(wrapper);
+        List<Template> templates = templateService.list(wrapper);
         List<Template> submitted = new ArrayList<>();
         List<Template> unSubmitted = new ArrayList<>();
         for (Template template : templates) {
             QueryWrapper<Report> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("report_template", template.getTemplateId())
                     .eq("uploader", student.getSno());
-            Integer integer = reportMapper.selectCount(queryWrapper);
+            int integer = reportService.count(queryWrapper);
             template.setClassId(classesService.getById(template.getClassId()).getName());
             template.setTemplateTeacher(teacherService.getById(template.getTemplateTeacher()).getTname());
             if (integer > 0) {
