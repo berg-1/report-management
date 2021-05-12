@@ -73,13 +73,15 @@ public class TemplateController {
                 throw new LargeFileException(MAX_UPLOAD_SIZE);
             }
             String uuid = UUID.randomUUID().toString();
-
+            System.out.println(cid);
+            String[] courseIdAndCid = cid.split("@");
             templateService.save(new Template(uuid,
                     file.getOriginalFilename(),
                     file.getContentType(),
                     tno,
-                    cid,
+                    courseIdAndCid[1],
                     deadline,
+                    courseIdAndCid[0],
                     bytes
             ));
             redirectAttributes.addFlashAttribute("success",

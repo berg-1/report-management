@@ -59,6 +59,7 @@ public class UploadController {
         try {
             String studentId = "20191603141005";
             String templateId = "038e584a-6de6-4d5d-a3aa-347f761412c3";
+            String classId = "CS10001";
             // 取得文件并以Bytes方式保存
             byte[] bytes = file.getBytes();
             if (bytes.length > MAX_UPLOAD_SIZE) {
@@ -71,6 +72,7 @@ public class UploadController {
                     file.getContentType(),
                     studentId,
                     templateId,
+                    "CS1001",
                     new Date(),
                     bytes,
                     uploadDate.before(new Date())));

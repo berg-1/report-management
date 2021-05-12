@@ -46,6 +46,11 @@ public class Report implements Serializable {
     private String reportTemplate;
 
     /**
+     * 课程名
+     */
+    private String courseId;
+
+    /**
      * 上传时间
      */
     private Date uploadTime;

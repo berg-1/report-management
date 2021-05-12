@@ -51,6 +51,11 @@ public class Template implements Serializable {
     private Date deadline;
 
     /**
+     * 课程号
+     */
+    private String courseId;
+
+    /**
      * 数据部分
      */
     private byte[] data;

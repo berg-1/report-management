@@ -82,14 +82,14 @@ public class TeacherController {
         classesCourseQueryWrapper.eq("teacher_id", teacher.getTno());
         List<ClassesCourse> classesCourses = classesCourseMapper.selectList(classesCourseQueryWrapper);
         HashMap<String, String> classesStringHashMap = new HashMap<>();
-
         for (ClassesCourse classesCourse : classesCourses) {
             // 教的班级的id
             String id = classesCourse.getClassId();
             // 教的课程id
-            String courseId = classesCourse.getCourseId();
-            String name = String.format("%s %s", classesService.getById(id).getName(), courseService.getById(courseId).getName());
-            classesStringHashMap.put(name, id);
+            String courseIdAndClassId = String.format("%s@%s", classesCourse.getCourseId(), classesCourse.getClassId());
+            String name = String.format("%s %s", classesService.getById(id).getName(),
+                    courseService.getById(classesCourse.getCourseId()).getName());
+            classesStringHashMap.put(name, courseIdAndClassId);
         }
 
         // 添加page信息到model
