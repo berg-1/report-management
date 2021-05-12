@@ -93,7 +93,7 @@ public class DownloadController {
      * @param rid report id
      * @return Report实体
      */
-    public Report getReportById(String rid) {
+    private Report getReportById(String rid) {
         return reportService.getById(rid);
     }
 
@@ -104,7 +104,7 @@ public class DownloadController {
      * @param studentId  学生id
      * @return Report实体
      */
-    public Report getReportByTemplateIdAndStudentId(String templateId, String studentId) {
+    private Report getReportByTemplateIdAndStudentId(String templateId, String studentId) {
         QueryWrapper<Report> reportQueryWrapper = new QueryWrapper<>();
         reportQueryWrapper.eq("uploader", studentId)
                 .eq("report_template", templateId);

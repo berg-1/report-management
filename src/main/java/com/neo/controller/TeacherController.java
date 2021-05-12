@@ -77,7 +77,6 @@ public class TeacherController {
         classesCourseQueryWrapper.eq("teacher_id", teacher.getTno());
 
         List<ClassesCourse> classesCourses = classesCourseService.list(classesCourseQueryWrapper);
-        ;
         HashMap<String, String> classesStringHashMap = new HashMap<>();
         for (ClassesCourse classesCourse : classesCourses) {
             // 教的班级的id
@@ -232,7 +231,7 @@ public class TeacherController {
      * @param classId 班级id
      * @return 班级学生对象的List集合
      */
-    public List<Student> getClassStudents(String classId) {
+    private List<Student> getClassStudents(String classId) {
         QueryWrapper<Student> studentQueryWrapper = new QueryWrapper<>();
         studentQueryWrapper.eq("class_id", classId);
         return studentService.list(studentQueryWrapper);
@@ -244,7 +243,7 @@ public class TeacherController {
      * @param classId 班级id
      * @return 班级名字
      */
-    public String getClassNameById(String classId) {
+    private String getClassNameById(String classId) {
         return classesService.getById(classId).getName();
     }
 
@@ -254,7 +253,7 @@ public class TeacherController {
      * @param className 班级名字
      * @return 班级id
      */
-    public String getClassIdByName(String className) {
+    private String getClassIdByName(String className) {
         return classesService.getOne(new QueryWrapper<Classes>().eq("name", className)).getCid();
     }
 
@@ -265,7 +264,7 @@ public class TeacherController {
      * @param studentId  学生Id
      * @return 模板Id和学生Id所对应的实验报告
      */
-    public Report getReportByTemplateIdAndStudentId(String templateId, String studentId) {
+    private Report getReportByTemplateIdAndStudentId(String templateId, String studentId) {
         QueryWrapper<Report> reportQueryWrapper = new QueryWrapper<>();
         reportQueryWrapper.select("rid", "filename", "type", "uploader", "report_template", "upload_time")
                 .eq("report_template", templateId)
@@ -280,7 +279,7 @@ public class TeacherController {
      * @param studentId  学生Id
      * @return 模板Id和学生Id所对应的实验报告
      */
-    public Report getReportByTemplateIdAndStudentIdWithData(String templateId, String studentId) {
+    private Report getReportByTemplateIdAndStudentIdWithData(String templateId, String studentId) {
         QueryWrapper<Report> reportQueryWrapper = new QueryWrapper<>();
         reportQueryWrapper.select("rid", "filename", "type", "data", "uploader", "report_template", "upload_time")
                 .eq("report_template", templateId)
@@ -296,7 +295,7 @@ public class TeacherController {
      * @param templateId 模板id
      * @return 学生提交的实验报告对象
      */
-    public Report getReportByStudentIdAndTemplateId(String studentId, String templateId) {
+    private Report getReportByStudentIdAndTemplateId(String studentId, String templateId) {
         QueryWrapper<Report> reportQueryWrapper = new QueryWrapper<>();
         reportQueryWrapper.select("rid", "filename", "type", "uploader", "report_template", "upload_time")
                 .eq("uploader", studentId)
@@ -310,7 +309,7 @@ public class TeacherController {
      * @param id 学生id
      * @return 学生id对应的学生姓名
      */
-    public String getStudentNameById(String id) {
+    private String getStudentNameById(String id) {
         return studentService.getById(id).getName();
     }
 

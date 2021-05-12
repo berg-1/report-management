@@ -176,7 +176,6 @@ public class ReportController {
      * @return 返回保存文件的路径 -> ./课程名/班级名/实验名/学号.姓名.pdf
      */
     private String getSavePath(String courseId, String classId, String templateName, String studentId) {
-
         return String.format("./%s/%s/%s/%s.%s.pdf",
                 courseService.getById(courseId).getName(),
                 classesService.getById(classId).getName(),
