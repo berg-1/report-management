@@ -198,11 +198,11 @@
             "dataType": "json",
             "success": function (data) {
                 $.each(data, function (idx, obj) {
-                    $("#treeTable").append("<tr data-tt-id=\"" + obj.nodeId + "\" data-tt-parent-id=\"" + obj.pid + "\"><td><a href='#' class='btn-link'>" + obj.text + "</a></td></tr>");
+                    $("#treeTable").append("<tr data-tt-id=\"" + obj.nid + "\" data-tt-parent-id=\"" + obj.pid + "\"><td><a href='#' class='btn-link'>" + obj.text + "</a></td></tr>");
                 });
                 $("#treeTable").treetable({
                     expandable: true,
-                    initialState: "expanded",
+                    initialState: "collapsed", /*expanded*/
                     clickableNodeNames: true,
                     indent: 30
                 });

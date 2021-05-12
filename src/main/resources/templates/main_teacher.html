@@ -70,7 +70,7 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a th:href="@{/mainTeacher}">Dashboard</a></li>
+                    <li class="active"><a th:href="@{/mainTeacherOld}">Dashboard</a></li>
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
@@ -201,12 +201,13 @@
                                     <div class="dataTables_paginate paging_bootstrap pagination">
                                         <ul>
                                             <li th:class="${templates.hasPrevious?'prev':'prev disabled'}">
-                                                <a th:href="@{/mainTeacher(pn=(${templates.current}-1))}">← 上一页</a></li>
+                                                <a th:href="@{/mainTeacherOld(pn=(${templates.current}-1))}">← 上一页</a>
+                                            </li>
                                             <li th:class="${num==templates.current?'active':''}"
                                                 th:each="num:${#numbers.sequence(1,templates.pages)}"><a
-                                                    th:href="@{/mainTeacher(pn=${num})}">[[${num}]]</a></li>
+                                                    th:href="@{/mainTeacherOld(pn=${num})}">[[${num}]]</a></li>
                                             <li th:class="${templates.hasNext?'next':'next disabled'}">
-                                                <a th:href="@{/mainTeacher(pn=(${templates.current}+1))}">下一页 → </a>
+                                                <a th:href="@{/mainTeacherOld(pn=(${templates.current}+1))}">下一页 → </a>
                                             </li>
                                         </ul>
                                     </div>

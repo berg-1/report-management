@@ -14,7 +14,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -51,48 +53,51 @@ public class TeacherController {
     StudentService studentService;
 
     /**
-     * @param pn      查询第几页的数据, 默认值为1
-     * @param session session session内包含用户类(学生或老师,由Object转型即可)
-     * @param model   model
-     * @return 跳转到学生页面
+     * 去教师页面
+     *
+     * @param session session,存放用户登录信息,包括教师
+     * @param model   将教师所教班级存放到model中,方便前端显示
+     * @return new_main_teacher.html
      */
     @GetMapping(value = {"mainTeacher", "mainTeacher.html"})
-    public String teacherPage(@RequestParam(value = "pn", defaultValue = "1") Integer pn,
-                              HttpSession session,
-                              Model model) {
+    public String teacherPage(
+            HttpSession session,
+            Model model) {
         Teacher teacher = (Teacher) session.getAttribute("loginUser");
-        QueryWrapper<Template> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("template_id", "name", "type", "template_teacher", "class_id", "deadline").
-                eq("template_teacher", teacher.getTno());
-        Page<Template> userPage = new Page<>(pn, 10);
-        // 分页查询结果
-        Page<Template> templates = templateService.page(userPage, queryWrapper);
-        for (Template record : templates.getRecords()) {
-            record.setClassId(classesService.getById(record.getClassId()).getName());
-            record.setTemplateTeacher(String.format("%s(%s)", record.getTemplateTeacher(), teacher.getTname()));
-        }
-
-        // 查询教师所教班级
-        QueryWrapper<ClassesCourse> classesCourseQueryWrapper = new QueryWrapper<>();
-        classesCourseQueryWrapper.eq("teacher_id", teacher.getTno());
-
-        List<ClassesCourse> classesCourses = classesCourseService.list(classesCourseQueryWrapper);
-        HashMap<String, String> classesStringHashMap = new HashMap<>();
-        for (ClassesCourse classesCourse : classesCourses) {
-            // 教的班级的id
-            String id = classesCourse.getClassId();
-            // 教的课程id
-            String courseIdAndClassId = String.format("%s@%s", classesCourse.getCourseId(), classesCourse.getClassId());
-            String name = String.format("%s %s", classesService.getById(id).getName(),
-                    courseService.getById(classesCourse.getCourseId()).getName());
-            classesStringHashMap.put(name, courseIdAndClassId);
-        }
-
-        // 添加page信息到model
-        model.addAttribute("templates", templates);
+        HashMap<String, String> classesStringHashMap = getTeacherClasses(teacher.getTno());
         // 添加classes到model
         model.addAttribute("classes", classesStringHashMap);
         return "new_main_teacher";
+    }
+
+
+    /**
+     * 去教师页面
+     *
+     * @param pn      查询第几页的数据, 默认值为1
+     * @param session session session内包含用户类(学生或老师,由Object转型即可)
+     * @param model   model
+     * @return 跳转到教师页面 main_teacher.html
+     */
+    @GetMapping(value = {"mainTeacherOld", "mainTeacherOld.html"})
+    public String oldTeacherPage(@RequestParam(value = "pn", defaultValue = "1") Integer pn,
+                                 HttpSession session,
+                                 Model model) {
+        Teacher teacher = (Teacher) session.getAttribute("loginUser");
+        String teacherId = teacher.getTno();
+        Page<Template> templatePagination = getTeacherTemplatePagination(pn, teacherId);
+        HashMap<String, String> classes = getTeacherClasses(teacherId);
+        model.addAttribute("templates", templatePagination);
+        model.addAttribute("classes", classes);
+        return "main_teacher";
+    }
+
+    @RequestMapping("nodes")
+    @GetMapping
+    @ResponseBody
+    public List<Node> getCoursesAndClasses(HttpSession session) {
+        Teacher teacher = (Teacher) session.getAttribute("loginUser");
+        return getNodeList(teacher.getTno());
     }
 
     /**
@@ -313,4 +318,79 @@ public class TeacherController {
         return studentService.getById(id).getName();
     }
 
+    /**
+     * 根据教师id返回教师所授班级的Node集合
+     *
+     * @param teacherId 教师Id
+     * @return 教师所教课程/班级的Node集合
+     */
+    private List<Node> getNodeList(String teacherId) {
+        ArrayList<Node> nodes = new ArrayList<>();
+        QueryWrapper<ClassesCourse> wrapper = new QueryWrapper<>();
+        wrapper.eq("teacher_id", teacherId);
+        List<ClassesCourse> list = classesCourseService.list(wrapper);
+        nodes.add(new Node("Root", "0", "我的课程", "https://frontbackend.com/root"));
+        for (ClassesCourse classesCourse : list) {
+            Course course = courseService.getById(classesCourse.getCourseId());
+            String courseName = course.getName();
+            String courseId = course.getCourseId();
+            Node node = new Node(courseId, "Root", courseName, "https://frontbackend.com/child3/child2");
+            if (!nodes.contains(node)) {
+                nodes.add(node);
+                QueryWrapper<ClassesCourse> wrapper1 = new QueryWrapper<>();
+                wrapper1.eq("teacher_id", teacherId)
+                        .eq("course_id", courseId);
+                List<ClassesCourse> list1 = classesCourseService.list(wrapper1);
+                for (ClassesCourse classesCourse1 : list1) {
+                    Classes aClass = classesService.getById(classesCourse1.getClassId());
+                    String className = aClass.getName();
+                    nodes.add(new Node(courseId + aClass.getCid(), courseId, className, "https://frontbackend.com/child3/child2"));
+                }
+            }
+        }
+        return nodes;
+    }
+
+    /**
+     * 查询教师所教班级
+     *
+     * @return 教师所教班级的HashMap -> key:课程id@班级id, value:班级名 课程名
+     */
+    private HashMap<String, String> getTeacherClasses(String teacherId) {
+        QueryWrapper<ClassesCourse> classesCourseQueryWrapper = new QueryWrapper<>();
+        classesCourseQueryWrapper.eq("teacher_id", teacherId);
+        List<ClassesCourse> classesCourses = classesCourseService.list(classesCourseQueryWrapper);
+        HashMap<String, String> classesStringHashMap = new HashMap<>();
+        for (ClassesCourse classesCourse : classesCourses) {
+            // 教的班级的id
+            String id = classesCourse.getClassId();
+            // 教的课程id
+            String courseIdAndClassId = String.format("%s@%s", classesCourse.getCourseId(), classesCourse.getClassId());
+            String name = String.format("%s %s", classesService.getById(id).getName(),
+                    courseService.getById(classesCourse.getCourseId()).getName());
+            classesStringHashMap.put(name, courseIdAndClassId);
+        }
+        return classesStringHashMap;
+    }
+
+    /**
+     * 根据教师id返回模板的分页
+     *
+     * @param pn        一页几条数据
+     * @param teacherId 教师Id
+     * @return 分页
+     */
+    private Page<Template> getTeacherTemplatePagination(Integer pn, String teacherId) {
+        QueryWrapper<Template> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("template_id", "name", "type", "template_teacher", "class_id", "deadline").
+                eq("template_teacher", teacherId);
+        Page<Template> userPage = new Page<>(pn, 10);
+        // 分页查询结果
+        Page<Template> templates = templateService.page(userPage, queryWrapper);
+        for (Template record : templates.getRecords()) {
+            record.setClassId(classesService.getById(record.getClassId()).getName());
+            record.setTemplateTeacher(String.format("%s(%s)", record.getTemplateTeacher(), teacherId));
+        }
+        return templates;
+    }
 }
