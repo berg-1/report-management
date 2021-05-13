@@ -15,12 +15,32 @@
     <link th:rel="stylesheet" th:href="@{/css/bootstrap.min.css} "/>
     <link th:replace="common::common_header">
     <style>
-        tr:hover {
-            background-color: #E6E6E6;
-        }
-
         td {
             padding: 4px 0;
+            font-size: medium;
+            background-color: white;
+        }
+
+        a {
+            color: black;
+            text-decoration: none;
+        }
+
+        a:link {
+            text-decoration: none;
+        }
+
+        a:visited {
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #1CAF9A;
+            text-decoration: none;
+        }
+
+        a:active {
+            text-decoration: none;
         }
 
     </style>
@@ -79,7 +99,7 @@
     </div>
     <!--body wrapper start-->
     <div class="wrapper">
-        <div class="col col-md-2">
+        <div class="col col-md-3">
             <div class="panel">
                 <div class="panel-heading">
                     <a href="#myModal" data-toggle="modal" class="btn btn-default btn-sm">
@@ -147,21 +167,18 @@
                         <a href="javascript:" class="fa fa-times"></a>
                      </span>
                     </header>
+                    <p>已提交:</p>
+                    <p id="submitted"></p>
+                    <p>未提交:</p>
+                    <p id="unSubmitted"></p>
                 </div>
-                <span th:if="${message != null}">
-                            <span th:text="${message}" class="fa fa-warning" style="color: red"></span>
-                        </span>
-                <span th:if="${success != null}">
-                            <span th:text="${success}" class="fa fa-check-circle-o" style="color: #4169E1"></span>
-                        </span>
-
                 <div class="panel-body">
                     <table id="treeTable1" class="table table-hover">
                     </table>
                 </div>
             </div>
         </div>
-        <div class="col col-md-10" style="height: 500px">
+        <div class="col col-md-9" style="height: 500px">
             <div class="panel">
                 <div class="panel-heading"><h2>模板名</h2></div>
                 <div class="panel-body"><p>Hello, Hello!</p></div>
@@ -198,7 +215,9 @@
             "dataType": "json",
             "success": function (data) {
                 $.each(data, function (idx, obj) {
-                    $("#treeTable").append("<tr data-tt-id=\"" + obj.nid + "\" data-tt-parent-id=\"" + obj.pid + "\"><td><a href='#' class='btn-link'>" + obj.text + "</a></td></tr>");
+                    $("#treeTable").append("<tr data-tt-id=\"" + obj.nid + "\" data-tt-parent-id=\"" +
+                        obj.pid + "\"><td><a href=\"javascript:getData('" + obj.href + "');\">" +
+                        obj.text + "</a></td></tr>");
                 });
                 $("#treeTable").treetable({
                     expandable: true,
@@ -209,6 +228,28 @@
             }
         });
     });
+
+    function getData(templateId) {
+        if (templateId !== '#') {
+            $("#submitted").text("")
+            $("#unSubmitted").text("")
+            $.ajax({
+                "type": 'get',
+                "url": '/templates?templateId=' + templateId,
+                "dataType": "json",
+                "success": function (data) {
+                    // console.log(data.submitted);
+                    // console.log(data.unSubmitted);
+                    $("#unSubmitted").text(data.unSubmitted.names)
+                    $.each(data.submitted, function (name, rid) {
+                        $("#submitted").append(name + "  " + rid);
+                        console.log(name + "  " + rid)
+                    });
+                }
+            });
+        }
+    }
+
 </script>
 
 

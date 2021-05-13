@@ -30,14 +30,10 @@ public class TemplateController {
     @Autowired
     TemplateService templateService;
 
-    @Autowired
-    ClassesMapper classesMapper;
 
     @Autowired
     ReportService reportService;
 
-    @Autowired
-    ReportMapper reportMapper;
 
     /**
      * 最大上传限制
@@ -108,7 +104,7 @@ public class TemplateController {
     String deleteTemplate(@RequestParam(value = "templateId") String templateId) {
         QueryWrapper<Report> reportQueryWrapper = new QueryWrapper<>();
         reportQueryWrapper.eq("report_template", templateId);
-        reportMapper.delete(reportQueryWrapper);
+        reportService.remove(reportQueryWrapper);
         templateService.removeById(templateId);
         return "redirect:mainTeacher";
     }

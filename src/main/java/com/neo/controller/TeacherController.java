@@ -1,12 +1,9 @@
 package com.neo.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.neo.domain.*;
-import com.neo.mapper.ClassesCourseMapper;
-import com.neo.mapper.ReportMapper;
-import com.neo.mapper.StudentMapper;
-import com.neo.mapper.TemplateMapper;
 import com.neo.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,6 +97,36 @@ public class TeacherController {
         return getNodeList(teacher.getTno());
     }
 
+    @RequestMapping("templates")
+    @GetMapping
+    @ResponseBody
+    public JSONObject getNamesByTemplateId(@RequestParam String templateId) {
+        JSONObject stat = new JSONObject();
+        JSONObject submitted = new JSONObject();
+        JSONObject unSubmitted = new JSONObject();
+        StringBuilder builder = new StringBuilder();
+        QueryWrapper<Template> wrapper = new QueryWrapper<>();
+        wrapper.select("template_id", "name", "type", "template_teacher", "class_id", "course_id", "deadline")
+                .eq("template_id", templateId);
+        Template one = templateService.getOne(wrapper);
+        List<Student> students = getClassStudents(one.getClassId());
+        QueryWrapper<Report> wrapper1 = new QueryWrapper<>();
+        for (Student student : students) {
+            student.setClassId(getClassNameById(student.getClassId()));
+            Report report = getReportByTemplateIdAndStudentId(templateId, student.getSno());
+            if (report != null) {
+                submitted.put(student.getName(), report.getRid());
+            } else {
+                builder.append(student.getName()).append("\t");
+            }
+        }
+        unSubmitted.put("names", builder.toString());
+        stat.put("submitted", submitted);
+        stat.put("unSubmitted", unSubmitted);
+        return stat;
+    }
+
+
     /**
      * 根据模板id和学生id获取实验报告提交情况
      *
@@ -114,7 +141,7 @@ public class TeacherController {
                                 Model model) {
         className = getClassIdByName(className);
         List<Student> students = getClassStudents(className);
-        HashMap<Student, Report> submitted = new HashMap<>(16);
+        HashMap<Student, Report> submitted = new HashMap<>(30);
         List<Student> unSubmitted = new ArrayList<>();
         for (Student student : students) {
             student.setClassId(getClassNameById(student.getClassId()));
@@ -329,22 +356,26 @@ public class TeacherController {
         QueryWrapper<ClassesCourse> wrapper = new QueryWrapper<>();
         wrapper.eq("teacher_id", teacherId);
         List<ClassesCourse> list = classesCourseService.list(wrapper);
-        nodes.add(new Node("Root", "0", "我的课程", "https://frontbackend.com/root"));
         for (ClassesCourse classesCourse : list) {
             Course course = courseService.getById(classesCourse.getCourseId());
             String courseName = course.getName();
             String courseId = course.getCourseId();
-            Node node = new Node(courseId, "Root", courseName, "https://frontbackend.com/child3/child2");
+            Node node = new Node(courseId, "0", courseName, "#");
             if (!nodes.contains(node)) {
                 nodes.add(node);
-                QueryWrapper<ClassesCourse> wrapper1 = new QueryWrapper<>();
-                wrapper1.eq("teacher_id", teacherId)
+                QueryWrapper<ClassesCourse> courseQueryWrapper = new QueryWrapper<>();
+                courseQueryWrapper.eq("teacher_id", teacherId)
                         .eq("course_id", courseId);
-                List<ClassesCourse> list1 = classesCourseService.list(wrapper1);
+                List<ClassesCourse> list1 = classesCourseService.list(courseQueryWrapper);
                 for (ClassesCourse classesCourse1 : list1) {
                     Classes aClass = classesService.getById(classesCourse1.getClassId());
                     String className = aClass.getName();
-                    nodes.add(new Node(courseId + aClass.getCid(), courseId, className, "https://frontbackend.com/child3/child2"));
+                    nodes.add(new Node(courseId + aClass.getCid(), courseId, className, "#"));
+                    List<Template> templates = getTemplateListByTnoCidCourseId(teacherId, aClass.getCid(), courseId);
+                    for (Template template : templates) {
+                        nodes.add(new Node(template.getTemplateId(), courseId + aClass.getCid(), template.getName(),
+                                template.getTemplateId()));
+                    }
                 }
             }
         }
@@ -393,4 +424,21 @@ public class TeacherController {
         }
         return templates;
     }
+
+
+    /**
+     * 根据模板Id获取一个没有数据的模板对象
+     *
+     * @param teacherId teacher id
+     * @return Template实体
+     */
+    private List<Template> getTemplateListByTnoCidCourseId(String teacherId, String cid, String courseId) {
+        QueryWrapper<Template> wrapper = new QueryWrapper<>();
+        wrapper.select("template_id", "name", "type", "template_teacher", "class_id", "course_id", "deadline")
+                .eq("template_teacher", teacherId)
+                .eq("course_id", courseId)
+                .eq("class_id", cid);
+        return templateService.list(wrapper);
+    }
+
 }
