@@ -201,8 +201,7 @@ public class TeacherController {
             ZipOutputStream out = new ZipOutputStream(new FileOutputStream(strZipPath));
             for (Report report : reports) {
                 log.info("下载,报告名:{}", report.getFilename());
-                String filename = String.format("%s.%s.%s%s",
-                        templateName.substring(0, templateName.lastIndexOf('.')),
+                String filename = String.format("%s.%s%s",
                         report.getUploader().substring(12),
                         getStudentNameById(report.getUploader()),
                         report.getFilename().substring(report.getFilename().lastIndexOf('.')));

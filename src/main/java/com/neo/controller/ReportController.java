@@ -102,8 +102,6 @@ public class ReportController {
             }
             Path path = Paths.get(savePath);
             Files.write(path, bytes);
-            redirectAttributes.addFlashAttribute("message",
-                    "You successfully uploaded '" + file.getOriginalFilename() + "'");
             log.info("保存文件{}", savePath);
             if (!isLate) {
                 log.info("学生提交时间超出截至日期!id={},templateId={}", studentId, templateId);

@@ -43,6 +43,9 @@
             text-decoration: none;
         }
 
+        * {
+            touch-action: pan-y;
+        }
     </style>
 
 </head>
@@ -110,12 +113,12 @@
                         <a class="fa fa-times" href="javascript:"></a>
                     </span>
                 </div>
-                <span th:if="${message != null}">
+                <div style="padding:0 20px"><span th:if="${message != null}">
                             <span th:text="${message}" class="fa fa-warning" style="color: red"></span>
-                        </span>
-                <span th:if="${success != null}">
+                        </span></div>
+                <div style="padding:0 20px"><span th:if="${success != null}">
                             <span th:text="${success}" class="fa fa-check-circle-o" style="color: #4169E1"></span>
-                        </span>
+                </span></div>
                 <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="myModal"
                      class="modal fade" style="display: none;">
                     <div class="modal-dialog">
@@ -128,7 +131,7 @@
                             <!--上传表单-->
                             <div class="modal-body">
                                 <form role="form" th:action="@{/uploadTemplate(tno=${session.loginUser.tno})}"
-                                      method="POST"
+                                      method="post"
                                       enctype="multipart/form-data">
                                     <label>
                                         <input type="file" name="file" accept=".docx, .doc, .pdf">
@@ -160,28 +163,26 @@
             </div>
             <div class="panel">
                 <div class="panel-heading">
-                    <header class="panel-heading">
-                        <span>班级名 - 实验名</span>
-                        <span class="tools pull-right">
+                    <span>班级名 - 实验名</span>
+                    <span class="tools pull-right">
                         <a href="javascript:" class="fa fa-chevron-down"></a>
                         <a href="javascript:" class="fa fa-times"></a>
                      </span>
-                    </header>
+                </div>
+                <div class="panel-body">
                     <p>已提交:</p>
                     <p id="submitted"></p>
                     <p>未提交:</p>
                     <p id="unSubmitted"></p>
                 </div>
-                <div class="panel-body">
-                    <table id="treeTable1" class="table table-hover">
-                    </table>
-                </div>
             </div>
         </div>
         <div class="col col-md-9" style="height: 500px">
             <div class="panel">
-                <div class="panel-heading"><h2>模板名</h2></div>
-                <div class="panel-body"><p>Hello, Hello!</p></div>
+                <div class="panel-heading"><h2>Template name goes here...</h2></div>
+                <div class="panel-body">
+                    <p>Report display here...</p>
+                </div>
             </div>
         </div>
     </div>
