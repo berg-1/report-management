@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.nio.charset.StandardCharsets;
+
 /**
  * @author Berg
  */
@@ -36,7 +37,7 @@ public class DownloadController {
      */
     @RequestMapping("/downloadTemplate")
     public ResponseEntity<byte[]> downloadTemplate(@RequestParam("id") String id) {
-        log.info("下载文件:id={}", id);
+        log.debug("下载文件:id={}", id);
         Template template = templateService.getById(id);
         byte[] bytes = template.getData();
         String fileName = template.getName();
@@ -70,7 +71,7 @@ public class DownloadController {
      */
     @RequestMapping("/downloadReportById")
     public ResponseEntity<byte[]> downloadReport(@RequestParam("reportId") String reportId) {
-        log.info("下载文件:id={}", reportId);
+        log.debug("下载文件:id={}", reportId);
         Report report = getReportById(reportId);
         return getResponseEntity(report);
     }
@@ -96,7 +97,7 @@ public class DownloadController {
         QueryWrapper<Report> reportQueryWrapper = new QueryWrapper<>();
         reportQueryWrapper.eq("uploader", studentId)
                 .eq("report_template", templateId);
-        return reportService.getById(reportQueryWrapper);
+        return reportService.getOne(reportQueryWrapper);
     }
 
     /**

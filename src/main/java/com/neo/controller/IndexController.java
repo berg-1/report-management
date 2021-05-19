@@ -52,11 +52,11 @@ public class IndexController {
     public String main(Student user, HttpSession session, Model model) {
         Student id = studentService.getById(user.getSno());
         if (id != null && (id.getPassword().equals(user.getPassword()))) {
-            log.info("学生登录id={}", id.getSno());
+            log.debug("学生登录id={}", id.getSno());
             session.setAttribute("loginUser", id);
             return "redirect:/mainStudent";
         } else if (teacherService.getById(user.getSno()) != null && (teacherService.getById(user.getSno()).getPassword().equals(user.getPassword()))) {
-            log.info("教师登录id={}", user.getSno());
+            log.debug("教师登录id={}", user.getSno());
             session.setAttribute("loginUser", teacherService.getById(user.getSno()));
             return "redirect:/mainTeacher";
         } else {
@@ -107,10 +107,10 @@ public class IndexController {
                                @RequestParam String passwdNew,
                                RedirectAttributes redirectAttributes,
                                Model model) {
-        log.info("Username:{},Password:{},new Password:{}", userId, passwd, passwdNew);
+        log.debug("Username:{},Password:{},new Password:{}", userId, passwd, passwdNew);
         Student id = studentService.getById(userId);
         if (id != null && (id.getPassword().equals(passwd))) {
-            log.info("学生修改密码 id={}", id.getSno());
+            log.debug("学生修改密码 id={}", id.getSno());
             UpdateWrapper<Student> updateWrapper = new UpdateWrapper<>();
             updateWrapper.eq("sno", userId)
                     .eq("password", passwd)
@@ -123,7 +123,7 @@ public class IndexController {
             }
             return "login";
         } else if (teacherService.getById(userId) != null && (teacherService.getById(userId).getPassword().equals(passwd))) {
-            log.info("教师修改密码 id={}", userId);
+            log.debug("教师修改密码 id={}", userId);
             UpdateWrapper<Teacher> updateWrapper = new UpdateWrapper<>();
             updateWrapper.eq("tno", userId)
                     .eq("password", passwd)

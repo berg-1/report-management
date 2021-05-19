@@ -2,3 +2,6 @@ spring:
   datasource:
     username: root
     password: network
+logging:
+  level:
+    com.neo: info

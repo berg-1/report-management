@@ -53,7 +53,7 @@ public class StudentController {
         Student student = (Student) session.getAttribute("loginUser");
         String classId = student.getClassId();
         QueryWrapper<Template> wrapper = new QueryWrapper<>();
-        wrapper.select("template_id", "name", "type", "template_teacher", "class_id", "deadline").
+        wrapper.select("template_id", "name", "type", "template_teacher", "class_id", "deadline", "course_id").
                 eq("class_id", classId);
         List<Template> templates = templateService.list(wrapper);
         List<Template> submitted = new ArrayList<>();
@@ -63,8 +63,9 @@ public class StudentController {
             queryWrapper.eq("report_template", template.getTemplateId())
                     .eq("uploader", student.getSno());
             int integer = reportService.count(queryWrapper);
-            template.setClassId(classesService.getById(template.getClassId()).getName());
-            template.setTemplateTeacher(teacherService.getById(template.getTemplateTeacher()).getTname());
+            template.setCourseId(getCourseNameById(template.getCourseId()));
+            template.setClassId(getClassNameById(template.getClassId()));
+            template.setTemplateTeacher(getTemplateTeacherById(template.getTemplateTeacher()));
             if (integer > 0) {
                 submitted.add(template);
             } else {
@@ -76,9 +77,15 @@ public class StudentController {
         return "main_student";
     }
 
-    @GetMapping("/getClassName")
-    String getClassName(@RequestParam(value = "classId") String cid) {
-        Classes c = classesService.getById(cid);
-        return c.getName();
+    String getCourseNameById(String courseId) {
+        return courseService.getById(courseId).getName();
+    }
+
+    String getClassNameById(String cid) {
+        return classesService.getById(cid).getName();
+    }
+
+    String getTemplateTeacherById(String tno) {
+        return teacherService.getById(tno).getTname();
     }
 }

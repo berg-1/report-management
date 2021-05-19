@@ -79,6 +79,7 @@
                                         <th>实验名</th>
                                         <th>上传教师</th>
                                         <th>班级</th>
+                                        <th>课程名</th>
                                         <th>截止日期</th>
                                         <th>下载模板</th>
                                         <th>上传实验报告</th>
@@ -90,6 +91,7 @@
                                         <td th:text="${template.name}">Trident</td>
                                         <td th:text="${template.templateTeacher}" class="center">Trident</td>
                                         <td th:text="${template.classId}" class="center">Trident</td>
+                                        <td th:text="${template.courseId}"></td>
                                         <td th:text="${#dates.format(template.deadline,'yyyy-MM-dd HH:mm')}"></td>
                                         <td><a th:href="@{/downloadTemplate(id=${template.templateId})}">
                                             <span class="fa fa-download">下载</span></a>
@@ -147,9 +149,10 @@
                                     <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>模板名</th>
+                                        <th>实验名</th>
                                         <th>上传教师</th>
                                         <th>班级</th>
+                                        <th>课程名</th>
                                         <th>截止日期</th>
                                         <th>下载模板</th>
                                         <th>下载你的实验报告</th>
@@ -162,6 +165,7 @@
                                         <td th:text="${template.name}">Trident</td>
                                         <td th:text="${template.templateTeacher}" class="center">Trident</td>
                                         <td th:text="${template.classId}" class="center">Trident</td>
+                                        <td th:text="${template.courseId}"></td>
                                         <td th:text="${#dates.format(template.deadline,'yyyy-MM-dd HH:mm')}"></td>
                                         <td><a th:href="@{/downloadTemplate(id=${template.templateId})}">
                                             <span class="fa fa-download">下载</span></a>

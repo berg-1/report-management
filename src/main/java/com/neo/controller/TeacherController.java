@@ -200,7 +200,7 @@ public class TeacherController {
             ServletOutputStream outputStream = response.getOutputStream();
             ZipOutputStream out = new ZipOutputStream(new FileOutputStream(strZipPath));
             for (Report report : reports) {
-                log.info("下载,报告名:{}", report.getFilename());
+                log.debug("下载,报告名:{}", report.getFilename());
                 String filename = String.format("%s.%s%s",
                         report.getUploader().substring(12),
                         getStudentNameById(report.getUploader()),

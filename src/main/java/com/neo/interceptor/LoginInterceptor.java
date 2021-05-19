@@ -29,7 +29,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             return true;
         } else {
             String uri = request.getRequestURI();
-            log.info("preHandle拦截的请求是:{}", uri);
+            log.debug("preHandle拦截的请求是:{}", uri);
             request.setAttribute("msg", "请先登录!");
             request.getRequestDispatcher("").forward(request, response);
             return false;
