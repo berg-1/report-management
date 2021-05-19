@@ -47,6 +47,7 @@ public class ReportController {
      * 最大上传限制
      */
     private static final Long MAX_UPLOAD_SIZE = 2 * 10 * 1024 * 1024L;
+    private static final String ACCEPT_FORMAT = ".pdf";
 
     /**
      * 上传一个Report实体到数据库
@@ -65,6 +66,12 @@ public class ReportController {
         redirectAttributes.addFlashAttribute("messageId", templateId);
         if (file.isEmpty()) {
             redirectAttributes.addFlashAttribute("message", "请选择文件再上传!");
+            return "redirect:mainStudent";
+        }
+        assert file.getOriginalFilename() != null;
+        if (!ACCEPT_FORMAT.equalsIgnoreCase(
+                file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".")))) {
+            redirectAttributes.addFlashAttribute("message", "请转换为PDF文件后再上传!");
             return "redirect:mainStudent";
         }
         try {

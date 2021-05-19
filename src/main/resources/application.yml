@@ -18,3 +18,6 @@ spring:
       enabled: true  # 热部署生效
       additional-paths: src/java/main  # 设置需要重启的目录
       exclude: static/**,public/**,WEB-INF/**
+
+  profiles:
+    active: prod
