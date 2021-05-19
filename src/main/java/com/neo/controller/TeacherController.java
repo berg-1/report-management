@@ -436,7 +436,8 @@ public class TeacherController {
         wrapper.select("template_id", "name", "type", "template_teacher", "class_id", "course_id", "deadline")
                 .eq("template_teacher", teacherId)
                 .eq("course_id", courseId)
-                .eq("class_id", cid);
+                .eq("class_id", cid)
+                .orderByAsc("name");
         return templateService.list(wrapper);
     }
 
