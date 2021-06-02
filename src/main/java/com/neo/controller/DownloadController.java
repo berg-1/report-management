@@ -1,6 +1,7 @@
 package com.neo.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.neo.Utils.MimeTypes;
 import com.neo.domain.Report;
 import com.neo.domain.Template;
 import com.neo.service.ReportService;
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,8 +41,9 @@ public class DownloadController {
     public ResponseEntity<byte[]> downloadTemplate(@RequestParam("id") String id) {
         log.debug("下载文件:id={}", id);
         Template template = templateService.getById(id);
+        String defaultExt = MimeTypes.getDefaultExt(template.getType());
         byte[] bytes = template.getData();
-        String fileName = template.getName();
+        String fileName = template.getName() + '.' + defaultExt;
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", template.getType() + ";charset=utf-8");
         headers.setContentDispositionFormData("attachment",
@@ -50,18 +53,19 @@ public class DownloadController {
     }
 
     /**
-     * 根据模板id和学生id下载实验报告
+     * 根据模板id和学生id下载实验报告 !Deprecated
      *
      * @param templateId 实验报告id
      * @param studentId  学生id
      * @return 实验报告文件
      */
-    @RequestMapping("/downloadReport")
+    @RequestMapping("/downloadReportDeprecated")
     public ResponseEntity<byte[]> downloadReport(@RequestParam("templateId") String templateId,
                                                  @RequestParam("studentId") String studentId) {
         Report report = getReportByTemplateIdAndStudentId(templateId, studentId);
         return getResponseEntity(report);
     }
+
 
     /**
      * 根据实验报告id下载实验报告
@@ -69,7 +73,7 @@ public class DownloadController {
      * @param reportId id
      * @return 实验报告文件
      */
-    @RequestMapping("/downloadReportById")
+    @RequestMapping("/downloadReport")
     public ResponseEntity<byte[]> downloadReport(@RequestParam("reportId") String reportId) {
         log.debug("下载文件:id={}", reportId);
         Report report = getReportById(reportId);
@@ -108,7 +112,8 @@ public class DownloadController {
      */
     private ResponseEntity<byte[]> getResponseEntity(Report report) {
         byte[] bytes = report.getData();
-        String fileName = report.getFilename();
+        String defaultExt = MimeTypes.getDefaultExt(report.getType());
+        String fileName = String.format("%s.%s", report.getFilename(), defaultExt);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", report.getType());
         headers.setContentDispositionFormData("attachment",

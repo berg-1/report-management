@@ -38,7 +38,7 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a th:href="@{/mainTeacher}">Dashboard</a></li>
+                    <li class="active"><a th:href="@{/mainTeacherOld}">Dashboard</a></li>
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
@@ -49,9 +49,9 @@
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="#">Profile</a></li>
-                            <li><a href="#">Settings</a></li>
-                            <li><a href="#">Log Out</a></li>
+                            <!--<li><a href="#">Profile</a></li>-->
+                            <li><a th:href="@{/change_passwd.html(id=${session.loginUser.tno})}">修改密码</a></li>
+                            <li><a th:href="@{/logout}">退出登录</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -59,11 +59,10 @@
         </div><!-- /.container-fluid -->
     </nav>
 
-
     <!--body wrapper start-->
     <div class="wrapper">
-        <div class="row">
-            <div class="col-sm-12">
+        <div class="">
+            <div class="col col-md-6">
                 <section class="panel">
                     <header class="panel-heading">
                         已提交实验报告学生<span th:text="'('+${submitted.size()}+'人)'"></span>
@@ -103,16 +102,16 @@
                                     <td th:text="${#dates.format(entry.value.uploadTime,'yyyy-MM-dd HH:mm')}"
                                         class="center">Trident
                                     </td>
-                                    <td th:if="${!entry.value.status}">
+                                    <td th:if="${entry.value.status}">
                                         <span class="label label-success label-mini">按时</span>
                                     </td>
-                                    <td th:if="${entry.value.status}">
+                                    <td th:if="${!entry.value.status}">
                                         <span class="label label-danger label-mini">迟交</span>
                                     </td>
-                                    <!--                                    <td class="center">-->
-                                    <!--                                        <a th:href="@{/downloadReportById(reportId=${entry.value.rid})}">-->
-                                    <!--                                            <span class="fa fa-download">下载</span></a>-->
-                                    <!--                                    </td>-->
+                                    <!--<td class="center">-->
+                                    <!--    <a th:href="@{/downloadReportById(reportId=${entry.value.rid})}">-->
+                                    <!--        <span class="fa fa-download">下载</span></a>-->
+                                    <!--</td>-->
                                 </tr>
                                 </tbody>
                             </table>
@@ -121,8 +120,8 @@
                 </section>
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-12">
+        <div class="">
+            <div class="col col-md-6">
                 <section class="panel">
                     <header class="panel-heading">
                         未提交实验报告学生<span th:text="'('+${unSubmitted.size()}+'人)'"></span>

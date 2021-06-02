@@ -3,6 +3,7 @@ package com.neo.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.neo.Utils.MimeTypes;
 import com.neo.domain.*;
 import com.neo.service.*;
 import lombok.extern.slf4j.Slf4j;
@@ -183,7 +184,7 @@ public class TeacherController {
         String className = getClassNameById(classId);
         String templateName = getTemplateNameById(templateId);
         // 压缩文件的名字
-        String zipName = String.format("%s %s.zip", className, templateName.substring(0, templateName.lastIndexOf('.')));
+        String zipName = String.format("%s.%s.zip", className, templateName.substring(0, templateName.lastIndexOf('.')));
         // 压缩文件下载的位置/缓存位置
         String strZipPath = "D:/实验报告下载/" + zipName;
         File file = new File("D:/实验报告下载/");
@@ -201,10 +202,10 @@ public class TeacherController {
             ZipOutputStream out = new ZipOutputStream(new FileOutputStream(strZipPath));
             for (Report report : reports) {
                 log.debug("下载,报告名:{}", report.getFilename());
-                String filename = String.format("%s.%s%s",
+                String filename = String.format("%s.%s.%s",
                         report.getUploader().substring(12),
                         getStudentNameById(report.getUploader()),
-                        report.getFilename().substring(report.getFilename().lastIndexOf('.')));
+                        MimeTypes.getDefaultExt(report.getType()));
                 out.putNextEntry(new ZipEntry(filename));
                 // 读入需要下载的文件的内容，打包到zip文件
                 out.write(report.getData());
@@ -213,7 +214,7 @@ public class TeacherController {
             out.close();
             BufferedInputStream bis = new BufferedInputStream(new FileInputStream(strZipPath));
             response.setContentType("application/x-msdownload");
-            response.setHeader("Content-disposition", "attachment; filename="
+            response.setHeader("Content-disposition", "attachment;filename="
                     + new String(zipName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1));
             // 将输入流的数据拷贝到输入流输出
             FileCopyUtils.copy(bis, outputStream);
@@ -297,7 +298,7 @@ public class TeacherController {
      */
     private Report getReportByTemplateIdAndStudentId(String templateId, String studentId) {
         QueryWrapper<Report> reportQueryWrapper = new QueryWrapper<>();
-        reportQueryWrapper.select("rid", "filename", "type", "uploader", "report_template", "upload_time")
+        reportQueryWrapper.select("rid", "filename", "type", "uploader", "report_template", "upload_time", "status")
                 .eq("report_template", templateId)
                 .eq("uploader", studentId);
         return reportService.getOne(reportQueryWrapper);

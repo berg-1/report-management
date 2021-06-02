@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.UUID;
 
@@ -50,36 +52,36 @@ public class TemplateController {
      * @return main_teacher.html
      */
     @PostMapping("/uploadTemplate")
-    public String singleFileUpload(@RequestParam(value = "file") MultipartFile file,
+    public String singleFileUpload(@RequestParam(value = "name") String name,
+                                   @RequestParam(value = "file") MultipartFile file,
                                    @RequestParam(value = "tno", defaultValue = "undefined") String tno,
                                    @RequestParam(value = "class", defaultValue = "undefined") String cid,
                                    @RequestParam(value = "deadline")
                                    @DateTimeFormat(pattern = "yyyy-MM-dd") Date deadline,
                                    RedirectAttributes redirectAttributes) {
-        if (file.isEmpty()) {
-            redirectAttributes.addFlashAttribute("message", "请选择文件再上传!");
-            return "redirect:mainTeacher";
-        }
         try {
+            byte[] bytes;
+            String type;
             // 取得文件并以Bytes方式保存
-            byte[] bytes = file.getBytes();
+            if (file.isEmpty()) {
+                type = "text/plain";
+                bytes = name.getBytes(StandardCharsets.UTF_8);
+            } else {
+                type = file.getContentType();
+                bytes = file.getBytes();
+            }
             if (bytes.length > MAX_UPLOAD_SIZE) {
                 throw new LargeFileException(MAX_UPLOAD_SIZE);
             }
             String uuid = UUID.randomUUID().toString();
-            System.out.println(cid);
+            name = name.replace(' ', '.');
             String[] courseIdAndCid = cid.split("@");
-            templateService.save(new Template(uuid,
-                    file.getOriginalFilename(),
-                    file.getContentType(),
-                    tno,
+            templateService.save(new Template(uuid, name, type, tno,
                     courseIdAndCid[1],
                     deadline,
                     courseIdAndCid[0],
-                    bytes
-            ));
-            redirectAttributes.addFlashAttribute("success",
-                    "文件'" + file.getOriginalFilename() + "'上传成功!");
+                    bytes));
+            redirectAttributes.addFlashAttribute("success", "实验'" + name + "'发布成功!");
         } catch (LargeFileException largeFileException) {
             redirectAttributes.addFlashAttribute("message", String.format(
                     "文件过大,上传失败!请将文件控制在%dMB内!",

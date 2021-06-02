@@ -1,24 +1,25 @@
 package com.neo.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.neo.domain.Classes;
 import com.neo.domain.Report;
 import com.neo.domain.Student;
 import com.neo.domain.Template;
 import com.neo.service.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
  * @author Berg
  */
+@Slf4j
 @Controller
 public class StudentController {
 
@@ -56,18 +57,21 @@ public class StudentController {
         wrapper.select("template_id", "name", "type", "template_teacher", "class_id", "deadline", "course_id").
                 eq("class_id", classId);
         List<Template> templates = templateService.list(wrapper);
-        List<Template> submitted = new ArrayList<>();
         List<Template> unSubmitted = new ArrayList<>();
+        HashMap<Template, Report> submitted = new HashMap<>();
+
         for (Template template : templates) {
             QueryWrapper<Report> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("report_template", template.getTemplateId())
                     .eq("uploader", student.getSno());
             int integer = reportService.count(queryWrapper);
             template.setCourseId(getCourseNameById(template.getCourseId()));
-            template.setClassId(getClassNameById(template.getClassId()));
             template.setTemplateTeacher(getTemplateTeacherById(template.getTemplateTeacher()));
             if (integer > 0) {
-                submitted.add(template);
+                Report one = reportService.getOne(queryWrapper);
+                one.setData(null);
+                submitted.put(template, one);
+                log.debug("The one:{}", one.getFilename());
             } else {
                 unSubmitted.add(template);
             }

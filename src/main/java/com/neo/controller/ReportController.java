@@ -1,6 +1,7 @@
 package com.neo.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.neo.Utils.MimeTypes;
 import com.neo.domain.Report;
 import com.neo.domain.Template;
 import com.neo.exception.LargeFileException;
@@ -53,14 +54,14 @@ public class ReportController {
      * 上传一个Report实体到数据库
      *
      * @param file               文件数据 -> MultipartFile
-     * @param studentId          上传者id
+     * @param sno                上传者id
      * @param templateId         模板id
      * @param redirectAttributes 重定向传值需要
      * @return mian_student.html
      */
     @PostMapping("/uploadReport")
     public String singleFileUpload(@RequestParam(value = "file") MultipartFile file,
-                                   @RequestParam(value = "studentId", defaultValue = "undefined") String studentId,
+                                   @RequestParam(value = "sno", defaultValue = "undefined") String sno,
                                    @RequestParam(value = "templateId", defaultValue = "undefined") String templateId,
                                    RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("messageId", templateId);
@@ -82,6 +83,7 @@ public class ReportController {
             }
             String uuid = UUID.randomUUID().toString();
             String fileName = file.getOriginalFilename();
+            String type = file.getContentType();
             Template template = getTemplateNoData(templateId);
             String courseId = template.getCourseId();
             String classId = template.getClassId();
@@ -90,14 +92,14 @@ public class ReportController {
             boolean isLate = uploadDate.before(template.getDeadline());
             reportService.save(new Report(uuid,
                     fileName,
-                    file.getContentType(),
-                    studentId,
+                    type,
+                    sno,
                     templateId,
                     courseId,
                     uploadDate,
                     bytes,
                     isLate));
-            String savePath = getSavePath(courseId, classId, templateName, studentId);
+            String savePath = getSavePath(courseId, classId, templateName, sno, type);
             File saveFolderPath = new File(savePath.substring(0, savePath.lastIndexOf("/")));
             if (!saveFolderPath.isDirectory() && !saveFolderPath.exists()) {
                 boolean mkdirs = saveFolderPath.mkdirs();
@@ -111,7 +113,7 @@ public class ReportController {
             Files.write(path, bytes);
             log.info("保存文件{}", savePath);
             if (!isLate) {
-                log.info("学生提交时间超出截至日期!id={},templateId={}", studentId, templateId);
+                log.info("学生提交时间超出截至日期!id={},templateId={}", sno, templateId);
                 redirectAttributes.addFlashAttribute("message", "上传成功,但已过截至日期!");
             } else {
                 redirectAttributes.addFlashAttribute("success",
@@ -180,23 +182,24 @@ public class ReportController {
      * @param studentId    学生id
      * @return 返回保存文件的路径 -> ./课程名/班级名/实验名/学号.姓名.pdf
      */
-    private String getSavePath(String courseId, String classId, String templateName, String studentId) {
-        return String.format("./%s/%s/%s/%s.%s.pdf",
+    private String getSavePath(String courseId, String classId, String templateName, String studentId, String type) {
+        return String.format("./%s/%s/%s/%s.%s.%s",
                 courseService.getById(courseId).getName(),
                 classesService.getById(classId).getName(),
                 templateName.substring(0, templateName.lastIndexOf(".")),
                 studentId.substring(12),
-                studentService.getById(studentId).getName());
+                studentService.getById(studentId).getName(),
+                MimeTypes.getDefaultExt(type));
     }
 
     /**
-     * 根据模板id和学生id删除实验报告
+     * 根据模板id和学生id删除实验报告 !Deprecated
      *
      * @param templateId 模板id
      * @param studentId  上传者id
      * @return main_student.html
      */
-    @GetMapping("/deleteReport")
+    @GetMapping("/deleteReportDeprecated")
     String deleteTemplate(@RequestParam("templateId") String templateId,
                           @RequestParam("studentId") String studentId) {
         QueryWrapper<Report> reportQueryWrapper = new QueryWrapper<>();
@@ -205,6 +208,18 @@ public class ReportController {
         queryWrapper.eq("report_template", templateId)
                 .eq("uploader", studentId);
         reportService.remove(queryWrapper);
+        return "redirect:mainStudent";
+    }
+
+    /**
+     * 根据Id删除实验报告
+     *
+     * @param reportId 实验报告id
+     * @return main_student.html
+     */
+    @GetMapping("/deleteReport")
+    String deleteTemplate(@RequestParam("reportId") String reportId) {
+        reportService.removeById(reportId);
         return "redirect:mainStudent";
     }
 

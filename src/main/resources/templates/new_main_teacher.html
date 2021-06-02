@@ -46,6 +46,10 @@
         * {
             touch-action: pan-y;
         }
+
+        .form_item {
+            padding-bottom: 10px;
+        }
     </style>
 
 </head>
@@ -93,20 +97,19 @@
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
     </nav>
-
-
     <!--body wrapper start-->
     <!-- 标题 -->
     <div class="page-heading">
         <h3><em>实验报告预览</em></h3>
     </div>
+
     <!--body wrapper start-->
     <div class="wrapper">
         <div class="col col-md-3">
             <div class="panel">
                 <div class="panel-heading">
                     <a href="#myModal" data-toggle="modal" class="btn btn-default btn-sm">
-                        <i class="fa fa-upload"></i>上传新模板
+                        <i class="fa fa-upload"></i>发布新实验
                     </a>
                     <span class="tools pull-right">
                         <a class="fa fa-chevron-down" href="javascript:"></a>
@@ -126,22 +129,32 @@
                             <div class="modal-header">
                                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×
                                 </button>
-                                <h4 class="modal-title">Form Tittle</h4>
+                                <h4 class="modal-title">发布新实验</h4>
                             </div>
                             <!--上传表单-->
                             <div class="modal-body">
                                 <form role="form" th:action="@{/uploadTemplate(tno=${session.loginUser.tno})}"
                                       method="post"
                                       enctype="multipart/form-data">
-                                    <label>
-                                        <input type="file" name="file" accept=".docx, .doc, .pdf">
-                                    </label>
-                                    <div>
-                                        <label for="deadline">截至日期</label><br/>
+                                    <div class="form_item">
+                                        <label>
+                                            <label for="templateName">实验名称:</label><br>
+                                            <input class="form-control" type="text" id="templateName" name="name"
+                                                   placeholder="实验名称..." required>
+                                        </label>
+                                    </div>
+                                    <div class="form_item">
+                                        <label>
+                                            <label for="file">实验文件:</label><br/>
+                                            <input type="file" id="file" name="file" accept=".docx, .doc, .pdf, .txt">
+                                        </label>
+                                    </div>
+                                    <div class="form_item">
+                                        <label for="deadline">截至日期:</label><br/>
                                         <input type="date" id="deadline" name="deadline" required>
                                     </div>
-                                    <div>
-                                        <label for="class">布置班级</label>
+                                    <div class="form_item">
+                                        <label for="class">布置班级:</label>
                                         <select id="class" name="class" class="form-control m-bot15">
                                             <option th:each="c:${classes.keySet()}" th:value="${classes.get(c)}"
                                                     th:text="${c}">Option
@@ -222,7 +235,7 @@
                 });
                 $("#treeTable").treetable({
                     expandable: true,
-                    initialState: "collapsed", /*expanded*/
+                    initialState: "expanded", /*expanded collapsed*/
                     clickableNodeNames: true,
                     indent: 30
                 });
