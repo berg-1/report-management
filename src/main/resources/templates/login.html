@@ -13,21 +13,23 @@
 
 <div class="container">
 
-    <form class="form-signin" method="post" th:action="@{/login}">
-        <div class="form-signin-heading text-center">
-            <h1 class="sign-title">Sign In</h1>
-            <img src="images/login-logo.png" alt=""/>
-        </div>
-        <div class="login-wrap">
-            <label style="color:red" th:text="${msg}"></label>
-            <label style="color:#4169E1" th:text="${success}"></label>
-            <input type="text" name="sno" required class="form-control" placeholder="用户名" autofocus>
-            <input type="password" name="password" required class="form-control" placeholder="密码">
-            <button class="btn btn-lg btn-login btn-block" type="submit">
-                <i class="fa fa-check"></i>
-            </button>
-        </div>
 
+    <form class="form-signin" method="post" th:action="@{/login}">
+        <main>
+            <div class="form-signin-heading text-center">
+                <h1 class="sign-title">Sign In</h1>
+                <img src="images/login-logo.png" alt=""/>
+            </div>
+            <div class="login-wrap">
+                <label style="color:red" th:text="${msg}"></label>
+                <label style="color:#4169E1" th:text="${success}"></label>
+                <input type="text" name="sno" required class="form-control" placeholder="用户名" autofocus>
+                <input type="password" name="password" required class="form-control" placeholder="密码">
+                <button class="btn btn-lg btn-login btn-block" type="submit" id="login" aria-label="LoginBtn">
+                    <i class="fa fa-check"></i>
+                </button>
+            </div>
+        </main>
     </form>
 
 </div>

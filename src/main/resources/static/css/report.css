@@ -19,3 +19,30 @@ a:hover {
 a:visited {
     text-decoration: none;
 }
+
+.error {
+    color: red;
+}
+
+.login-body, main::before {
+    background: url("../images/wallhaven-5w1p17.jpg") 0 / cover fixed;
+}
+
+main {
+    background: hsla(0, 0%, 100%, .3);
+    position: relative;
+    overflow: hidden;
+    border-radius: 5%;
+}
+
+main::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    filter: blur(20px);
+    z-index: -1;
+    margin: -30px;
+}
