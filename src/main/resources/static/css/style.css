@@ -20,7 +20,7 @@ body {
     background: #424f63;
     font-family: 'Open Sans', sans-serif;
     color: #7a7676;
-    line-height: 20px;
+    line-height: 33px;
     overflow-x: hidden;
     font-size: 14px;
 }
@@ -1177,7 +1177,7 @@ footer.sticky-footer {
 
 .state-overview .red {
     background: #fc8675;
-    box-shadow: 0 5px 0 #e27869;
+    box-shadow: 0 5px 0 #e29069;
 }
 
 .state-overview .blue {
@@ -2208,7 +2208,7 @@ ul.user-states li {
 }
 
 .dataTables_filter label input {
-    width: 78%;
+    width: 83%;
 }
 
 .border-top {
@@ -2297,7 +2297,7 @@ ul.user-states li {
 .adv-table .dataTables_filter label input {
     float: right;
     margin-left: 10px;
-    width: 78%;
+    width: 83%;
 }
 
 .adv-table .dataTables_filter label {
@@ -2325,7 +2325,7 @@ ul.user-states li {
 }
 
 .editable-table .dataTables_filter {
-    width: 80%;
+    width: 50%;
 }
 
 .dataTable tr.odd.gradeX td.sorting_1, .dataTable tr.even.gradeX td.sorting_1,
@@ -3947,7 +3947,7 @@ ul.labels-info li h5 {
 
 ul.labels-info li a {
     border-radius: 0;
-    color: #707278;
+    color: #707290;
     padding-left: 0;
     padding-right: 0;
 }

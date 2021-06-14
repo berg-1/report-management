@@ -8381,7 +8381,7 @@
                  *      } );
                  *    } );
                  */
-                "sInfo": "Showing _START_ to _END_ of _TOTAL_ entries",
+                "sInfo": "第 _START_ 到 _END_ 条记录, 共 _TOTAL_ 条",
 
 
                 /**
@@ -8420,7 +8420,7 @@
                  *      } );
                  *    } );
                  */
-                "sInfoFiltered": "(filtered from _MAX_ total entries)",
+                "sInfoFiltered": "(从 _MAX_ 条记录中筛选)",
 
 
                 /**
@@ -8575,7 +8575,7 @@
                  *      } );
                  *    } );
                  */
-                "sSearch": "Search:",
+                "sSearch": "搜索:",
 
 
                 /**

@@ -46,3 +46,7 @@ main::before {
     z-index: -1;
     margin: -30px;
 }
+
+.panel-body {
+    background: hsla(0, 0%, 100%, .7);
+}

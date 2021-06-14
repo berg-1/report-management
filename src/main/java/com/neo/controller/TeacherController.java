@@ -58,12 +58,26 @@ public class TeacherController {
      * @return new_main_teacher.html
      */
     @GetMapping(value = {"mainTeacher", "mainTeacher.html"})
-    public String teacherPage(
-            HttpSession session,
-            Model model) {
+    public String teacherPage(HttpSession session, Model model,
+                              @RequestParam(defaultValue = "*") String classId,
+                              @RequestParam(defaultValue = "*") String courseId) {
         Teacher teacher = (Teacher) session.getAttribute("loginUser");
+        List<Template> templates;
+        QueryWrapper<Template> wrapper = new QueryWrapper<>();
+        if (classId.equals("*")) {
+            wrapper.select("template_id", "name", "type", "template_teacher", "class_id", "course_id", "deadline")
+                    .eq("template_teacher", teacher.getTno())
+                    .orderByAsc("name");
+        } else {
+            wrapper.select("template_id", "name", "type", "template_teacher", "class_id", "course_id", "deadline")
+                    .eq("class_id", classId)
+                    .eq("course_id", courseId)
+                    .orderByAsc("name");
+        }
+        templates = templateService.list(wrapper);
         HashMap<String, String> classesStringHashMap = getTeacherClasses(teacher.getTno());
         // 添加classes到model
+        model.addAttribute("templates", templates);
         model.addAttribute("classes", classesStringHashMap);
         return "new_main_teacher";
     }
@@ -101,29 +115,20 @@ public class TeacherController {
     @RequestMapping("templates")
     @GetMapping
     @ResponseBody
-    public JSONObject getNamesByTemplateId(@RequestParam String templateId) {
+    public JSONObject getNamesByTemplateId(@RequestParam String classId,
+                                           @RequestParam String courseId) {
         JSONObject stat = new JSONObject();
-        JSONObject submitted = new JSONObject();
-        JSONObject unSubmitted = new JSONObject();
-        StringBuilder builder = new StringBuilder();
+        JSONObject ts = new JSONObject();
         QueryWrapper<Template> wrapper = new QueryWrapper<>();
         wrapper.select("template_id", "name", "type", "template_teacher", "class_id", "course_id", "deadline")
-                .eq("template_id", templateId);
-        Template one = templateService.getOne(wrapper);
-        List<Student> students = getClassStudents(one.getClassId());
-        QueryWrapper<Report> wrapper1 = new QueryWrapper<>();
-        for (Student student : students) {
-            student.setClassId(getClassNameById(student.getClassId()));
-            Report report = getReportByTemplateIdAndStudentId(templateId, student.getSno());
-            if (report != null) {
-                submitted.put(student.getName(), report.getRid());
-            } else {
-                builder.append(student.getName()).append("\t");
-            }
+                .eq("class_id", classId)
+                .eq("course_id", courseId)
+                .orderByAsc("name");
+        List<Template> templates = templateService.list(wrapper);
+        for (Template template : templates) {
+            ts.put(template.getTemplateId(), template);
         }
-        unSubmitted.put("names", builder.toString());
-        stat.put("submitted", submitted);
-        stat.put("unSubmitted", unSubmitted);
+        stat.put("templates", ts);
         return stat;
     }
 
@@ -370,12 +375,7 @@ public class TeacherController {
                 for (ClassesCourse classesCourse1 : list1) {
                     Classes aClass = classesService.getById(classesCourse1.getClassId());
                     String className = aClass.getName();
-                    nodes.add(new Node(courseId + aClass.getCid(), courseId, className, "#"));
-                    List<Template> templates = getTemplateListByTnoCidCourseId(teacherId, aClass.getCid(), courseId);
-                    for (Template template : templates) {
-                        nodes.add(new Node(template.getTemplateId(), courseId + aClass.getCid(), template.getName(),
-                                template.getTemplateId()));
-                    }
+                    nodes.add(new Node(courseId + aClass.getCid(), courseId, className, String.format("%s@%s", aClass.getCid(), courseId)));
                 }
             }
         }

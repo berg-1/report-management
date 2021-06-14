@@ -1780,7 +1780,7 @@
 
                 var sSearchStr = oSettings.oLanguage.sSearch;
                 sSearchStr = (sSearchStr.indexOf('_INPUT_') !== -1) ?
-                    sSearchStr.replace('_INPUT_', '<input type="text"class="form-control" />') :
+                    sSearchStr.replace('_INPUT_', '<input type="text" class="form-control" />') :
                     sSearchStr === "" ? '<input type="text" class="form-control"/>' : sSearchStr + ' <input type="text" class="form-control"/>';
 
                 var nFilter = document.createElement('div');
@@ -8381,7 +8381,7 @@
                  *      } );
                  *    } );
                  */
-                "sInfo": "Showing _START_ to _END_ of _TOTAL_ entries",
+                "sInfo": "第 _START_ 到 _END_ 条记录, 共 _TOTAL_ 条",
 
 
                 /**
@@ -8552,7 +8552,7 @@
                  * control over where it appears in the string. If "_INPUT_" is not given
                  * then the input box is appended to the string automatically.
                  *  @type string
-                 *  @default Search:
+                 *  @default 搜索:
                  *  @dtopt Language
                  *
                  *  @example
@@ -8575,7 +8575,7 @@
                  *      } );
                  *    } );
                  */
-                "sSearch": "Search:",
+                "sSearch": "搜索:",
 
 
                 /**
