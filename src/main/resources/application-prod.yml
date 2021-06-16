@@ -1,7 +1,7 @@
 spring:
   datasource:
     username: root
-    password: network
+    password: root
 logging:
   level:
     com.neo: info
