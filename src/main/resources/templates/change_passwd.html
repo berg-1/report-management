@@ -24,37 +24,38 @@
 <div class="container">
 
     <form class="form-signin" th:action="@{/updatePasswd}" method="post">
-        <div class="form-signin-heading text-center">
-            <h1 class="sign-title">修改你的密码</h1>
-            <img src="images/login-logo.png" alt=""/>
-        </div>
-
-
-        <div class="login-wrap">
-            <p> Enter your account details below</p>
-            <label style="color:red" th:text="${msg}"></label>
-            <input required type="text" name="userId" autofocus="" placeholder="用户名" class="form-control"
-                   th:value="${id}">
-            <input required type="password" name="passwd" placeholder="原密码" class="form-control">
-            <input required type="password" id="passwd_new" name="passwdNew" onkeyup="validate()" placeholder="新密码"
-                   class="form-control">
-            <span id="notice"></span>
-            <input required type="password" id="passwd_retry" name="passwd_retry" onkeyup="validate()"
-                   placeholder="重新输入密码"
-                   class="form-control">
-            <button type="submit" class="btn btn-lg btn-login btn-block" id="submit">
-                <i class="fa fa-check"></i>
-            </button>
-
-            <div class="registration">
-                Already Registered.
-                <a th:href="@{/login}" class="">
-                    Login
-                </a>
+        <main>
+            <div class="form-signin-heading text-center">
+                <h1 class="sign-title">修改你的密码</h1>
+                <img src="images/login-logo.png" alt=""/>
             </div>
 
-        </div>
 
+            <div class="login-wrap">
+                <!--                <p> 在下方输入更改</p>-->
+                <label style="color:red" th:text="${msg}"></label>
+                <input required type="text" name="userId" autofocus="" placeholder="用户名" class="form-control"
+                       th:value="${id}">
+                <input required type="password" name="passwd" placeholder="原密码" class="form-control">
+                <input required type="password" id="passwd_new" name="passwdNew" onkeyup="validate()" placeholder="新密码"
+                       class="form-control">
+                <span id="notice"></span>
+                <input required type="password" id="passwd_retry" name="passwd_retry" onkeyup="validate()"
+                       placeholder="重新输入密码"
+                       class="form-control">
+                <button type="submit" class="btn btn-lg btn-login btn-block" id="submit">
+                    <i class="fa fa-check"></i>
+                </button>
+
+                <div class="registration">
+                    Already Registered.
+                    <a th:href="@{/login}" class="">
+                        Login
+                    </a>
+                </div>
+
+            </div>
+        </main>
     </form>
 
 </div>
