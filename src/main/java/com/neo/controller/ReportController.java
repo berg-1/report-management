@@ -186,7 +186,7 @@ public class ReportController {
         return String.format("./%s/%s/%s/%s.%s.%s",
                 courseService.getById(courseId).getName(),
                 classesService.getById(classId).getName(),
-                templateName.substring(0, templateName.lastIndexOf(".")),
+                templateName,
                 studentId.substring(12),
                 studentService.getById(studentId).getName(),
                 MimeTypes.getDefaultExt(type));

@@ -61,17 +61,23 @@ public class StudentController {
         HashMap<Template, Report> submitted = new HashMap<>();
 
         for (Template template : templates) {
-            QueryWrapper<Report> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("report_template", template.getTemplateId())
+            QueryWrapper<Report> getCountWrapper = new QueryWrapper<>();
+            getCountWrapper.eq("report_template", template.getTemplateId())
                     .eq("uploader", student.getSno());
-            int integer = reportService.count(queryWrapper);
+            int integer = reportService.count(getCountWrapper);
             template.setCourseId(getCourseNameById(template.getCourseId()));
             template.setTemplateTeacher(getTemplateTeacherById(template.getTemplateTeacher()));
-            if (integer > 0) {
-                Report one = reportService.getOne(queryWrapper);
-                one.setData(null);
+            if (integer == 1) {
+                Report one = getOne(template.getTemplateId(), student.getSno());
                 submitted.put(template, one);
-                log.debug("The one:{}", one.getFilename());
+            } else if (integer > 1) {
+                List<Report> sameReports = reportService.list(getCountWrapper);
+                for (int i = 1; i < sameReports.size(); i++) {
+                    reportService.removeById(sameReports.get(i).getRid());
+                    log.info("Delete Same Report:{}", sameReports.get(i).getFilename());
+                }
+                Report one = getOne(template.getTemplateId(), student.getSno());
+                submitted.put(template, one);
             } else {
                 unSubmitted.add(template);
             }
@@ -79,6 +85,14 @@ public class StudentController {
         model.addAttribute("submitted", submitted);
         model.addAttribute("unsubmitted", unSubmitted);
         return "main_student";
+    }
+
+    Report getOne(String templateId, String uploader) {
+        QueryWrapper<Report> getOneWrapper = new QueryWrapper<>();
+        getOneWrapper.select("rid", "filename", "type", "uploader", "upload_time", "report_template", "status", "course_id")
+                .eq("report_template", templateId)
+                .eq("uploader", uploader);
+        return reportService.getOne(getOneWrapper);
     }
 
     String getCourseNameById(String courseId) {

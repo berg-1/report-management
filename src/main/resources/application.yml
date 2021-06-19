@@ -19,11 +19,11 @@ spring:
       additional-paths: src/java/main  # 设置需要重启的目录
       exclude: static/**,public/**,WEB-INF/**
 
-  profiles:
-    active: prod
+#  profiles:
+#    active: prod
 
 logging:
   level:
     com.neo: debug
 server:
-  port: 8888
+  port: 8080

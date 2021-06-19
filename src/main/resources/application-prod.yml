@@ -5,3 +5,6 @@ spring:
 logging:
   level:
     com.neo: info
+
+server:
+  port: 8888
