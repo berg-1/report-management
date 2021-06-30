@@ -8,14 +8,9 @@
     <link rel="shortcut icon" href="#" type="image/png">
     <title>实验提交详情页面</title>
     <link th:replace="common::common_header">
-    <style>
-        th, td {
-            width: 10%;
-        }
-    </style>
 
 </head>
-<body class="horizontal-menu-page">
+<body class="horizontal-menu-page unselectable">
 
 <section>
 
@@ -61,13 +56,14 @@
 
     <!--body wrapper start-->
     <div class="wrapper">
-        <div class="">
-            <div class="col col-md-6">
+
+        <div class="col col-md-3">
+            <div class="">
                 <section class="panel">
                     <header class="panel-heading">
                         已提交实验报告学生<span th:text="'('+${submitted.size()}+'人)'"></span>
                         <a class="btn btn-success" type="button" style="margin-left: 3px;"
-                           th:href="@{/export(templateId=${templateId},classId=${classId})}">
+                           th:href="@{/export(templateId=${templateId})}">
                             <span class="fa fa-download "></span>&nbsp;批量下载</a>
                         <span class="tools pull-right">
                         <a href="javascript:" class="fa fa-chevron-down"></a>
@@ -81,24 +77,15 @@
                                 <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>学号</th>
                                     <th>姓名</th>
-                                    <th>班级</th>
-                                    <th>实验报告名</th>
                                     <th>上传日期</th>
                                     <th>提交状态</th>
-                                    <!--<th>下载此实验报告</th>-->
-                                    <!--<th>预览</th>-->
-                                    <!--<th>评语</th>-->
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr class="gradeX" th:each="entry, stat:${submitted}">
                                     <td th:text="${stat.count}">Trident</td>
-                                    <td th:text="${entry.key.sno}">Trident</td>
                                     <td th:text="${entry.key.name}">Trident</td>
-                                    <td th:text="${entry.key.classId}">Trident</td>
-                                    <td th:text="${entry.value.filename}" class="center">Trident</td>
                                     <td th:text="${#dates.format(entry.value.uploadTime,'yyyy-MM-dd HH:mm')}"
                                         class="center">Trident
                                     </td>
@@ -119,9 +106,8 @@
                     </div>
                 </section>
             </div>
-        </div>
-        <div class="">
-            <div class="col col-md-6">
+
+            <div class="">
                 <section class="panel">
                     <header class="panel-heading">
                         未提交实验报告学生<span th:text="'('+${unSubmitted.size()}+'人)'"></span>
@@ -132,29 +118,27 @@
                     </header>
                     <div class="panel-body">
                         <div class="adv-table editable-table ">
-                            <div class="space15"></div>
-                            <table class="table table-striped table-hover table-bordered" id="editable-sample">
-                                <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>学号</th>
-                                    <th>姓名</th>
-                                    <th>班级</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr class="gradeX" th:each="student, stat:${unSubmitted}">
-                                    <td th:text="${stat.count}">Trident</td>
-                                    <td th:text="${student.sno}" class="center">Trident</td>
-                                    <td th:text="${student.name}">Trident</td>
-                                    <td th:text="${student.classId}">Trident</td>
-                                </tr>
-                                </tbody>
-                            </table>
+                                <span class="gradeX" th:each="student:${unSubmitted}">
+                                    <span th:text="${student.name}">Trident</span>,
+                                </span>
                         </div>
                     </div>
                 </section>
             </div>
+        </div>
+        <div class="col col-md-9" style="height: 500px">
+            <section class="panel">
+                <header class="panel-heading">
+                    预览框
+                    <span class="tools pull-right">
+                        <a href="javascript:" class="fa fa-chevron-down"></a>
+                        <a href="javascript:" class="fa fa-times"></a>
+                     </span>
+                </header>
+                <div class="panel-body">
+                    Hello There
+                </div>
+            </section>
         </div>
     </div>
     <!--body wrapper end-->

@@ -54,7 +54,7 @@
 
 </head>
 
-<body class="horizontal-menu-page">
+<body class="horizontal-menu-page unselectable">
 
 <section>
 
@@ -99,12 +99,16 @@
     </nav>
     <!--body wrapper start-->
     <!-- 标题 -->
-    <div class="page-heading">
-        <h3><em>实验报告预览</em></h3>
+    <div class="page-heading" style="padding: 15px 30px;">
+        <h3>
+            实验报告预览
+        </h3>
     </div>
 
     <!--body wrapper start-->
     <div class="wrapper">
+
+
         <div class="col col-md-2">
             <div class="panel">
                 <div class="panel-heading">
@@ -116,12 +120,16 @@
                         <a class="fa fa-times" href="javascript:"></a>
                     </span>
                 </div>
-                <div style="padding:0 20px"><span th:if="${message != null}">
+                <div style="padding:0 20px">
+                    <span th:if="${message != null}">
                             <span th:text="${message}" class="fa fa-warning" style="color: red"></span>
-                        </span></div>
-                <div style="padding:0 20px"><span th:if="${success != null}">
-                            <span th:text="${success}" class="fa fa-check-circle-o" style="color: #4169E1"></span>
-                </span></div>
+                    </span>
+                </div>
+                <div style="padding:0 20px">
+                    <span th:if="${success != null}">
+                        <span th:text="${success}" class="fa fa-check-circle-o" style="color: #4169E1"></span>
+                    </span>
+                </div>
                 <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="myModal"
                      class="modal fade" style="display: none;">
                     <div class="modal-dialog">
@@ -168,13 +176,13 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="panel-body">
                     <table id="treeTable" class="table table-hover">
                     </table>
                 </div>
             </div>
         </div>
+
         <div class="col col-md-10">
             <div class="panel">
                 <div class="panel-heading"><h2>实验报告管理</h2></div>
@@ -188,24 +196,73 @@
                                 <th>提交人数</th>
                                 <th>截至日期</th>
                                 <th>操作
-                                    <a data-original-title="编辑实验 | 删除实验" type="button"
-                                       class="fa fa-question-circle tooltips" data-toggle="tooltip" data-placement="top"
-                                       href="#">
-                                    </a>
+                                    <i data-original-title="编辑实验 | 删除实验" type="button"
+                                       class="fa fa-question-circle tooltips" data-toggle="tooltip"
+                                       data-placement="top">
+                                    </i>
                                 </th>
                             </tr>
                             </thead>
                             <tbody id="templates">
-                            <tr class="gradeX" th:each="template, stat:${templates}">
+                            <tr class="gradeX selectable" th:each="template, stat:${templates}">
                                 <td th:text="${stat.count}">temp</td>
-                                <td th:text="${template.name}">Smith</td>
-                                <td th:text="${template.templateTeacher}">3455</td>
+                                <td>
+                                    <a th:text="${template.name}"
+                                       th:href="@{/stats(templateId=${template.templateId})}">
+                                    </a>
+                                </td>
+                                <td><span th:text="${template.type}"></span></td>
                                 <td th:text="${#dates.format(template.deadline,'yyyy-MM-dd HH:mm')}"></td>
-                                <td><a class="fa fa-edit edit" href="javascript:"></a> |
-                                    <a class="fa fa-trash-o delete" href="javascript:"></a></td>
+                                <td><a class="fa fa-edit edit" href="#updateModal" data-toggle="modal"
+                                       th:attr="onclick=|getValues('${template.templateId}', '${template.name}', '${template.deadline}', '${template.classId}', 'template.courseId')|"></a>|
+                                    <a class="fa fa-trash-o delete"
+                                       th:href="@{/deleteTemplate(templateId=${template.templateId})}">
+                                    </a>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
+                        <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1"
+                             id="updateModal"
+                             class="modal fade" style="display: none;">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×
+                                        </button>
+                                        <h4 class="modal-title">修改实验</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form role="form" th:action="@{/modifyTemplate(tno=${session.loginUser.tno})}"
+                                              method="post"
+                                              enctype="multipart/form-data">
+                                            <input style="display: none" id="templateIdUpdate" name="templateId"/>
+                                            <div class="form_item">
+                                                <label>
+                                                    <label for="templateNameUpdate">实验名称:</label><br>
+                                                    <input class="form-control" type="text" id="templateNameUpdate"
+                                                           name="name"
+                                                           placeholder="实验名称..." required>
+                                                </label>
+                                            </div>
+                                            <div class="form_item">
+                                                <label>
+                                                    <label for="file">实验文件:</label><br/>
+                                                    <input type="file" id="fileUpdate" name="file"
+                                                           accept=".docx, .doc, .pdf, .txt">
+                                                </label>
+                                            </div>
+                                            <div class="form_item">
+                                                <label for="deadlineUpdate">截至日期:</label><br/>
+                                                <input type="date" id="deadlineUpdate" name="deadline" required>
+                                            </div>
+                                            <br/>
+                                            <button type="submit" class="btn btn-primary">修改</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -214,9 +271,9 @@
     <!--body wrapper end-->
 
     <!--footer section start-->
-    <footer class="sticky-footer">
-        Footer contents goes here
-    </footer>
+    <!--    <footer class="sticky-footer">-->
+    <!--        Footer contents goes here-->
+    <!--    </footer>-->
     <!--footer section end-->
 
 </section>
@@ -255,6 +312,15 @@
             }
         });
     });
+
+    function getValues(templateId, templateName, Deadline, classId, courseId) {
+        let d = new Date(Deadline);
+        console.log(classId);
+        console.log(courseId);
+        $("#templateIdUpdate").val(templateId);
+        $("#templateNameUpdate").val(templateName);
+        $("#deadlineUpdate").val(d.toISOString().slice(0, 10));
+    }
 
     function getData(info) {
         if (info !== '#') {

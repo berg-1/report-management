@@ -7,6 +7,7 @@ import com.neo.domain.Template;
 import com.neo.exception.LargeFileException;
 import com.neo.service.ReportService;
 import com.neo.service.TemplateService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,7 @@ import java.util.UUID;
 /**
  * @author Berg
  */
+@Slf4j
 @Controller
 public class TemplateController {
 
@@ -93,6 +95,51 @@ public class TemplateController {
         }
         return "redirect:mainTeacher";
     }
+
+
+    @PostMapping("/modifyTemplate")
+    public String modifyTemplate(@RequestParam(value = "templateId") String templateId,
+                                 @RequestParam(value = "name") String name,
+                                 MultipartFile file,
+                                 @RequestParam(value = "tno", defaultValue = "undefined") String tno,
+                                 @RequestParam(value = "class", defaultValue = "undefined") String cid,
+                                 @RequestParam(value = "deadline")
+                                 @DateTimeFormat(pattern = "yyyy-MM-dd") Date deadline,
+                                 RedirectAttributes redirectAttributes) {
+        log.info("file == null : {}", file.isEmpty());
+        Template origin = templateService.getById(templateId);
+        try {
+            byte[] bytes;
+            String type;
+            if (file.isEmpty()) {
+                type = origin.getType();
+                bytes = origin.getData();
+            } else {
+                type = file.getContentType();
+                bytes = file.getBytes();
+            }
+            if (bytes.length > MAX_UPLOAD_SIZE) {
+                throw new LargeFileException(MAX_UPLOAD_SIZE);
+            }
+            name = name.replace(' ', '.');
+            templateService.updateById(new Template(templateId, name, type, tno,
+                    origin.getClassId(),
+                    deadline,
+                    origin.getCourseId(),
+                    bytes));
+            redirectAttributes.addFlashAttribute("successUpdate", "实验'" + name + "'修改成功!");
+        } catch (LargeFileException largeFileException) {
+            redirectAttributes.addFlashAttribute("messageUpdate", String.format(
+                    "文件过大,上传失败!请将文件控制在%dMB内!",
+                    largeFileException.getMaxSize() / 1048576
+            ));
+        } catch (Exception s) {
+            redirectAttributes.addFlashAttribute("messageUpdate", "上传失败!");
+            s.printStackTrace();
+        }
+        return "redirect:mainTeacher";
+    }
+
 
     /**
      * 根据实验报告id删除实验报告

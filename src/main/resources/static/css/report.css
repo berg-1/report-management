@@ -25,7 +25,7 @@ a:visited {
 }
 
 .login-body, main::before {
-    background: url("../images/wallhaven-5w1p17.jpg") 0 / cover fixed;
+    background: url("../images/bg2.jpg") 0 / cover fixed;
 }
 
 main {
@@ -49,4 +49,9 @@ main::before {
 
 .panel-body {
     background: hsla(0, 0%, 100%, .7);
+}
+
+.login-footer {
+    line-height: 50px;
+    /*bottom: 0;*/
 }

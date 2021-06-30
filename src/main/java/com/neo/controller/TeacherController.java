@@ -75,6 +75,10 @@ public class TeacherController {
                     .orderByAsc("name");
         }
         templates = templateService.list(wrapper);
+        for (Template template : templates) {
+            int c = getReportCountByTemplateId(template.getTemplateId());
+            template.setType(String.valueOf(c));
+        }
         HashMap<String, String> classesStringHashMap = getTeacherClasses(teacher.getTno());
         // 添加classes到model
         model.addAttribute("templates", templates);
@@ -82,6 +86,11 @@ public class TeacherController {
         return "new_main_teacher";
     }
 
+    private int getReportCountByTemplateId(String templateId) {
+        QueryWrapper<Report> wrapper = new QueryWrapper<>();
+        wrapper.eq("report_template", templateId);
+        return reportService.count(wrapper);
+    }
 
     /**
      * 去教师页面
@@ -137,16 +146,14 @@ public class TeacherController {
      * 根据模板id和学生id获取实验报告提交情况
      *
      * @param templateId 模板id
-     * @param className  课程名,后转化为课程id
      * @param model      存放提交和未提交学生的信息
      * @return 实验报告统计页面
      */
     @GetMapping(value = {"stats"})
-    public String templateStats(@RequestParam(value = "templateId") String templateId,
-                                @RequestParam(value = "classId") String className,
-                                Model model) {
-        className = getClassIdByName(className);
-        List<Student> students = getClassStudents(className);
+    public String templateStats(@RequestParam(value = "templateId") String templateId, Model model) {
+        String classId = templateService.getById(templateId).getClassId();
+        List<Student> students = getClassStudents(classId);
+
         HashMap<Student, Report> submitted = new HashMap<>(30);
         List<Student> unSubmitted = new ArrayList<>();
         for (Student student : students) {
@@ -161,7 +168,6 @@ public class TeacherController {
         model.addAttribute("submitted", submitted);
         model.addAttribute("unSubmitted", unSubmitted);
         model.addAttribute("templateId", templateId);
-        model.addAttribute("classId", className);
         return "stat_page";
     }
 
@@ -169,14 +175,13 @@ public class TeacherController {
      * 批量导出一个班的实验报告 -> D:/实验报告下载/班级名 实验模板名.zip
      *
      * @param templateId 模板id
-     * @param classId    班级id
      * @param response   返回
      */
     @GetMapping("/export")
     public void exportedReportsInZip(@RequestParam(value = "templateId") String templateId,
-                                     @RequestParam(value = "classId") String classId,
                                      HttpServletResponse response) {
         ArrayList<Report> reports = new ArrayList<>();
+        String classId = templateService.getById(templateId).getClassId();
         List<Student> students = getClassStudents(classId);
         for (Student student : students) {
             student.setClassId(getClassNameById(student.getClassId()));
@@ -191,8 +196,8 @@ public class TeacherController {
         // 压缩文件的名字
         String zipName = String.format("%s.%s.zip", className, templateName.substring(0, templateName.lastIndexOf('.')));
         // 压缩文件下载的位置/缓存位置
-        String strZipPath = "D:/实验报告下载/" + zipName;
-        File file = new File("D:/实验报告下载/");
+        String strZipPath = "./实验报告下载/" + zipName;
+        File file = new File("./实验报告下载/");
         //文件存放位置目录不存在就创建
         if (!file.isDirectory() && !file.exists()) {
             if (file.mkdirs()) {

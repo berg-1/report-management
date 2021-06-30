@@ -26,7 +26,7 @@ var EditableTable = function () {
             }
 
             function saveRow(oTable, nRow) {
-                var jqInputs = $('input', nRow);
+                const jqInputs = $('input', nRow);
                 oTable.fnUpdate(jqInputs[0].value, nRow, 0, false);
                 oTable.fnUpdate(jqInputs[1].value, nRow, 1, false);
                 oTable.fnUpdate(jqInputs[2].value, nRow, 2, false);
@@ -91,7 +91,7 @@ var EditableTable = function () {
                     return;
                 }
 
-                var nRow = $(this).parents('tr')[0];
+                const nRow = $(this).parents('tr')[0];
                 oTable.fnDeleteRow(nRow);
                 alert("Deleted! Do not forget to do some ajax to sync with backend :)");
             });

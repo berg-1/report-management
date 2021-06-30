@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" style="height: 100%">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
@@ -11,7 +11,7 @@
 
 <body class="login-body unselectable">
 
-<div class="container">
+<div class="container" style="height: 90%">
 
 
     <form class="form-signin" method="post" th:action="@{/login}">
@@ -34,8 +34,19 @@
 
 </div>
 
+<div class="container">
+    <div class="form-signin" style="max-width: 150px; margin: auto;">
+        <main style="border-radius: 15px;">
+            <div style="height: 50px; text-align: center; line-height: 50px;">
+                <label style="color: #808A87"> Version 2.1 </label>
+            </div>
+        </main>
+    </div>
+
+</div>
 
 <div th:replace="common::#common_script"></div>
 
 </body>
+
 </html>
