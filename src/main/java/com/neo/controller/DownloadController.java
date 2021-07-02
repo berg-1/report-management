@@ -8,14 +8,17 @@ import com.neo.service.ReportService;
 import com.neo.service.TemplateService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -122,4 +125,22 @@ public class DownloadController {
         return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/inlineDisplay")
+    public ResponseEntity<InputStreamResource> getTermsConditions(@RequestParam("rid") String rid) {
+        QueryWrapper<Report> reportQueryWrapper = new QueryWrapper<>();
+        reportQueryWrapper.eq("rid", rid);
+        Report report = reportService.getOne(reportQueryWrapper);
+        byte[] bytes = report.getData();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("content-disposition", "inline;filename=" + report.getFilename());
+        InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(bytes));
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentLength(bytes.length)
+                .contentType(MediaType.parseMediaType("application/pdf"))
+                .body(resource);
+    }
+
 }
+
+

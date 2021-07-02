@@ -22,6 +22,7 @@ import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -165,11 +166,20 @@ public class TeacherController {
                 unSubmitted.add(student);
             }
         }
+
+        // 通过stream流对HashMap排序 https://mkyong.com/java8/java-8-how-to-sort-a-map/
+        submitted = submitted.entrySet()
+                .stream()
+                .sorted(Map.Entry.<Student, Report>comparingByKey())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                        (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+
         model.addAttribute("submitted", submitted);
         model.addAttribute("unSubmitted", unSubmitted);
         model.addAttribute("templateId", templateId);
         return "stat_page";
     }
+
 
     /**
      * 批量导出一个班的实验报告 -> D:/实验报告下载/班级名 实验模板名.zip
@@ -275,7 +285,8 @@ public class TeacherController {
      */
     private List<Student> getClassStudents(String classId) {
         QueryWrapper<Student> studentQueryWrapper = new QueryWrapper<>();
-        studentQueryWrapper.eq("class_id", classId);
+        studentQueryWrapper.eq("class_id", classId)
+                .orderByAsc("sno");
         return studentService.list(studentQueryWrapper);
     }
 
@@ -311,7 +322,9 @@ public class TeacherController {
         reportQueryWrapper.select("rid", "filename", "type", "uploader", "report_template", "upload_time", "status")
                 .eq("report_template", templateId)
                 .eq("uploader", studentId);
-        return reportService.getOne(reportQueryWrapper);
+        List<Report> list = reportService.list(reportQueryWrapper);
+        if (list.isEmpty()) return null;
+        return list.get(0);
     }
 
     /**

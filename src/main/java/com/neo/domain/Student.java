@@ -13,7 +13,7 @@ import lombok.Data;
  */
 @TableName(value = "student")
 @Data
-public class Student implements Serializable {
+public class Student implements Serializable, Comparable<Student> {
     /**
      * 学号
      */
@@ -37,4 +37,9 @@ public class Student implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
+
+    @Override
+    public int compareTo(Student o) {
+        return sno.compareTo(o.getSno());
+    }
 }

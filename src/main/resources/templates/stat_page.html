@@ -83,9 +83,13 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr class="gradeX" th:each="entry, stat:${submitted}">
+                                <tr class="gradeX" th:each="entry, stat:${submitted}" th:id="${entry.value.rid}">
                                     <td th:text="${stat.count}">Trident</td>
-                                    <td th:text="${entry.key.name}">Trident</td>
+                                    <td>
+                                        <a th:attr="onclick=|displayReport('@{inlineDisplay(rid=${entry.value.rid})}')|"
+                                           th:text="${entry.key.name}"
+                                           href="#frame">Trident</a>
+                                    </td>
                                     <td th:text="${#dates.format(entry.value.uploadTime,'yyyy-MM-dd HH:mm')}"
                                         class="center">Trident
                                     </td>
@@ -95,10 +99,6 @@
                                     <td th:if="${!entry.value.status}">
                                         <span class="label label-danger label-mini">迟交</span>
                                     </td>
-                                    <!--<td class="center">-->
-                                    <!--    <a th:href="@{/downloadReportById(reportId=${entry.value.rid})}">-->
-                                    <!--        <span class="fa fa-download">下载</span></a>-->
-                                    <!--</td>-->
                                 </tr>
                                 </tbody>
                             </table>
@@ -126,17 +126,17 @@
                 </section>
             </div>
         </div>
-        <div class="col col-md-9" style="height: 500px">
+        <div class="col col-md-9">
             <section class="panel">
                 <header class="panel-heading">
-                    预览框
+                    实验报告预览
                     <span class="tools pull-right">
                         <a href="javascript:" class="fa fa-chevron-down"></a>
                         <a href="javascript:" class="fa fa-times"></a>
                      </span>
                 </header>
                 <div class="panel-body">
-                    Hello There
+                    <iframe src="#" class="frame-inline" id="frame" title="myFrame"></iframe>
                 </div>
             </section>
         </div>
@@ -159,5 +159,19 @@
 <script th:src="@{/js/editable-table.js}"></script>
 
 <script type="text/javascript" th:src="@{/js/jquery.media.js}"></script>
+
+<script>
+    $(document).ready(function () {
+        let submittedStudents = $("#editable-sample tbody");
+        //eq表示同类元素中的某一个，类似于数组用下标取元素；children表示子元素
+        let reportURL = submittedStudents.eq(0).children("tr").eq(0).attr("id");
+        displayReport("inlineDisplay?rid=" + reportURL);
+    });
+
+    function displayReport(reportURL) {
+        $("#frame").attr("src", reportURL);
+    }
+</script>
+
 </body>
 </html>
