@@ -28,6 +28,7 @@ a:visited {
     background: url("../images/bg2.jpg") 0 / cover fixed;
 }
 
+/* 弃用 */
 main {
     background: hsla(0, 0%, 100%, .3);
     position: relative;
@@ -35,6 +36,7 @@ main {
     border-radius: 5%;
 }
 
+/* 弃用 */
 main::before {
     content: '';
     position: absolute;
@@ -51,10 +53,6 @@ main::before {
     background: hsla(0, 0%, 100%, .7);
 }
 
-.login-footer {
-    line-height: 50px;
-    /*bottom: 0;*/
-}
 
 .frame-inline {
     width: 100%;
@@ -62,17 +60,35 @@ main::before {
     border: none;
 }
 
-/*.page-heading{*/
-/*    padding: 15px 30px;*/
-/*}*/
-
 .selected {
     color: #4169E1 !important;
 }
 
 .glass {
-    background-color: rgba(1, 1, 1, 0.1);
+    background-color: hsla(0, 0%, 100%, .3);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     border: none;
+    color: #808A87;
+    font-weight: 700;
+}
+
+.glass-shrink-right {
+    width: 280px !important;
+    height: 55px;
+    right: 0;
+    border-radius: 25px 0 0 0;
+}
+
+.glass-login {
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    border-radius: 5%;
+}
+
+.glass-version {
+    border-radius: 15px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
 }

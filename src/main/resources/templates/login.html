@@ -15,7 +15,7 @@
 
 
     <form class="form-signin" method="post" th:action="@{/login}">
-        <main>
+        <div class="glass glass-login">
             <div class="form-signin-heading text-center">
                 <h1 class="sign-title">Sign In</h1>
                 <img src="images/login-logo.png" alt=""/>
@@ -29,20 +29,16 @@
                     <i class="fa fa-check"></i>
                 </button>
             </div>
-        </main>
+        </div>
     </form>
-
 </div>
 
 <div class="container">
     <div class="form-signin" style="max-width: 150px; margin: auto;">
-        <main style="border-radius: 15px;">
-            <div style="height: 50px; text-align: center; line-height: 50px;">
-                <label style="color: #808A87"> Version <span th:text="#{version}"></span> </label>
-            </div>
-        </main>
+        <div class="glass glass-version">
+            <label> Version <span th:text="#{version}"></span></label>
+        </div>
     </div>
-
 </div>
 
 <div th:replace="common::#common_script"></div>
