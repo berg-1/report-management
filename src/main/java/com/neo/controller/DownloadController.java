@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
@@ -125,6 +126,12 @@ public class DownloadController {
         return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
     }
 
+    /**
+     * 返回pdf,浏览器内联显示(iframe/embed)
+     *
+     * @param rid 实验报告id
+     * @return 内联Report响应
+     */
     @GetMapping(value = "/inlineDisplay")
     public ResponseEntity<InputStreamResource> getTermsConditions(@RequestParam("rid") String rid) {
         QueryWrapper<Report> reportQueryWrapper = new QueryWrapper<>();
@@ -141,6 +148,12 @@ public class DownloadController {
                 .body(resource);
     }
 
+
+    @GetMapping(value = "/getNoReport")
+    @ResponseBody
+    public String getNoReport() {
+        return "<h1>没有找到提交的实验报告。</h1>";
+    }
 }
 
 

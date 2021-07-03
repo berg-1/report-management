@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Berg
@@ -53,33 +54,35 @@ public class StudentController {
     public String studentPage(HttpSession session, Model model) {
         Student student = (Student) session.getAttribute("loginUser");
         String classId = student.getClassId();
-        QueryWrapper<Template> wrapper = new QueryWrapper<>();
-        wrapper.select("template_id", "name", "type", "template_teacher", "class_id", "deadline", "course_id").
-                eq("class_id", classId);
-        List<Template> templates = templateService.list(wrapper);
         List<Template> unSubmitted = new ArrayList<>();
         HashMap<Template, Report> submitted = new HashMap<>();
 
+        QueryWrapper<Template> wrapper = new QueryWrapper<>();
+        wrapper.select("template_id", "name", "type", "template_teacher", "class_id", "deadline", "course_id")
+                .eq("class_id", classId);
+        List<Template> templates = templateService.list(wrapper);
+
+        QueryWrapper<Report> wrapper1 = new QueryWrapper<>();
+        wrapper1.select("rid", "filename", "type", "uploader", "report_template", "upload_time", "status", "course_id")
+                .eq("uploader", student.getSno());
+        List<Report> reportsList = reportService.list(wrapper1);
+
+
         for (Template template : templates) {
-            QueryWrapper<Report> getCountWrapper = new QueryWrapper<>();
-            getCountWrapper.eq("report_template", template.getTemplateId())
-                    .eq("uploader", student.getSno());
-            int integer = reportService.count(getCountWrapper);
-            template.setCourseId(getCourseNameById(template.getCourseId()));
-            template.setTemplateTeacher(getTemplateTeacherById(template.getTemplateTeacher()));
-            if (integer == 1) {
-                Report one = getOne(template.getTemplateId(), student.getSno());
-                submitted.put(template, one);
-            } else if (integer > 1) {
-                List<Report> sameReports = reportService.list(getCountWrapper);
-                for (int i = 1; i < sameReports.size(); i++) {
-                    reportService.removeById(sameReports.get(i).getRid());
-                    log.info("Delete Same Report:{}", sameReports.get(i).getFilename());
-                }
-                Report one = getOne(template.getTemplateId(), student.getSno());
-                submitted.put(template, one);
-            } else {
+            String templateId = template.getTemplateId();
+            List<Report> r = reportsList.stream()
+                    .filter(m -> m.getReportTemplate().equals(templateId))
+                    .collect(Collectors.toList());
+            if (r.isEmpty()) {
+                template.setCourseId(getCourseNameById(template.getCourseId()));
                 unSubmitted.add(template);
+            } else if (r.size() == 1) {
+                submitted.put(template, r.get(0));
+            } else {
+                for (int i = 1; i < r.size(); i++) {
+                    reportService.removeById(r.get(i).getRid());
+                    log.info("删除相同的实验报告:{}", r.get(i).getFilename());
+                }
             }
         }
         model.addAttribute("submitted", submitted);

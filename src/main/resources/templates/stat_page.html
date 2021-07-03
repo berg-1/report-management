@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="ThemeBucket">
-    <link rel="shortcut icon" href="#" type="image/png">
+    <link rel="shortcut icon" href="javascript:;" type="image/png">
     <title>实验提交详情页面</title>
     <link th:replace="common::common_header">
 
@@ -25,7 +25,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">
+                <a class="navbar-brand" href="javascript:;">
                     <img src="images/logo.png" alt="">
                 </a>
             </div>
@@ -33,18 +33,17 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a th:href="@{/mainTeacherOld}">Dashboard</a></li>
+                    <li class="active"><a th:href="@{/mainTeacher}">首页</a></li>
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
                             <img alt="" src="images/photos/user-avatar.png">
                             <span th:text="${session.loginUser.tname}">John Doe</span>
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
-                            <!--<li><a href="#">Profile</a></li>-->
                             <li><a th:href="@{/change_passwd.html(id=${session.loginUser.tno})}">修改密码</a></li>
                             <li><a th:href="@{/logout}">退出登录</a></li>
                         </ul>
@@ -54,11 +53,26 @@
         </div><!-- /.container-fluid -->
     </nav>
 
+
     <!--body wrapper start-->
     <div class="wrapper">
 
         <div class="col col-md-3">
             <div class="">
+
+                <!-- 标题 -->
+                <div class="page-heading">
+                    <h3>
+                        实验报告预览
+                    </h3>
+                    <ul class="breadcrumb">
+                        <li class="active">
+                            <a th:href="@{mainTeacher(classId=${classId}, courseId=${courseId})}"> 教师首页 </a>
+                        </li>
+                        <li class="active"> 实验报告预览</li>
+                    </ul>
+                </div>
+
                 <section class="panel">
                     <header class="panel-heading">
                         已提交实验报告学生<span th:text="'('+${submitted.size()}+'人)'"></span>
@@ -136,7 +150,8 @@
                      </span>
                 </header>
                 <div class="panel-body">
-                    <iframe src="#" class="frame-inline" id="frame" title="myFrame"></iframe>
+                    <iframe allowtransparency=”yes”
+                            src="/getNoReport" class="frame-inline" id="frame" title="myFrame"></iframe>
                 </div>
             </section>
         </div>
@@ -144,9 +159,7 @@
     <!--body wrapper end-->
 
     <!--footer section start-->
-    <footer class="sticky-footer">
-        Footer contents goes here
-    </footer>
+    <!--    <div th:replace="common::#common_footer"></div>-->
     <!--footer section end-->
 
 </section>
@@ -165,7 +178,9 @@
         let submittedStudents = $("#editable-sample tbody");
         //eq表示同类元素中的某一个，类似于数组用下标取元素；children表示子元素
         let reportURL = submittedStudents.eq(0).children("tr").eq(0).attr("id");
-        displayReport("inlineDisplay?rid=" + reportURL);
+        if (reportURL !== undefined) {
+            displayReport("inlineDisplay?rid=" + reportURL);
+        }
     });
 
     function displayReport(reportURL) {

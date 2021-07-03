@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="ThemeBucket">
-    <link rel="shortcut icon" href="#" type="image/png">
+    <link rel="shortcut icon" href="javascript:;" type="image/png">
 
 
     <title>教师首页</title>
@@ -77,7 +77,7 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a th:href="@{/mainTeacher}">Dashboard</a></li>
+                    <li class="active"><a th:href="@{/mainTeacher}">首页</a></li>
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
@@ -97,19 +97,21 @@
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
     </nav>
-    <!--body wrapper start-->
-    <!-- 标题 -->
-    <div class="page-heading" style="padding: 15px 30px;">
-        <h3>
-            实验报告预览
-        </h3>
-    </div>
 
     <!--body wrapper start-->
     <div class="wrapper">
 
-
         <div class="col col-md-2">
+            <!-- 标题 -->
+            <div class="page-heading">
+                <h3>
+                    实验报告预览
+                </h3>
+                <ul class="breadcrumb">
+                    <li class="active"> 教师首页</li>
+                </ul>
+            </div>
+
             <div class="panel">
                 <div class="panel-heading">
                     <a href="#myModal" data-toggle="modal" class="btn btn-primary btn-sm">
@@ -271,9 +273,7 @@
     <!--body wrapper end-->
 
     <!--footer section start-->
-    <!--    <footer class="sticky-footer">-->
-    <!--        Footer contents goes here-->
-    <!--    </footer>-->
+    <div th:replace="common::#common_footer"></div>
     <!--footer section end-->
 
 </section>
@@ -297,9 +297,15 @@
             "url": '/nodes',
             "dataType": "json",
             "success": function (data) {
+                console.log(document.URL)
                 $.each(data, function (idx, obj) {
-                    info = obj.href.split('@')
-                    $("#treeTable").append("<tr data-tt-id=\"" + obj.nid + "\" data-tt-parent-id=\"" +
+                    let info = obj.href.split('@')
+                    let classId = getQueryVariable("classId");
+                    let courseId = getQueryVariable("courseId");
+                    if (classId === info[0] && courseId === info[1])
+                        $("#treeTable").append("<tr data-tt-id=\"" + obj.nid + "\" data-tt-parent-id=\"" +
+                            obj.pid + "\"><td class='selected'>" + obj.text + "</td></tr>");
+                    else $("#treeTable").append("<tr data-tt-id=\"" + obj.nid + "\" data-tt-parent-id=\"" +
                         obj.pid + "\"><td><a href=\"/mainTeacher?classId=" + info[0] + "&courseId=" + info[1] + "\">" +
                         obj.text + "</a></td></tr>");
                 });
@@ -312,6 +318,23 @@
             }
         });
     });
+
+    /**
+     * 获取当前URL参数
+     * @param variable 要获取的参数名
+     * @returns {string|boolean} 存在:返回参数的值;不存在:false
+     */
+    function getQueryVariable(variable) {
+        let query = window.location.search.substring(1);
+        let vars = query.split("&");
+        for (let i = 0; i < vars.length; i++) {
+            let pair = vars[i].split("=");
+            if (pair[0] === variable) {
+                return pair[1];
+            }
+        }
+        return false;
+    }
 
     function getValues(templateId, templateName, Deadline, classId, courseId) {
         let d = new Date(Deadline);

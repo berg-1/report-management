@@ -52,20 +52,26 @@
         </div><!-- /.container-fluid -->
     </nav>
 
-    <div class="page-heading">
-        <h3><em>我的实验</em></h3>
-    </div>
-
     <div class="panel" style="background-color:#F0F0F0">
         <!--body wrapper start-->
         <div class="wrapper">
-            <div class="col col-sm-12">
-                <div class="panel">
-                    <div class="panel-body">
-                        Filter Here...
-                    </div>
-                </div>
+            <!-- 标题 -->
+            <div class="page-heading">
+                <h3>
+                    我的实验
+                </h3>
+                <ul class="breadcrumb">
+                    <li class="active"> 实验报告提交</li>
+                </ul>
             </div>
+
+            <!--            <div class="col col-sm-12">-->
+            <!--                <div class="panel">-->
+            <!--                    <div class="panel-body">-->
+            <!--                        Filter Here...-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </div>-->
             <div class="col col-sm-5">
                 <div th:if="${unsubmitted.size() != 0}">
                     <section class="panel">
@@ -255,9 +261,7 @@
     </div>
 
     <!--footer section start-->
-    <footer class="sticky-footer">
-        Footer contents goes here
-    </footer>
+    <div th:replace="common::#common_footer"></div>
     <!--footer section end-->
 
 </section>

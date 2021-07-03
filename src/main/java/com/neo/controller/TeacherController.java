@@ -152,18 +152,27 @@ public class TeacherController {
      */
     @GetMapping(value = {"stats"})
     public String templateStats(@RequestParam(value = "templateId") String templateId, Model model) {
-        String classId = templateService.getById(templateId).getClassId();
+        Template template = templateService.getById(templateId);
+        String classId = template.getClassId();
+        String courseId = template.getCourseId();
         List<Student> students = getClassStudents(classId);
 
         HashMap<Student, Report> submitted = new HashMap<>(30);
         List<Student> unSubmitted = new ArrayList<>();
+
+        QueryWrapper<Report> wrapper = new QueryWrapper<>();
+        wrapper.select("rid", "filename", "type", "uploader", "report_template", "upload_time", "status", "course_id")
+                .eq("report_template", templateId);
+        List<Report> reportsList = reportService.list(wrapper);
+
         for (Student student : students) {
-            student.setClassId(getClassNameById(student.getClassId()));
-            Report report = getReportByTemplateIdAndStudentId(templateId, student.getSno());
-            if (report != null) {
-                submitted.put(student, report);
-            } else {
+            List<Report> rs = reportsList.stream()
+                    .filter(r -> r.getUploader().equals(student.getSno()))
+                    .collect(Collectors.toList());
+            if (rs.isEmpty()) {
                 unSubmitted.add(student);
+            } else {
+                submitted.put(student, rs.get(0));
             }
         }
 
@@ -177,6 +186,8 @@ public class TeacherController {
         model.addAttribute("submitted", submitted);
         model.addAttribute("unSubmitted", unSubmitted);
         model.addAttribute("templateId", templateId);
+        model.addAttribute("classId", classId);
+        model.addAttribute("courseId", courseId);
         return "stat_page";
     }
 

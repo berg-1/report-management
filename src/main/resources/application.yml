@@ -19,6 +19,9 @@ spring:
       additional-paths: src/java/main  # 设置需要重启的目录
       exclude: static/**,public/**,WEB-INF/**
 
+  messages:
+    basename: msg
+
 #  profiles:
 #    active: prod
 
