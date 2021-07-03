@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpSession;
@@ -43,6 +44,9 @@ public class StudentController {
     @Autowired
     TeacherService teacherService;
 
+    @Autowired
+    RedisService redisService;
+
 
     /**
      * 跳转
@@ -67,14 +71,16 @@ public class StudentController {
                 .eq("uploader", student.getSno());
         List<Report> reportsList = reportService.list(wrapper1);
 
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
 
         for (Template template : templates) {
             String templateId = template.getTemplateId();
             List<Report> r = reportsList.stream()
                     .filter(m -> m.getReportTemplate().equals(templateId))
                     .collect(Collectors.toList());
+            template.setCourseId(redisService.hGet("course", template.getCourseId()));
             if (r.isEmpty()) {
-                template.setCourseId(getCourseNameById(template.getCourseId()));
                 unSubmitted.add(template);
             } else if (r.size() == 1) {
                 submitted.put(template, r.get(0));
@@ -84,11 +90,16 @@ public class StudentController {
                     log.info("删除相同的实验报告:{}", r.get(i).getFilename());
                 }
             }
+
         }
+
+        stopWatch.stop();
+        log.info("Student Login Time Cost: {} ms", stopWatch.getLastTaskTimeMillis());
         model.addAttribute("submitted", submitted);
         model.addAttribute("unsubmitted", unSubmitted);
         return "main_student";
     }
+
 
     Report getOne(String templateId, String uploader) {
         QueryWrapper<Report> getOneWrapper = new QueryWrapper<>();
@@ -97,6 +108,7 @@ public class StudentController {
                 .eq("uploader", uploader);
         return reportService.getOne(getOneWrapper);
     }
+
 
     String getCourseNameById(String courseId) {
         return courseService.getById(courseId).getName();
