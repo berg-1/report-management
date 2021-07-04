@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="ThemeBucket">
-    <link rel="shortcut icon" href="javascript:;" type="image/png">
+    <link rel="shortcut icon" type="image/png">
 
 
     <title>教师首页</title>
@@ -164,8 +164,8 @@
                                         <input type="date" id="deadline" name="deadline" required>
                                     </div>
                                     <div class="form_item">
-                                        <label for="class">布置班级:</label>
-                                        <select id="class" name="class" class="form-control m-bot15">
+                                        <label for="classes">布置班级:</label>
+                                        <select id="classes" name="class" class="form-control m-bot15">
                                             <option th:each="c:${classes.keySet()}" th:value="${classes.get(c)}"
                                                     th:text="${c}">Option
                                             </option>
@@ -302,12 +302,14 @@
                     let info = obj.href.split('@')
                     let classId = getQueryVariable("classId");
                     let courseId = getQueryVariable("courseId");
-                    if (classId === info[0] && courseId === info[1])
+                    if (classId === info[0] && courseId === info[1]) {  // 选择的那个 课程-班级
                         $("#treeTable").append("<tr data-tt-id=\"" + obj.nid + "\" data-tt-parent-id=\"" +
                             obj.pid + "\"><td class='selected'>" + obj.text + "</td></tr>");
-                    else $("#treeTable").append("<tr data-tt-id=\"" + obj.nid + "\" data-tt-parent-id=\"" +
-                        obj.pid + "\"><td><a href=\"/mainTeacher?classId=" + info[0] + "&courseId=" + info[1] + "\">" +
-                        obj.text + "</a></td></tr>");
+                    } else {
+                        $("#treeTable").append("<tr data-tt-id=\"" + obj.nid + "\" data-tt-parent-id=\"" +
+                            obj.pid + "\"><td><a href=\"/mainTeacher?classId=" + info[0] + "&courseId=" + info[1] + "\">" +
+                            obj.text + "</a></td></tr>");
+                    }
                 });
                 $("#treeTable").treetable({
                     expandable: true,
@@ -354,19 +356,19 @@
             const t = document.createElement("table")
             t.classList.add("table", "table-striped", "table-hover", "table-bordered")
             t.innerHTML = "<thead>\n" +
-                "                            <tr>\n" +
-                "                                <th>#</th>\n" +
-                "                                <th>实验</th>\n" +
-                "                                <th>提交人数</th>\n" +
-                "                                <th>截至日期</th>\n" +
-                "                                <th>操作\n" +
-                "                                    <a data-original-title=\"编辑实验 | 删除实验\" type=\"button\"\n" +
-                "                                       class=\"fa fa-question-circle tooltips\" data-toggle=\"tooltip\" data-placement=\"top\"\n" +
-                "                                       href=\"#\">\n" +
-                "                                    </a>\n" +
-                "                                </th>\n" +
-                "                            </tr>\n" +
-                "                            </thead>"
+                "<tr>\n" +
+                "    <th>#</th>\n" +
+                "    <th>实验</th>\n" +
+                "    <th>提交人数</th>\n" +
+                "    <th>截至日期</th>\n" +
+                "    <th>操作\n" +
+                "        <a data-original-title=\"编辑实验 | 删除实验\" type=\"button\"\n" +
+                "           class=\"fa fa-question-circle tooltips\" data-toggle=\"tooltip\" data-placement=\"top\"\n" +
+                "           href=\"#\">\n" +
+                "        </a>\n" +
+                "    </th>\n" +
+                "</tr>\n" +
+                "</thead>"
             const tb = document.createElement("tbody");
             t.append(tb)
             t.id = "editable-sample"

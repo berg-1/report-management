@@ -33,6 +33,8 @@ public class RedisApplicationRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         log.info("Initializing Redis Courses");
         InitRedisCourse();
+        log.info("Initializing Redis Classes");
+        InitRedisClasses();
     }
 
     private void InitRedisClasses() {

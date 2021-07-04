@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -51,6 +52,9 @@ public class TeacherController {
     @Autowired
     StudentService studentService;
 
+    @Autowired
+    RedisService redisService;
+
     /**
      * 去教师页面
      *
@@ -62,6 +66,10 @@ public class TeacherController {
     public String teacherPage(HttpSession session, Model model,
                               @RequestParam(defaultValue = "*") String classId,
                               @RequestParam(defaultValue = "*") String courseId) {
+
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+
         Teacher teacher = (Teacher) session.getAttribute("loginUser");
         List<Template> templates;
         QueryWrapper<Template> wrapper = new QueryWrapper<>();
@@ -77,12 +85,14 @@ public class TeacherController {
         }
         templates = templateService.list(wrapper);
         for (Template template : templates) {
-            int c = getReportCountByTemplateId(template.getTemplateId());
-            template.setType(String.valueOf(c));
+            template.setType(redisService.hGet(teacher.getTno(), template.getTemplateId()));
         }
         HashMap<String, String> classesStringHashMap = getTeacherClasses(teacher.getTno());
-        // 添加classes到model
+
+        stopWatch.stop();
+        log.info("Template Table Initialing Time: {} ms", stopWatch.getLastTaskTimeMillis());
         model.addAttribute("templates", templates);
+        // 添加classes到model, 前端显示布置班级
         model.addAttribute("classes", classesStringHashMap);
         return "new_main_teacher";
     }
@@ -386,28 +396,32 @@ public class TeacherController {
      * @return 教师所教课程/班级的Node集合
      */
     private List<Node> getNodeList(String teacherId) {
+
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+
         ArrayList<Node> nodes = new ArrayList<>();
         QueryWrapper<ClassesCourse> wrapper = new QueryWrapper<>();
-        wrapper.eq("teacher_id", teacherId);
+        wrapper.eq("teacher_id", teacherId)
+                .orderByAsc("course_id");
         List<ClassesCourse> list = classesCourseService.list(wrapper);
         for (ClassesCourse classesCourse : list) {
-            Course course = courseService.getById(classesCourse.getCourseId());
-            String courseName = course.getName();
-            String courseId = course.getCourseId();
+            String courseId = classesCourse.getCourseId();
+            String courseName = redisService.hGet("course", courseId);
+            String classId = classesCourse.getClassId();
+            String className = redisService.hGet("classes", classId);
             Node node = new Node(courseId, "0", courseName, "#");
             if (!nodes.contains(node)) {
                 nodes.add(node);
-                QueryWrapper<ClassesCourse> courseQueryWrapper = new QueryWrapper<>();
-                courseQueryWrapper.eq("teacher_id", teacherId)
-                        .eq("course_id", courseId);
-                List<ClassesCourse> list1 = classesCourseService.list(courseQueryWrapper);
-                for (ClassesCourse classesCourse1 : list1) {
-                    Classes aClass = classesService.getById(classesCourse1.getClassId());
-                    String className = aClass.getName();
-                    nodes.add(new Node(courseId + aClass.getCid(), courseId, className, String.format("%s@%s", aClass.getCid(), courseId)));
-                }
             }
+            // 结点ID, 父结点ID, 班级名称, 课程ID@班级ID
+            Node n = new Node(courseId + classId, courseId,
+                    className, String.format("%s@%s", classId, courseId));
+            nodes.add(n);
         }
+
+        stopWatch.stop();
+        log.info("Get nodes Time Cost: {} ms", stopWatch.getLastTaskTimeMillis());
         return nodes;
     }
 
@@ -417,17 +431,18 @@ public class TeacherController {
      * @return 教师所教班级的HashMap -> key:课程id@班级id, value:班级名 课程名
      */
     private HashMap<String, String> getTeacherClasses(String teacherId) {
-        QueryWrapper<ClassesCourse> classesCourseQueryWrapper = new QueryWrapper<>();
-        classesCourseQueryWrapper.eq("teacher_id", teacherId);
-        List<ClassesCourse> classesCourses = classesCourseService.list(classesCourseQueryWrapper);
+        QueryWrapper<ClassesCourse> wrapper = new QueryWrapper<>();
+        wrapper.eq("teacher_id", teacherId);
+        List<ClassesCourse> classesCourses = classesCourseService.list(wrapper);
         HashMap<String, String> classesStringHashMap = new HashMap<>();
         for (ClassesCourse classesCourse : classesCourses) {
             // 教的班级的id
-            String id = classesCourse.getClassId();
+            String classId = classesCourse.getClassId();
+            String courseId = classesCourse.getCourseId();
             // 教的课程id
-            String courseIdAndClassId = String.format("%s@%s", classesCourse.getCourseId(), classesCourse.getClassId());
-            String name = String.format("%s %s", classesService.getById(id).getName(),
-                    courseService.getById(classesCourse.getCourseId()).getName());
+            String courseIdAndClassId = String.format("%s@%s", courseId, classId);
+            String name = String.format("%s %s", redisService.hGet("classes", classId),
+                    redisService.hGet("course", courseId));
             classesStringHashMap.put(name, courseIdAndClassId);
         }
         return classesStringHashMap;

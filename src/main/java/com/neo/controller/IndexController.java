@@ -1,11 +1,10 @@
 package com.neo.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.neo.domain.Student;
-import com.neo.domain.Teacher;
+import com.neo.domain.*;
 import com.neo.mapper.StudentMapper;
-import com.neo.service.StudentService;
-import com.neo.service.TeacherService;
+import com.neo.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * @author Berg
@@ -29,6 +29,15 @@ public class IndexController {
 
     @Autowired
     TeacherService teacherService;
+
+    @Autowired
+    TemplateService templateService;
+
+    @Autowired
+    RedisService redisService;
+
+    @Autowired
+    ReportService reportService;
 
     /**
      * 来登录页
@@ -49,15 +58,26 @@ public class IndexController {
      * @return 验证完毕, 跳转页面
      */
     @PostMapping("/login")
-    public String main(Student user, HttpSession session, Model model) {
-        Student id = studentService.getById(user.getSno());
-        if (id != null && (id.getPassword().equals(user.getPassword()))) {
+    public String main(User user, HttpSession session, Model model) {
+        String username = user.getUsername();
+        String userPasswd = user.getPassword();
+        log.info("user: {}", user);
+        Student id = studentService.getById(username);
+        if (id != null && (id.getPassword().equals(userPasswd))) {
             log.debug("学生登录id={}", id.getSno());
             session.setAttribute("loginUser", id);
             return "redirect:/mainStudent";
-        } else if (teacherService.getById(user.getSno()) != null && (teacherService.getById(user.getSno()).getPassword().equals(user.getPassword()))) {
-            log.debug("教师登录id={}", user.getSno());
-            session.setAttribute("loginUser", teacherService.getById(user.getSno()));
+        } else if (teacherService.getById(username) != null && (teacherService.getById(username).getPassword().equals(userPasswd))) {
+            log.debug("教师登录id={}", username);
+            session.setAttribute("loginUser", teacherService.getById(username));
+            QueryWrapper<Template> wrapper = new QueryWrapper<>();
+            wrapper.select("template_id", "name", "type", "template_teacher", "class_id", "course_id", "deadline")
+                    .eq("template_teacher", username);
+            List<Template> teacherTemplates = templateService.list(wrapper);
+            for (Template teacherTemplate : teacherTemplates) {
+                int count = getReportCountByTemplateId(teacherTemplate.getTemplateId());
+                redisService.hSet(username, teacherTemplate.getTemplateId(), String.valueOf(count));
+            }
             return "redirect:/mainTeacher";
         } else {
             model.addAttribute("msg", "账号或密码错误");
@@ -139,6 +159,12 @@ public class IndexController {
             redirectAttributes.addFlashAttribute("msg", "账号或密码错误,请重试");
             return "redirect:changePasswd";
         }
+    }
+
+    private int getReportCountByTemplateId(String templateId) {
+        QueryWrapper<Report> wrapper = new QueryWrapper<>();
+        wrapper.eq("report_template", templateId);
+        return reportService.count(wrapper);
     }
 
 }

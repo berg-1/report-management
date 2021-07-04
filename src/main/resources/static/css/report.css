@@ -92,3 +92,11 @@ main::before {
     text-align: center;
     line-height: 50px;
 }
+
+.upload-time {
+    width: 40%;
+}
+
+.status {
+    width: 10%;
+}

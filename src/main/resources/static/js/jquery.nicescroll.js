@@ -157,7 +157,8 @@
                     deltaX: 0,
                     deltaZ: 0,
                     preventDefault: function () {
-                        b.preventDefault ? b.preventDefault() : b.returnValue = !1;
+                        // b.preventDefault ? b.preventDefault() : b.returnValue = !1;
+                        b.preventDefault ? b.returnValue : b.returnValue = !1;
                         return !1
                     },
                     stopImmediatePropagation: function () {

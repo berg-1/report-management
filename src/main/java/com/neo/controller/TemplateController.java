@@ -151,9 +151,12 @@ public class TemplateController {
     String deleteTemplate(@RequestParam(value = "templateId") String templateId) {
         QueryWrapper<Report> reportQueryWrapper = new QueryWrapper<>();
         reportQueryWrapper.eq("report_template", templateId);
+        QueryWrapper<Template> wrapper = new QueryWrapper<>();
+        wrapper.select("course_id", "class_id").eq("template_id", templateId);
+        Template one = templateService.getOne(wrapper);
         reportService.remove(reportQueryWrapper);
         templateService.removeById(templateId);
-        return "redirect:mainTeacher";
+        return String.format("redirect:mainTeacher?classId=%s&courseId=%s", one.getClassId(), one.getCourseId());
     }
 
 }
