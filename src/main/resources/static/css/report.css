@@ -32,34 +32,9 @@ a:visited {
     height: 90%;
 }
 
-.login-body, main::before {
+.login-body {
     background: url("../images/bg/bg2.jpg") 0 / cover fixed;
 }
-
-/* 弃用 */
-main {
-    background: hsla(0, 0%, 100%, .3);
-    position: relative;
-    overflow: hidden;
-    border-radius: 5%;
-}
-
-/* 弃用 */
-main::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    filter: blur(20px);
-    z-index: -1;
-    margin: -30px;
-}
-
-/*.panel-body {*/
-/*    background: hsla(0, 0%, 100%, .7);*/
-/*}*/
 
 
 .frame-inline {
@@ -79,6 +54,18 @@ main::before {
     border: none;
     /*color: #808A87;*/
     font-weight: 700;
+}
+
+.glass-content {
+    background-color: hsla(0, 0%, 100%, .7);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(20px);
+}
+
+.glass-upload {
+    background-color: hsla(0, 0%, 100%, .3);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(20px);
 }
 
 .footer-shrink-right {
@@ -164,5 +151,23 @@ table.treetable tr.branch {
 }
 
 .dataTables_paginate.paging_bootstrap.pagination li a {
-    color: #87CEEB;
+    /*color: #87CEEB;*/
+}
+
+.dataTables_paginate.paging_bootstrap.pagination li.disabled a {
+    color: #777;
+}
+
+.btn-max {
+    width: 100%;
+}
+
+.test-ease {
+    -webkit-transform: translate(0, -25%);
+    -ms-transform: translate(0, -25%);
+    transform: translate(0, -25%);
+    -webkit-transition: -webkit-transform .3s ease-out;
+    -moz-transition: -moz-transform .3s ease-out;
+    -o-transition: -o-transform .3s ease-out;
+    transition: transform .3s ease-out;
 }

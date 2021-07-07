@@ -78,9 +78,6 @@
                 <section class="panel">
                     <header class="panel-heading">
                         已提交实验报告学生<span th:text="'('+${submitted.size()}+'人)'"></span>
-                        <a class="btn btn-success" type="button" style="margin-left: 3px;"
-                           th:href="@{/export(templateId=${templateId})}">
-                            <span class="fa fa-download "></span>&nbsp;批量下载</a>
                         <span class="tools pull-right">
                         <a href="javascript:" class="fa fa-chevron-down"></a>
                         <a href="javascript:" class="fa fa-times"></a>
@@ -120,10 +117,15 @@
                             </table>
                         </div>
                     </div>
+                    <div class="panel-footer">
+                        <a class="btn btn-success" type="button" style="margin-left: 3px;"
+                           th:href="@{/export(templateId=${templateId})}">
+                            <span class="fa fa-download "></span>&nbsp;批量下载</a>
+                    </div>
                 </section>
             </div>
 
-            <div class="">
+            <div>
                 <section class="panel">
                     <header class="panel-heading">
                         未提交实验报告学生<span th:text="'('+${unSubmitted.size()}+'人)'"></span>
@@ -132,7 +134,7 @@
                         <a href="javascript:" class="fa fa-times"></a>
                      </span>
                     </header>
-                    <div class="panel-body">
+                    <div class="panel-body selectable">
                         <div class="adv-table editable-table ">
                                 <span class="gradeX" th:each="student:${unSubmitted}">
                                     <span th:text="${student.name}">Trident</span>,

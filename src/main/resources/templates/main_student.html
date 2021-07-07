@@ -55,7 +55,7 @@
         <!--body wrapper start-->
         <div class="wrapper">
             <!-- 标题 -->
-            <div class="page-heading glass glass-heading">
+            <div class="page-heading glass-content glass-heading">
                 <h3>
                     我的实验
                 </h3>
@@ -73,12 +73,11 @@
             <!--</div>-->
             <div class="col col-sm-5">
                 <div th:if="${unsubmitted.size() != 0}">
-                    <section class="panel glass">
+                    <section class="panel glass-content">
                         <header class="panel-heading">
                             <span>未提交实验报告</span>
                             <span class="tools pull-right">
                                 <a href="javascript:" class="fa fa-chevron-down"></a>
-                                <!--                                <a href="javascript:" class="fa fa-times"></a>-->
                             </span>
                         </header>
                         <div class="panel-body">
@@ -108,74 +107,76 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1"
-                                 id="uploadNewReport"
-                                 class="modal fade" style="display: none;">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">
-                                                ×
-                                            </button>
-                                            <h4 class="modal-title">上传实验报告</h4>
-                                        </div>
-                                        <!--上传表单-->
-                                        <div class="modal-body">
-                                            <form role="form" th:action="@{/uploadReport(sno=${session.loginUser.sno})}"
-                                                  method="post"
-                                                  enctype="multipart/form-data">
-                                                <div class="form_item">
-                                                    <label>
-                                                        <label for="file">实验文件:</label><br/>
-                                                        <input type="file" id="file" name="file" accept=".pdf">
-                                                    </label>
-                                                </div>
-                                                <div class="form_item">
-                                                    <label for="template">实验名:</label>
-                                                    <select id="template" name="templateId"
-                                                            class="form-control m-bot15">
-                                                        <option th:each="template, stat:${unsubmitted}"
-                                                                th:text="${template.name}"
-                                                                th:value="${template.templateId}">
-                                                        </option>
-                                                    </select>
-                                                </div>
-                                                <br/><br/>
-                                                <button type="submit" class="btn btn-primary">提交</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+
                         </div>
 
                         <div class="panel-footer">
-                            <div>
-                                <a href="#uploadNewReport" data-toggle="modal" class="btn btn-default">
-                                    <i class="fa fa-upload"></i> 上传实验报告
-                                </a>
-                                <span th:if="${message != null}">
-                                    <span th:text="${message}" class="fa fa-warning" style="color: red"></span>
-                                </span>
-                            </div>
+                            <!--Footer content goes here..-->
                         </div>
+
 
                     </section>
                 </div>
                 <div th:if="${unsubmitted.size() == 0}">
-                    <section class="panel glass">
+                    <section class="panel glass-content">
                         <header class="panel-heading">
                             <span>你已提交所有实验报告!</span>
                             <span class="tools pull-right">
-<!--                                <a href="javascript:" class="fa fa-times"></a>-->
                             </span>
                         </header>
                     </section>
                 </div>
+                <div>
+                    <a href="#uploadNewReport" data-toggle="modal" class="btn btn-primary">
+                        <i class="fa fa-upload"></i> 上传实验报告
+                    </a>
+                    <span th:if="${message != null}">
+                                    <span th:text="${message}" class="fa fa-warning" style="color: red"></span>
+                                </span>
+                </div>
+                <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1"
+                     id="uploadNewReport"
+                     class="modal fade" style="display: none;">
+                    <div class="modal-dialog">
+                        <div class="modal-content glass-content">
+                            <div class="modal-header">
+                                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">
+                                    ×
+                                </button>
+                                <h4 class="modal-title">上传实验报告</h4>
+                            </div>
+                            <!--上传表单-->
+                            <div class="modal-body">
+                                <form role="form" th:action="@{/uploadReport(sno=${session.loginUser.sno})}"
+                                      method="post"
+                                      enctype="multipart/form-data">
+                                    <div class="form_item">
+                                        <label>
+                                            <label for="file">实验文件:</label><br/>
+                                            <input type="file" id="file" name="file" accept=".pdf">
+                                        </label>
+                                    </div>
+                                    <div class="form_item">
+                                        <label for="template">实验名:</label>
+                                        <select id="template" name="templateId"
+                                                class="form-control m-bot15">
+                                            <option th:each="template, stat:${unsubmitted}"
+                                                    th:text="${template.name}"
+                                                    th:value="${template.templateId}">
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <br/><br/>
+                                    <button type="submit" class="btn btn-primary">提交</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="col col-sm-7">
                 <div th:if="${submitted.size() != 0}">
-                    <section class="panel glass">
+                    <section class="panel glass-content">
                         <header class="panel-heading">
                             <span>已提交的实验报告</span>
                             <span class="tools pull-right">
@@ -249,11 +250,10 @@
                     </section>
                 </div>
                 <div th:if="${submitted.size() == 0}">
-                    <section class="panel glass">
+                    <section class="panel glass-content">
                         <header class="panel-heading">
                             <span>你还未提交任何实验报告!</span>
                             <span class="tools pull-right">
-<!--                                <a href="javascript:" class="fa fa-times"></a>-->
                             </span>
                         </header>
                     </section>

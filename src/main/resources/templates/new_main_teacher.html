@@ -100,7 +100,7 @@
     <!--body wrapper start-->
     <div class="wrapper">
 
-        <div class="glass glass-heading page-heading">
+        <div class="glass-content glass-heading page-heading">
             <h3>
                 实验报告预览
             </h3>
@@ -111,17 +111,24 @@
 
         <div class="col col-md-2 ">
             <!-- 标题 -->
-
-            <div class="panel glass">
+            <div class="panel glass-content">
                 <div class="panel-heading">
-                    <a href="#myModal" data-toggle="modal" class="btn btn-primary btn-sm">
-                        发布新实验 <i class="fa fa-plus"></i>
-                    </a>
+                    <span>班级信息</span>
                     <span class="tools pull-right">
                         <a class="fa fa-chevron-down" href="javascript:"></a>
-                        <a class="fa fa-times" href="javascript:"></a>
                     </span>
                 </div>
+
+                <div class="panel-body">
+                    <table id="treeTable" class="table table-hover">
+                    </table>
+                </div>
+            </div>
+
+            <div>
+                <a href="#myModal" data-toggle="modal" class="btn btn-primary btn-max">
+                    发布新实验 <i class="fa fa-plus"></i>
+                </a>
                 <div style="padding:0 20px">
                     <span th:if="${message != null}">
                             <span th:text="${message}" class="fa fa-warning" style="color: red"></span>
@@ -135,7 +142,7 @@
                 <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="myModal"
                      class="modal fade" style="display: none;">
                     <div class="modal-dialog">
-                        <div class="modal-content">
+                        <div class="modal-content glass-content">
                             <div class="modal-header">
                                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×
                                 </button>
@@ -163,7 +170,7 @@
                                         <label for="deadline">截至日期:</label><br/>
                                         <input type="date" id="deadline" name="deadline" required>
                                     </div>
-                                    <div class="form_item">
+                                    <div class="form_item test-ease">
                                         <label for="classes">布置班级:</label>
                                         <select id="classes" name="class" class="form-control m-bot15">
                                             <option th:each="c:${classes.keySet()}" th:value="${classes.get(c)}"
@@ -178,15 +185,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel-body">
-                    <table id="treeTable" class="table table-hover">
-                    </table>
-                </div>
             </div>
         </div>
 
         <div class="col col-md-10">
-            <div class="panel glass">
+            <div class="panel glass-content">
                 <div class="panel-heading">实验报告管理</div>
                 <div class="panel-body" id="pb">
                     <div class="adv-table editable-table">
