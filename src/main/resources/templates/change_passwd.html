@@ -2,34 +2,22 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="ThemeBucket">
     <title>修改密码</title>
     <link th:replace="common::common_header">
-    <script>
-        function validate() {
-            const pwd1 = document.getElementById("passwd_new").value;
-            const pwd2 = document.getElementById("passwd_retry").value;
-            <!-- 对比两次输入的密码 -->
-            if (pwd1 === pwd2) {
-                document.getElementById("notice").innerHTML = "<span class='fa fa-check-circle-o' style='color: #4169E1'> 密码相同</span>";
-                document.getElementById("submit").disabled = false;
-            } else {
-                document.getElementById("notice").innerHTML = "<span style='color: red'>请输入相同的密码</span>";
-                document.getElementById("submit").disabled = true;
-            }
-        }
-    </script>
 </head>
-<body class="login-body">
+<body class="login-body unselectable">
 
-<div class="container">
+<div class="container login-container">
 
     <form class="form-signin" th:action="@{/updatePasswd}" method="post">
-        <main>
+        <div class="glass glass-login">
             <div class="form-signin-heading text-center">
                 <h1 class="sign-title">修改你的密码</h1>
                 <img src="images/login-logo.png" alt=""/>
             </div>
-
 
             <div class="login-wrap">
                 <!--                <p> 在下方输入更改</p>-->
@@ -53,18 +41,41 @@
                         Login
                     </a>
                 </div>
-
             </div>
-        </main>
+        </div>
     </form>
-
 </div>
 
+<!--footer content start-->
+<div class="container">
+    <div class="form-signin" style="max-width: 150px; margin: auto;">
+        <div class="glass glass-version">
+            <label> Version <span th:text="#{version}"></span></label>
+        </div>
+    </div>
+</div>
+<!--footer content ends-->
+
+<script>
+    function validate() {
+        const pwd1 = document.getElementById("passwd_new").value;
+        const pwd2 = document.getElementById("passwd_retry").value;
+        <!-- 对比两次输入的密码 -->
+        if (pwd1 === pwd2) {
+            document.getElementById("notice").innerHTML = "<span class='fa fa-check-circle-o' style='color: #4169E1'> 密码相同</span>";
+            document.getElementById("submit").disabled = false;
+        } else {
+            document.getElementById("notice").innerHTML = "<span style='color: red'>请输入相同的密码</span>";
+            document.getElementById("submit").disabled = true;
+        }
+    }
+</script>
 
 <!-- Placed js at the end of the document so the pages load faster -->
 <div th:replace="common::#common_script"></div>
 
 <!--script for editable table-->
 <script th:src="@{/js/editable-table.js}"></script>
+
 </body>
 </html>

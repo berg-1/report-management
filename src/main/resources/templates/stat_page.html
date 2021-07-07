@@ -33,7 +33,7 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a th:href="@{/mainTeacher}">首页</a></li>
+                    <li><a th:href="@{/mainTeacher}">首页</a></li>
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
@@ -67,7 +67,9 @@
                     </h3>
                     <ul class="breadcrumb">
                         <li class="active">
-                            <a th:href="@{mainTeacher(classId=${classId}, courseId=${courseId})}"> 教师首页 </a>
+                            <a th:href="@{mainTeacher(classId=${classId}, courseId=${courseId})}">
+                                <span class="fa fa-home">教师首页</span>
+                            </a>
                         </li>
                         <li class="active"> 实验报告预览</li>
                     </ul>

@@ -18,7 +18,6 @@
         td {
             padding: 4px 0;
             font-size: medium;
-            background-color: white;
         }
 
         a {
@@ -54,7 +53,7 @@
 
 </head>
 
-<body class="horizontal-menu-page unselectable">
+<body class="teacher-page horizontal-menu-page unselectable">
 
 <section>
 
@@ -89,7 +88,7 @@
                         </a>
                         <ul class="dropdown-menu">
                             <!--<li><a href="#">Profile</a></li>-->
-                            <li><a th:href="@{/change_passwd.html(id=${session.loginUser.tno})}">修改密码</a></li>
+                            <li><a th:href="@{/changePasswd(id=${session.loginUser.tno})}">修改密码</a></li>
                             <li><a th:href="@{/logout}">退出登录</a></li>
                         </ul>
                     </li>
@@ -101,18 +100,19 @@
     <!--body wrapper start-->
     <div class="wrapper">
 
-        <div class="col col-md-2">
-            <!-- 标题 -->
-            <div class="page-heading">
-                <h3>
-                    实验报告预览
-                </h3>
-                <ul class="breadcrumb">
-                    <li class="active"> 教师首页</li>
-                </ul>
-            </div>
+        <div class="glass glass-heading page-heading">
+            <h3>
+                实验报告预览
+            </h3>
+            <ul class="breadcrumb">
+                <li class="active"><span class="fa fa-home">教师首页</span></li>
+            </ul>
+        </div>
 
-            <div class="panel">
+        <div class="col col-md-2 ">
+            <!-- 标题 -->
+
+            <div class="panel glass">
                 <div class="panel-heading">
                     <a href="#myModal" data-toggle="modal" class="btn btn-primary btn-sm">
                         发布新实验 <i class="fa fa-plus"></i>
@@ -186,8 +186,8 @@
         </div>
 
         <div class="col col-md-10">
-            <div class="panel">
-                <div class="panel-heading"><h2>实验报告管理</h2></div>
+            <div class="panel glass">
+                <div class="panel-heading">实验报告管理</div>
                 <div class="panel-body" id="pb">
                     <div class="adv-table editable-table">
                         <table class="table table-striped table-hover table-bordered" id="editable-sample">
@@ -273,7 +273,7 @@
     <!--body wrapper end-->
 
     <!--footer section start-->
-    <div th:replace="common::#common_footer"></div>
+    <div th:replace="common::#common_footer_shrink_left"></div>
     <!--footer section end-->
 
 </section>

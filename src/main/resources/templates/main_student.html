@@ -9,10 +9,9 @@
     <title th:inline="text">学生首页 - [[${session.loginUser.name}]]</title>
     <link th:replace="common::common_header">
 
-<body class="horizontal-menu-page unselectable">
+<body class="student-page horizontal-menu-page unselectable">
 
 <section>
-
     <nav class="navbar navbar-default" role="navigation">
         <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
@@ -52,29 +51,29 @@
         </div><!-- /.container-fluid -->
     </nav>
 
-    <div class="panel" style="background-color:#F0F0F0">
+    <div class="panel" style="background: none;">
         <!--body wrapper start-->
         <div class="wrapper">
             <!-- 标题 -->
-            <div class="page-heading">
+            <div class="page-heading glass glass-heading">
                 <h3>
                     我的实验
                 </h3>
                 <ul class="breadcrumb">
-                    <li class="active"> 实验报告提交</li>
+                    <li class="active"><span class="fa fa-home">实验报告提交</span></li>
                 </ul>
             </div>
 
-            <!--            <div class="col col-sm-12">-->
-            <!--                <div class="panel">-->
-            <!--                    <div class="panel-body">-->
-            <!--                        Filter Here...-->
-            <!--                    </div>-->
-            <!--                </div>-->
-            <!--            </div>-->
+            <!--<div class="col col-sm-12">-->
+            <!--    <div class="panel">-->
+            <!--        <div class="panel-body">-->
+            <!--            Filter Here...-->
+            <!--        </div>-->
+            <!--    </div>-->
+            <!--</div>-->
             <div class="col col-sm-5">
                 <div th:if="${unsubmitted.size() != 0}">
-                    <section class="panel">
+                    <section class="panel glass">
                         <header class="panel-heading">
                             <span>未提交实验报告</span>
                             <span class="tools pull-right">
@@ -164,7 +163,7 @@
                     </section>
                 </div>
                 <div th:if="${unsubmitted.size() == 0}">
-                    <section class="panel">
+                    <section class="panel glass">
                         <header class="panel-heading">
                             <span>你已提交所有实验报告!</span>
                             <span class="tools pull-right">
@@ -176,7 +175,7 @@
             </div>
             <div class="col col-sm-7">
                 <div th:if="${submitted.size() != 0}">
-                    <section class="panel">
+                    <section class="panel glass">
                         <header class="panel-heading">
                             <span>已提交的实验报告</span>
                             <span class="tools pull-right">
@@ -243,10 +242,14 @@
                                 </table>
                             </div>
                         </div>
+                        <div class="panel-footer">
+                            <div>
+                            </div>
+                        </div>
                     </section>
                 </div>
                 <div th:if="${submitted.size() == 0}">
-                    <section class="panel">
+                    <section class="panel glass">
                         <header class="panel-heading">
                             <span>你还未提交任何实验报告!</span>
                             <span class="tools pull-right">
@@ -261,7 +264,7 @@
     </div>
 
     <!--footer section start-->
-    <div th:replace="common::#common_footer"></div>
+    <div th:replace="common::#common_footer_shrink_left"></div>
     <!--footer section end-->
 
 </section>

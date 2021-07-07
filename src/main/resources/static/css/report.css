@@ -1,3 +1,7 @@
+html {
+    height: 100%;
+}
+
 .unselectable {
     -moz-user-select: none;
     -webkit-user-select: none;
@@ -24,8 +28,12 @@ a:visited {
     color: red;
 }
 
+.login-container {
+    height: 90%;
+}
+
 .login-body, main::before {
-    background: url("../images/bg2.jpg") 0 / cover fixed;
+    background: url("../images/bg/bg2.jpg") 0 / cover fixed;
 }
 
 /* 弃用 */
@@ -49,9 +57,9 @@ main::before {
     margin: -30px;
 }
 
-.panel-body {
-    background: hsla(0, 0%, 100%, .7);
-}
+/*.panel-body {*/
+/*    background: hsla(0, 0%, 100%, .7);*/
+/*}*/
 
 
 .frame-inline {
@@ -67,17 +75,24 @@ main::before {
 .glass {
     background-color: hsla(0, 0%, 100%, .3);
     -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(20px);
     border: none;
-    color: #808A87;
+    /*color: #808A87;*/
     font-weight: 700;
 }
 
-.glass-shrink-right {
-    width: 280px !important;
+.footer-shrink-right {
+    width: 276px !important;
     height: 55px;
     right: 0;
-    border-radius: 25px 0 0 0;
+    border-radius: 5px 0 0 0;
+    color: #333333;
+}
+
+.footer-shrink-left {
+    width: 276px !important;
+    border-radius: 0 5px 0 0;
+    color: #333333;
 }
 
 .glass-login {
@@ -99,4 +114,55 @@ main::before {
 
 .status {
     width: 10%;
+}
+
+.student-page {
+    background: url("../images/bg/bg3.jpg") 0 / cover fixed;
+}
+
+.teacher-page {
+    background: url("../images/bg/bg3.jpg") 0 / cover fixed;
+}
+
+.glass-heading {
+    border-radius: 5px;
+    margin: 15px;
+}
+
+
+.panel-footer {
+    background: none;
+    border: none;
+}
+
+.table-striped > tbody > tr:nth-child(odd) > td, .table-striped > tbody > tr:nth-child(odd) > th {
+    background: hsla(0, 0%, 100%, .333);
+}
+
+.table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+    border: none;
+}
+
+.table-bordered {
+    border: none;
+}
+
+.table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
+    background-color: #f5f5f5
+}
+
+table.treetable tr.branch {
+    background: none;
+}
+
+.dataTables_paginate.paging_bootstrap.pagination li a {
+    color: black;
+}
+
+.dataTables_paginate.paging_bootstrap.pagination li {
+    border: 1px solid #999;
+}
+
+.dataTables_paginate.paging_bootstrap.pagination li a {
+    color: #87CEEB;
 }
