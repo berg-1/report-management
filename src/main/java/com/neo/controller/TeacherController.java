@@ -162,6 +162,10 @@ public class TeacherController {
      */
     @GetMapping(value = {"stats"})
     public String templateStats(@RequestParam(value = "templateId") String templateId, Model model) {
+
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+
         Template template = templateService.getById(templateId);
         String classId = template.getClassId();
         String courseId = template.getCourseId();
@@ -192,6 +196,9 @@ public class TeacherController {
                 .sorted(Map.Entry.<Student, Report>comparingByKey())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
                         (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+
+        stopWatch.stop();
+        log.info("StatPage Initialing Time: {} ms", stopWatch.getLastTaskTimeMillis());
 
         model.addAttribute("submitted", submitted);
         model.addAttribute("unSubmitted", unSubmitted);

@@ -69,17 +69,18 @@ a:visited {
 }
 
 .footer-shrink-right {
-    width: 276px !important;
-    height: 55px;
+    width: 135px !important;
     right: 0;
     border-radius: 5px 0 0 0;
     color: #333333;
+    padding: 0 15px;
 }
 
 .footer-shrink-left {
-    width: 276px !important;
+    width: 135px !important;
     border-radius: 0 5px 0 0;
     color: #333333;
+    padding: 0 15px;
 }
 
 .glass-login {

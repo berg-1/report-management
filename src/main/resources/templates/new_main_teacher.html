@@ -57,45 +57,9 @@
 
 <section>
 
-    <nav class="navbar navbar-default" role="navigation">
-        <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse"
-                        data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">
-                    <img src="images/logo.png" alt="">
-                </a>
-            </div>
-
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    <li class="active"><a th:href="@{/mainTeacher}">首页</a></li>
-                </ul>
-
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <img alt="" src="images/photos/user-avatar.png">
-                            <span th:text="${session.loginUser.tname}">John Doe</span>
-                            <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <!--<li><a href="#">Profile</a></li>-->
-                            <li><a th:href="@{/changePasswd(id=${session.loginUser.tno})}">修改密码</a></li>
-                            <li><a th:href="@{/logout}">退出登录</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div><!-- /.navbar-collapse -->
-        </div><!-- /.container-fluid -->
-    </nav>
+    <!--nav section start-->
+    <div th:replace="common::#teacher_common_nav"></div>
+    <!--nav section end-->
 
     <!--body wrapper start-->
     <div class="wrapper">
@@ -227,46 +191,47 @@
                             </tr>
                             </tbody>
                         </table>
-                        <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1"
-                             id="updateModal"
-                             class="modal fade" style="display: none;">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×
-                                        </button>
-                                        <h4 class="modal-title">修改实验</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form role="form" th:action="@{/modifyTemplate(tno=${session.loginUser.tno})}"
-                                              method="post"
-                                              enctype="multipart/form-data">
-                                            <input style="display: none" id="templateIdUpdate" name="templateId"/>
-                                            <div class="form_item">
-                                                <label>
-                                                    <label for="templateNameUpdate">实验名称:</label><br>
-                                                    <input class="form-control" type="text" id="templateNameUpdate"
-                                                           name="name"
-                                                           placeholder="实验名称..." required>
-                                                </label>
-                                            </div>
-                                            <div class="form_item">
-                                                <label>
-                                                    <label for="file">实验文件:</label><br/>
-                                                    <input type="file" id="fileUpdate" name="file"
-                                                           accept=".docx, .doc, .pdf, .txt">
-                                                </label>
-                                            </div>
-                                            <div class="form_item">
-                                                <label for="deadlineUpdate">截至日期:</label><br/>
-                                                <input type="date" id="deadlineUpdate" name="deadline" required>
-                                            </div>
-                                            <br/>
-                                            <button type="submit" class="btn btn-primary">修改</button>
-                                        </form>
-                                    </div>
+
+                    </div>
+                </div>
+            </div>
+            <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1"
+                 id="updateModal"
+                 class="modal fade" style="display: none;">
+                <div class="modal-dialog">
+                    <div class="modal-content glass-content">
+                        <div class="modal-header">
+                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×
+                            </button>
+                            <h4 class="modal-title">修改实验</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form role="form" th:action="@{/modifyTemplate(tno=${session.loginUser.tno})}"
+                                  method="post"
+                                  enctype="multipart/form-data">
+                                <input style="display: none" id="templateIdUpdate" name="templateId"/>
+                                <div class="form_item">
+                                    <label>
+                                        <label for="templateNameUpdate">实验名称:</label><br>
+                                        <input class="form-control" type="text" id="templateNameUpdate"
+                                               name="name"
+                                               placeholder="实验名称..." required>
+                                    </label>
                                 </div>
-                            </div>
+                                <div class="form_item">
+                                    <label>
+                                        <label for="file">实验文件:</label><br/>
+                                        <input type="file" id="fileUpdate" name="file"
+                                               accept=".docx, .doc, .pdf, .txt">
+                                    </label>
+                                </div>
+                                <div class="form_item">
+                                    <label for="deadlineUpdate">截至日期:</label><br/>
+                                    <input type="date" id="deadlineUpdate" name="deadline" required>
+                                </div>
+                                <br/>
+                                <button type="submit" class="btn btn-primary">修改</button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -322,6 +287,8 @@
                 });
             }
         });
+        $("#home").attr("class", "active");
+
     });
 
     /**
