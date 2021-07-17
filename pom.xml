@@ -7,7 +7,7 @@
     <groupId>com.neo</groupId>
     <artifactId>spring-boot-file-upload</artifactId>
     <packaging>jar</packaging>
-    <version>2.4</version>
+    <version>2.5</version>
 
 
     <properties>

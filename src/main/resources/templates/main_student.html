@@ -8,6 +8,8 @@
     <link rel="shortcut icon" href="#" type="image/png">
     <title th:inline="text">学生首页 - [[${session.loginUser.name}]]</title>
     <link th:replace="common::common_header">
+    <!--file upload-->
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-fileupload.min.css"/>
 
 <body class="student-page horizontal-menu-page unselectable">
 
@@ -80,7 +82,6 @@
                             <!--Footer content goes here..-->
                         </div>
 
-
                     </section>
                 </div>
                 <div th:if="${unsubmitted.size() == 0}">
@@ -93,12 +94,32 @@
                     </section>
                 </div>
                 <div>
-                    <a href="#uploadNewReport" data-toggle="modal" class="btn btn-primary">
+                    <a href="#uploadNewReport" data-toggle="modal" class="btn custom-btn btn-4">
                         <i class="fa fa-upload"></i> 上传实验报告
                     </a>
-                    <span th:if="${message != null}">
-                                    <span th:text="${message}" class="fa fa-warning" style="color: red"></span>
-                                </span>
+                    <div th:if="${message != null}">
+                        <div style="padding:20px 0">
+                            <div class="alert alert-block alert-danger fade in">
+                                <button type="button" class="close close-sm" data-dismiss="alert">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                                <strong>Oh snap!</strong><span th:text="${messahe}" class="fa fa-warning"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div th:if="${success != null}">
+                        <div style="padding:20px 0">
+                            <div class="alert alert-success fade in">
+
+                                <button type="button" class="close close-sm" data-dismiss="alert">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                                <strong>Well done!</strong> <span th:text="${success}"
+                                                                  class="fa fa-check-circle-o"></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1"
                      id="uploadNewReport"
@@ -114,26 +135,42 @@
                             <!--上传表单-->
                             <div class="modal-body">
                                 <form role="form" th:action="@{/uploadReport(sno=${session.loginUser.sno})}"
-                                      method="post"
-                                      enctype="multipart/form-data">
-                                    <div class="form_item">
-                                        <label>
-                                            <label for="file">实验文件:</label><br/>
-                                            <input type="file" id="file" name="file" accept=".pdf">
-                                        </label>
+                                      method="post" class="form-horizontal" enctype="multipart/form-data">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3" for="file">我的实验文件:</label>
+                                        <div>
+                                            <div class="controls col-md-9">
+                                                <div class="fileupload fileupload-new" data-provides="fileupload">
+                                                <span class="btn btn-default btn-file">
+                                                <span class="fileupload-new"><i
+                                                        class="fa fa-paper-clip"></i>选择文件</span>
+                                                <span class="fileupload-exists"><i class="fa fa-undo"></i>更改</span>
+                                                <input type="file" class="default" id="file" name="file" accept=".pdf"/>
+                                                </span>
+                                                    <span class="fileupload-preview" style="margin-left:5px;"></span>
+                                                </div>
+                                                <span class="label label-danger ">NOTE!</span>
+                                                <span>文件限制为20MB以内的PDF文件.</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="form_item">
-                                        <label for="template">实验名:</label>
-                                        <select id="template" name="templateId"
-                                                class="form-control m-bot15">
-                                            <option th:each="template, stat:${unsubmitted}"
-                                                    th:text="${template.name}"
-                                                    th:value="${template.templateId}">
-                                            </option>
-                                        </select>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3" for="template">实验:</label>
+                                        <div class="col-md-6">
+                                            <select id="template" name="templateId"
+                                                    class="form-control m-bot15">
+                                                <option th:each="template, stat:${unsubmitted}"
+                                                        th:text="${template.name}"
+                                                        th:value="${template.templateId}">
+                                                </option>
+                                            </select>
+                                        </div>
                                     </div>
-                                    <br/><br/>
-                                    <button type="submit" class="btn btn-primary">提交</button>
+                                    <div class="form-group">
+                                        <div class="col-lg-offset-3 col-lg-10" style="align-content: center">
+                                            <button type="submit" class="btn btn-primary">提交</button>
+                                        </div>
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -235,9 +272,10 @@
 
 </section>
 
+<!--file upload-->
+<script type="text/javascript" th:src="@{js/bootstrap-fileupload.min.js}"></script>
 <!-- Placed js at the end of the document so the pages load faster -->
 <div th:replace="common::#common_script"></div>
-
 <!--script for editable table-->
 <script th:src="@{/js/editable-table.js}"></script>
 

@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="ThemeBucket">
-    <link rel="shortcut icon" href="javascript:;" type="image/png">
+    <link rel="shortcut icon" type="image/png">
+    <link rel="stylesheet" th:href="@{/js/bootstrap-star-rating/css/star-rating.min.css}" media="all" type="text/css"/>
     <title>实验提交详情页面</title>
     <link th:replace="common::common_header">
 
@@ -20,10 +21,8 @@
 
     <!--body wrapper start-->
     <div class="wrapper">
-
         <div class="col col-md-3">
             <div class="">
-
                 <!-- 标题 -->
                 <div class="page-heading">
                     <h3>
@@ -38,7 +37,6 @@
                         <li class="active"> 实验报告预览</li>
                     </ul>
                 </div>
-
                 <section class="panel">
                     <header class="panel-heading">
                         已提交实验报告学生<span th:text="'('+${submitted.size()}+'人)'"></span>
@@ -118,18 +116,23 @@
                      </span>
                 </header>
                 <div class="panel-body">
-                    <iframe allowtransparency=”yes”
-                            src="/getNoReport" class="frame-inline" id="frame" title="myFrame"></iframe>
+                    <iframe allowtransparency=”yes” src="/getNoReport" class="frame-inline" id="frame"
+                            title="myFrame">
+                    </iframe>
+                    <ul class="pager">
+                        <li id="previous" class="previous"><a href="#frame" onclick="previous()">« 上一个</a></li>
+                        <li><label for="rating"></label><input id="rating" name="rating" value="5.0"
+                                                               class="rating-loading"></li>
+                        <li id="next" class="next"><a href="#frame" onclick="next()">下一个 »</a></li>
+                    </ul>
                 </div>
             </section>
         </div>
     </div>
     <!--body wrapper end-->
-
     <!--footer section start-->
     <div th:replace="common::#common_footer_shrink_left"></div>
     <!--footer section end-->
-
 </section>
 
 
@@ -142,19 +145,81 @@
 <script type="text/javascript" th:src="@{/js/jquery.media.js}"></script>
 
 <script>
+    let reports = [];
+    let current = 0;
     $(document).ready(function () {
+        // 初始化页面,选择第一个同学的实验报告(如果存在)
         let submittedStudents = $("#editable-sample tbody");
+        let trList = submittedStudents.eq(0).children("tr")
+        for (let i = 0; i < trList.length; i++) {
+            // 将实验报告id添加到数组中
+            const id = trList.eq(i).attr("id");
+            reports[i] = id;
+            console.log(i + " " + id);
+        }
+
         //eq表示同类元素中的某一个，类似于数组用下标取元素；children表示子元素
         let reportURL = submittedStudents.eq(0).children("tr").eq(0).attr("id");
         if (reportURL !== undefined) {
-            displayReport("inlineDisplay?rid=" + reportURL);
+            displayReport("inlineDisplay?rid=" + reports[current]);
         }
+
+        $('#rating').rating({
+            min: 0,
+            max: 10,
+            minThreshold: 2,
+            step: 0.2,
+            stars: 5,
+            language: "zh",
+            containerClass: 'inline-display'
+            // showCaption: true,
+        });
+
+
     });
 
+    $('.rating-loading').on(
+        'change', function () {
+            console.log('Rating selected: ' + $(this).val());
+            // 与后端同步分数...
+        });
+
     function displayReport(reportURL) {
-        $("#frame").attr("src", reportURL);
+        console.log(reportURL);
+        // 添加参数 PDF 初始页为1, 适应页面宽度 https://www.jianshu.com/p/1c91aa255259
+        $("#frame").attr("src", reportURL + "#page=1&view=FitH");
+        const regex = new RegExp("[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}");
+        let rid = regex.exec(reportURL);  // 正则表达式返回一个匹配数组,选第一个
+        for (let i = 0; i < reports.length; i++) {
+            let a = $("#" + reports[i]);
+            a.eq(0).children("td").eq(1).children("a").eq(0).attr("class", "");
+            if (rid[0] === reports[i]) {
+                a.eq(0).children("td").eq(1).children("a").eq(0).attr("class", "selected");
+                let previous = $("#previous");
+                let next = $("#next");
+                previous.attr("class", "previous");
+                next.attr("class", "next");
+                if (i === 0)
+                    previous.attr("class", "previous disabled");
+                else if (i === reports.length - 1)
+                    next.attr("class", "next disabled");
+            }
+        }
+    }
+
+    function previous() {
+        if (current > 0) {
+            displayReport("inlineDisplay?rid=" + reports[--current]);
+        }
+    }
+
+    function next() {
+        if (current < reports.length - 1) {
+            displayReport("inlineDisplay?rid=" + reports[++current]);
+        }
     }
 </script>
-
+<script src="js/bootstrap-star-rating/js/star-rating.min.js"></script>
+<script src="js/bootstrap-star-rating/js/locales/zh.js"></script>
 </body>
 </html>

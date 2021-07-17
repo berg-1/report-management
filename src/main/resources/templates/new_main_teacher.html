@@ -6,18 +6,18 @@
     <meta name="description" content="">
     <meta name="author" content="ThemeBucket">
     <link rel="shortcut icon" type="image/png">
-
-
     <title>教师首页</title>
 
     <link th:rel="stylesheet" th:href="@{/css/jquery.treetable.css}"/>
     <link th:rel="stylesheet" th:href="@{/css/jquery.treetable.theme.default.css}"/>
     <link th:rel="stylesheet" th:href="@{/css/bootstrap.min.css} "/>
+    <link th:rel="stylesheet" th:href="@{/js/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css}"/>
+    <!--file upload-->
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-fileupload.min.css"/>
     <link th:replace="common::common_header">
     <style>
         td {
-            padding: 4px 0;
-            font-size: medium;
+
         }
 
         a {
@@ -44,10 +44,6 @@
 
         * {
             touch-action: pan-y;
-        }
-
-        .form_item {
-            padding-bottom: 10px;
         }
     </style>
 
@@ -90,18 +86,31 @@
             </div>
 
             <div>
-                <a href="#myModal" data-toggle="modal" class="btn btn-primary btn-max">
+                <a href="#myModal" data-toggle="modal" class="btn custom-btn btn-4">
                     发布新实验 <i class="fa fa-plus"></i>
                 </a>
-                <div style="padding:0 20px">
-                    <span th:if="${message != null}">
-                            <span th:text="${message}" class="fa fa-warning" style="color: red"></span>
-                    </span>
+
+                <div th:if="${message != null}">
+                    <div style="padding:20px 0">
+                        <div class="alert alert-block alert-danger fade in">
+                            <button type="button" class="close close-sm" data-dismiss="alert">
+                                <i class="fa fa-times"></i>
+                            </button>
+                            <strong>Oh snap!</strong><span th:text="${messahe}" class="fa fa-warning"></span>
+                        </div>
+                    </div>
                 </div>
-                <div style="padding:0 20px">
-                    <span th:if="${success != null}">
-                        <span th:text="${success}" class="fa fa-check-circle-o" style="color: #4169E1"></span>
-                    </span>
+
+                <div th:if="${success != null}">
+                    <div style="padding:20px 0">
+                        <div class="alert alert-success fade in">
+
+                            <button type="button" class="close close-sm" data-dismiss="alert">
+                                <i class="fa fa-times"></i>
+                            </button>
+                            <strong>Well done!</strong> <span th:text="${success}" class="fa fa-check-circle-o"></span>
+                        </div>
+                    </div>
                 </div>
                 <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="myModal"
                      class="modal fade" style="display: none;">
@@ -115,35 +124,58 @@
                             <!--上传表单-->
                             <div class="modal-body">
                                 <form role="form" th:action="@{/uploadTemplate(tno=${session.loginUser.tno})}"
-                                      method="post"
-                                      enctype="multipart/form-data">
-                                    <div class="form_item">
-                                        <label>
-                                            <label for="templateName">实验名称:</label><br>
+                                      method="post" class="form-horizontal" enctype="multipart/form-data">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3" for="templateName">实验名称:</label>
+                                        <div class="col-md-6">
                                             <input class="form-control" type="text" id="templateName" name="name"
                                                    placeholder="实验名称..." required>
-                                        </label>
+                                        </div>
                                     </div>
-                                    <div class="form_item">
-                                        <label>
-                                            <label for="file">实验文件:</label><br/>
-                                            <input type="file" id="file" name="file" accept=".docx, .doc, .pdf, .txt">
-                                        </label>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3" for="file">实验文件:</label>
+                                        <div>
+                                            <div class="controls col-md-9">
+                                                <div class="fileupload fileupload-new" data-provides="fileupload">
+                                                <span class="btn btn-default btn-file">
+                                                <span class="fileupload-new"><i
+                                                        class="fa fa-paper-clip"></i>选择文件</span>
+                                                <span class="fileupload-exists"><i class="fa fa-undo"></i>更改</span>
+                                                <input type="file" class="default" id="file" name="file"
+                                                       accept=".docx, .doc, .pdf, .txt"/>
+                                                </span>
+                                                    <span class="fileupload-preview" style="margin-left:5px;"></span>
+                                                </div>
+                                                <span class="label label-danger ">NOTE!</span>
+                                                <span>文件限制文件限制为20MB以内的文件!</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="form_item">
-                                        <label for="deadline">截至日期:</label><br/>
-                                        <input type="date" id="deadline" name="deadline" required>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3" for="classes">布置班级:</label>
+                                        <div class="col-md-6">
+                                            <select id="classes" name="class" class="form-control m-bot15">
+                                                <option th:each="c:${classes.keySet()}" th:value="${classes.get(c)}"
+                                                        th:text="${c}">Option
+                                                </option>
+                                            </select>
+                                        </div>
                                     </div>
-                                    <div class="form_item test-ease">
-                                        <label for="classes">布置班级:</label>
-                                        <select id="classes" name="class" class="form-control m-bot15">
-                                            <option th:each="c:${classes.keySet()}" th:value="${classes.get(c)}"
-                                                    th:text="${c}">Option
-                                            </option>
-                                        </select>
+                                    <div class="form-group">
+                                        <label for="deadline" class="col-md-3 control-label">截止日期:</label>
+                                        <div class="input-group date form_datetime col-md-6" style="padding: 0 15px;">
+                                            <input required class="form-control" id="deadline" name="deadline"
+                                                   type="text" value="" readonly="">
+                                            <span class="input-group-addon"><span
+                                                    class="glyphicon glyphicon-remove"></span></span>
+                                            <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                        </div>
                                     </div>
-                                    <br/><br/>
-                                    <button type="submit" class="btn btn-primary">提交</button>
+                                    <div class="form-group">
+                                        <div class="col-lg-offset-3 col-lg-10" style="align-content: center">
+                                            <button type="submit" class="btn btn-primary">提交</button>
+                                        </div>
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -177,7 +209,7 @@
                                 <td th:text="${stat.count}">temp</td>
                                 <td>
                                     <a th:text="${template.name}"
-                                       th:href="@{/stats(templateId=${template.templateId})}">
+                                       th:href="|/stats?templateId=${template.templateId}#frame|">
                                     </a>
                                 </td>
                                 <td><span th:text="${template.type}"></span></td>
@@ -207,30 +239,50 @@
                         </div>
                         <div class="modal-body">
                             <form role="form" th:action="@{/modifyTemplate(tno=${session.loginUser.tno})}"
-                                  method="post"
-                                  enctype="multipart/form-data">
+                                  method="post" class="form-horizontal" enctype="multipart/form-data">
                                 <input style="display: none" id="templateIdUpdate" name="templateId"/>
-                                <div class="form_item">
-                                    <label>
-                                        <label for="templateNameUpdate">实验名称:</label><br>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3" for="templateNameUpdate">实验名称:</label>
+                                    <div class="col-md-6">
                                         <input class="form-control" type="text" id="templateNameUpdate"
-                                               name="name"
-                                               placeholder="实验名称..." required>
-                                    </label>
+                                               name="name" placeholder="实验名称..." required>
+                                    </div>
                                 </div>
-                                <div class="form_item">
-                                    <label>
-                                        <label for="file">实验文件:</label><br/>
-                                        <input type="file" id="fileUpdate" name="file"
-                                               accept=".docx, .doc, .pdf, .txt">
-                                    </label>
+                                <div class="form-group">
+                                    <label for="deadlineUpdate" class="col-md-3 control-label">截止日期:</label>
+                                    <div class="input-group date form_datetime col-md-6" style="padding: 0 15px;">
+                                        <input required class="form-control" id="deadlineUpdate" name="deadline"
+                                               type="text" value="" readonly="">
+                                        <span class="input-group-addon"><span
+                                                class="glyphicon glyphicon-remove"></span></span>
+                                        <span class="input-group-addon"><span
+                                                class="glyphicon glyphicon-th"></span></span>
+                                    </div>
                                 </div>
-                                <div class="form_item">
-                                    <label for="deadlineUpdate">截至日期:</label><br/>
-                                    <input type="date" id="deadlineUpdate" name="deadline" required>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3" for="fileUpdate">实验文件:</label>
+                                    <div>
+                                        <div class="controls col-md-9">
+                                            <div class="fileupload fileupload-new" data-provides="fileupload">
+                                                <span class="btn btn-default btn-file">
+                                                <span class="fileupload-new"><i
+                                                        class="fa fa-paper-clip"></i>选择文件</span>
+                                                <span class="fileupload-exists"><i class="fa fa-undo"></i>更改</span>
+                                                <input type="file" class="default" id="fileUpdate" name="file"
+                                                       accept=".docx, .doc, .pdf, .txt"/>
+                                                </span>
+                                                <span class="fileupload-preview" style="margin-left:5px;"></span>
+                                            </div>
+                                            <span class="label label-danger ">NOTE!</span>
+                                            <span>文件限制为20MB以内的文件!</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <br/>
-                                <button type="submit" class="btn btn-primary">修改</button>
+                                <div class="form-group">
+                                    <div class="col-lg-offset-3 col-lg-10" style="align-content: center">
+                                        <button type="submit" class="btn btn-primary">修改</button>
+                                    </div>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -257,8 +309,11 @@
 <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 <script th:src="@{/js/jquery.treetable.js}"></script>
+<!--日期格式转换-->
+<script th:src="@{/js/date-formatter.js}"></script>
 
 <script type="text/javascript">
+
     $(document).ready(function () {
         $.ajax({
             "type": 'get',
@@ -289,6 +344,11 @@
         });
         $("#home").attr("class", "active");
 
+        window.setTimeout(function () {
+            $(".alert").fadeTo(1000, 0).slideUp(1000, function () {
+                $(this).remove();
+            });
+        }, 5000);
     });
 
     /**
@@ -310,11 +370,10 @@
 
     function getValues(templateId, templateName, Deadline, classId, courseId) {
         let d = new Date(Deadline);
-        console.log(classId);
-        console.log(courseId);
         $("#templateIdUpdate").val(templateId);
         $("#templateNameUpdate").val(templateName);
-        $("#deadlineUpdate").val(d.toISOString().slice(0, 10));
+        $("#deadlineUpdate").val(d.format("yyyy年MM月dd日 hh:mm"));
+
     }
 
     function getData(info) {
@@ -375,6 +434,14 @@
 
 </script>
 
+
+<script type="text/javascript" th:src="@{js/bootstrap-datepicker/js/bootstrap-datepicker.js}"></script>
+<script type="text/javascript" th:src="@{js/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js}"></script>
+<script type="text/javascript"
+        th:src="@{js/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js}"></script>
+
+<!--file upload-->
+<script type="text/javascript" th:src="@{js/bootstrap-fileupload.min.js}"></script>
 <!--script for editable table-->
 <script th:src="@{/js/editable-table.js}"></script>
 <!--data table-->
@@ -386,6 +453,9 @@
         EditableTable.init();
     });
 </script>
+
+<!--pickers initialization-->
+<script src="js/pickers-init.js"></script>
 
 </body>
 </html>

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.neo.domain.Report;
 import com.neo.domain.Template;
 import com.neo.exception.LargeFileException;
+import com.neo.service.RedisService;
 import com.neo.service.ReportService;
 import com.neo.service.TemplateService;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
@@ -35,6 +37,9 @@ public class TemplateController {
 
     @Autowired
     ReportService reportService;
+
+    @Autowired
+    RedisService redisService;
 
 
     /**
@@ -58,10 +63,10 @@ public class TemplateController {
                                    @RequestParam(value = "file") MultipartFile file,
                                    @RequestParam(value = "tno", defaultValue = "undefined") String tno,
                                    @RequestParam(value = "class", defaultValue = "undefined") String cid,
-                                   @RequestParam(value = "deadline")
-                                   @DateTimeFormat(pattern = "yyyy-MM-dd") Date deadline,
+                                   @RequestParam(value = "deadline") String deadline,
                                    RedirectAttributes redirectAttributes) {
         try {
+            Date deadlineFormat = new SimpleDateFormat("yyyy年MM月dd日 hh:mm").parse(deadline);
             byte[] bytes;
             String type;
             // 取得文件并以Bytes方式保存
@@ -72,23 +77,20 @@ public class TemplateController {
                 type = file.getContentType();
                 bytes = file.getBytes();
             }
-            if (bytes.length > MAX_UPLOAD_SIZE) {
-                throw new LargeFileException(MAX_UPLOAD_SIZE);
-            }
+            if (bytes.length > MAX_UPLOAD_SIZE) throw new LargeFileException(MAX_UPLOAD_SIZE);
             String uuid = UUID.randomUUID().toString();
             name = name.replace(' ', '.');
             String[] courseIdAndCid = cid.split("@");
-            templateService.save(new Template(uuid, name, type, tno,
-                    courseIdAndCid[1],
-                    deadline,
-                    courseIdAndCid[0],
-                    bytes));
-            redirectAttributes.addFlashAttribute("success", "实验'" + name + "'发布成功!");
+            String courseId = courseIdAndCid[0];
+            String classId = courseIdAndCid[1];
+            templateService.save(new Template(uuid, name, type, tno, classId, deadlineFormat, courseId, bytes));
+            redisService.hSet(tno, uuid, "0");
+            redirectAttributes.addFlashAttribute("success", "实验'" + name + "'上传成功!");
+            redirectAttributes.addAttribute("classId", classId);
+            redirectAttributes.addAttribute("courseId", courseId);
         } catch (LargeFileException largeFileException) {
-            redirectAttributes.addFlashAttribute("message", String.format(
-                    "文件过大,上传失败!请将文件控制在%dMB内!",
-                    largeFileException.getMaxSize() / 1048576
-            ));
+            redirectAttributes.addFlashAttribute("message", String.format("请将文件控制在%dMB内!",
+                    largeFileException.getMaxSize() / 1048576));
         } catch (Exception s) {
             redirectAttributes.addFlashAttribute("message", "上传失败!");
             s.printStackTrace();
@@ -102,13 +104,12 @@ public class TemplateController {
                                  @RequestParam(value = "name") String name,
                                  MultipartFile file,
                                  @RequestParam(value = "tno", defaultValue = "undefined") String tno,
-                                 @RequestParam(value = "class", defaultValue = "undefined") String cid,
-                                 @RequestParam(value = "deadline")
-                                 @DateTimeFormat(pattern = "yyyy-MM-dd") Date deadline,
-                                 RedirectAttributes redirectAttributes) {
+                                 @RequestParam(value = "deadline") String deadline,
+                                 RedirectAttributes attributes) {
         log.info("file == null : {}", file.isEmpty());
         Template origin = templateService.getById(templateId);
         try {
+            Date deadlineFormat = new SimpleDateFormat("yyyy年MM月dd日 hh:mm").parse(deadline);
             byte[] bytes;
             String type;
             if (file.isEmpty()) {
@@ -124,17 +125,19 @@ public class TemplateController {
             name = name.replace(' ', '.');
             templateService.updateById(new Template(templateId, name, type, tno,
                     origin.getClassId(),
-                    deadline,
+                    deadlineFormat,
                     origin.getCourseId(),
                     bytes));
-            redirectAttributes.addFlashAttribute("successUpdate", "实验'" + name + "'修改成功!");
+            attributes.addFlashAttribute("success", "实验'" + name + "'修改成功!");
+            attributes.addAttribute("classId", origin.getClassId());
+            attributes.addAttribute("courseId", origin.getCourseId());
         } catch (LargeFileException largeFileException) {
-            redirectAttributes.addFlashAttribute("messageUpdate", String.format(
-                    "文件过大,上传失败!请将文件控制在%dMB内!",
+            attributes.addFlashAttribute("message", String.format(
+                    "文件过大,请将文件控制在%dMB内!",
                     largeFileException.getMaxSize() / 1048576
             ));
         } catch (Exception s) {
-            redirectAttributes.addFlashAttribute("messageUpdate", "上传失败!");
+            attributes.addFlashAttribute("message", "修改失败!");
             s.printStackTrace();
         }
         return "redirect:mainTeacher";
@@ -148,7 +151,7 @@ public class TemplateController {
      * @return main_teacher.html
      */
     @GetMapping("/deleteTemplate")
-    String deleteTemplate(@RequestParam(value = "templateId") String templateId) {
+    String deleteTemplate(@RequestParam(value = "templateId") String templateId, RedirectAttributes attributes) {
         QueryWrapper<Report> reportQueryWrapper = new QueryWrapper<>();
         reportQueryWrapper.eq("report_template", templateId);
         QueryWrapper<Template> wrapper = new QueryWrapper<>();
@@ -156,7 +159,9 @@ public class TemplateController {
         Template one = templateService.getOne(wrapper);
         reportService.remove(reportQueryWrapper);
         templateService.removeById(templateId);
-        return String.format("redirect:mainTeacher?classId=%s&courseId=%s", one.getClassId(), one.getCourseId());
+        attributes.addAttribute("classId", one.getClassId());
+        attributes.addAttribute("courseId", one.getCourseId());
+        return "redirect:mainTeacher";
     }
 
 }

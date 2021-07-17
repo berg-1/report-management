@@ -1,4 +1,4 @@
-var Gritter = function () {
+let Gritter = function () {
 
     $('#add-sticky').click(function () {
 
