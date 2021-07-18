@@ -1,7 +1,9 @@
 package com.neo.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.neo.Utils.MimeTypes;
+import com.neo.domain.Comments;
 import com.neo.domain.Report;
 import com.neo.domain.Template;
 import com.neo.exception.LargeFileException;
@@ -9,9 +11,7 @@ import com.neo.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -90,15 +90,8 @@ public class ReportController {
             String templateName = template.getName();
             Date uploadDate = new Date();
             boolean isLate = uploadDate.before(template.getDeadline());
-            reportService.save(new Report(uuid,
-                    fileName,
-                    type,
-                    sno,
-                    templateId,
-                    courseId,
-                    uploadDate,
-                    bytes,
-                    isLate));
+            reportService.save(new Report(uuid, fileName, type, sno, templateId,
+                    courseId, uploadDate, bytes, isLate, 0, null));
             String savePath = getSavePath(courseId, classId, templateName, sno, type);
             File saveFolderPath = new File(savePath.substring(0, savePath.lastIndexOf("/")));
             if (!saveFolderPath.isDirectory() && !saveFolderPath.exists()) {
@@ -129,6 +122,48 @@ public class ReportController {
             s.printStackTrace();
         }
         return "redirect:mainStudent";
+    }
+
+    @RequestMapping("rating")
+    @ResponseBody
+    @GetMapping("rating")
+    public String updateRating(@RequestParam(value = "rid") String rid,
+                               @RequestParam(value = "rating") float rating) {
+        UpdateWrapper<Report> wrapper = new UpdateWrapper<>();
+        wrapper.eq("rid", rid).set("rating", rating);
+        boolean update = reportService.update(wrapper);
+        if (update) return "OK";
+        return "Failed";
+    }
+
+    @RequestMapping("getRate")
+    @GetMapping("getRate")
+    @ResponseBody
+    public String getRating(@RequestParam(value = "rid") String rid) {
+        QueryWrapper<Report> wrapper = new QueryWrapper<>();
+        wrapper.select("rid", "rating").eq("rid", rid);
+        Report one = reportService.getOne(wrapper);
+        return Float.toString(one.getRating());
+    }
+
+    @RequestMapping("comment")
+    @ResponseBody
+    public String comment(@RequestParam(value = "rid") String rid,
+                          @RequestParam(value = "comment") String comment) {
+        UpdateWrapper<Report> wrapper = new UpdateWrapper<>();
+        wrapper.eq("rid", rid).set("comment", comment);
+        boolean update = reportService.update(wrapper);
+        if (update) return "OK";
+        return "Failed";
+    }
+
+    @GetMapping("getComment")
+    @ResponseBody
+    public String getComment(@RequestParam(value = "rid") String rid) {
+        QueryWrapper<Report> wrapper = new QueryWrapper<>();
+        wrapper.select("rid", "comment").eq("rid", rid);
+        Report one = reportService.getOne(wrapper);
+        return one.getComment();
     }
 
     /**

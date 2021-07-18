@@ -13,7 +13,7 @@
 (function ($) {
     "use strict";
     $.fn.ratingLocales['zh'] = {
-        defaultCaption: '{rating} 星',
+        defaultCaption: '{rating} 分',
         starCaptions: {
             0.5: '半星',
             1: '一星',

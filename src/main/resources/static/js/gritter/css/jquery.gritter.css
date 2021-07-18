@@ -29,11 +29,14 @@
 .gritter-item-wrapper {
     position: relative;
     margin: 0 0 10px 0;
-    background: url('../images/ie-spacer.gif'); /* ie7/8 fix */
+    /*background: url('../images/ie-spacer.gif'); !* ie7/8 fix *!*/
+    background: hsla(0, 0%, 100%, .3) left -30px;;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(20px);
 }
 
 .gritter-top {
-    background: url(../images/gritter.png) no-repeat left -30px;
+    /*background: url(../images/gritter.png) no-repeat left -30px;*/
     height: 10px;
 }
 
@@ -42,7 +45,7 @@
 }
 
 .gritter-bottom {
-    background: url(../images/gritter.png) no-repeat left bottom;
+    /*background: url(../images/gritter.png) no-repeat left bottom;*/
     height: 8px;
     margin: 0;
 }
@@ -53,11 +56,17 @@
 
 .gritter-item {
     display: block;
-    background: url(../images/gritter.png) no-repeat left -40px;
-    color: #eee;
+    /*background: url(../images/gritter.png) no-repeat left -40px;*/
+    background: #5cb85c24 left -40px;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(20px);
+    border: none;
+    font-weight: 700;
+    box-shadow: 0 0.9rem 1.7rem rgba(0, 0, 0, 0.25), 0 0.7rem 0.7rem rgba(0, 0, 0, 0.22);
     padding: 2px 11px 8px 11px;
     font-size: 11px;
-    font-family: verdana;
+    font-family: verdana, monospace;
+    border-radius: 5px;
 }
 
 .hover .gritter-item {
@@ -75,7 +84,10 @@
     position: absolute;
     top: 5px;
     left: 3px;
-    background: url(../images/gritter.png) no-repeat left top;
+    /*background: url(../images/gritter.png) no-repeat left top;*/
+    background: hsla(0, 0%, 100%, .3) left top;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(20px);
     cursor: pointer;
     width: 30px;
     height: 30px;
@@ -110,7 +122,7 @@
 .gritter-light .gritter-bottom,
 .gritter-light .gritter-top,
 .gritter-light .gritter-close {
-    background-image: url(../images/gritter-light.png);
+    /*background-image: url(../images/gritter-light.png);*/
     color: #222;
 }
 

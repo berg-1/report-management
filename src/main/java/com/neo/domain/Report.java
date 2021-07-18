@@ -65,6 +65,16 @@ public class Report implements Serializable {
      */
     private boolean status;
 
+    /**
+     * 实验报告评分
+     */
+    private float rating;
+
+    /**
+     * 教师评论
+     */
+    private String comment;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }
