@@ -27,6 +27,6 @@
             5: '五星'
         },
         clearButtonTitle: '清除',
-        clearCaption: '未评级'
+        clearCaption: '未评分'
     };
 })(window.jQuery);

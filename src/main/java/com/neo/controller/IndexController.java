@@ -63,6 +63,7 @@ public class IndexController {
         String userPasswd = user.getPassword();
         log.info("user: {}", user);
         Student id = studentService.getById(username);
+        session.setMaxInactiveInterval(2 * 60 * 60);  // 60分钟后失效
         if (id != null && (id.getPassword().equals(userPasswd))) {
             log.debug("学生登录id={}", id.getSno());
             session.setAttribute("loginUser", id);

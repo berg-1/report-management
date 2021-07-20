@@ -18,6 +18,7 @@ $(document).ready(function () {
         displayReport("inlineDisplay?rid=" + reports[current]);
     }
 
+    // 初始化评分.
     $('#rating').rating({
         min: 0,
         max: 10,
@@ -31,6 +32,7 @@ $(document).ready(function () {
 
 });
 
+// 评论改变时自动提交
 $('#comment').on(
     'change', function () {
         $.ajax({
@@ -53,6 +55,7 @@ $('#comment').on(
         });
     });
 
+// 评分改变时自动提交
 $('.rating-loading').on(
     'change', function () {
         const rate = $(this).val()
@@ -67,7 +70,7 @@ $('.rating-loading').on(
                 console.log("成功更新分数...", data)
                 $.gritter.add({
                     title: '成功更新分数!',
-                    text: '实验报告分数为<em>' + rate + '</a>',
+                    text: "实验报告分数为<span class='red'>" + rate + '分</span>',
                     sticky: false,
                     time: '2000'
                 });
@@ -106,6 +109,7 @@ function displayReport(reportURL) {
             $('input#rating').rating('update', data);
         }
     });
+    // 更新评论
     $.ajax({
         "type": 'get',
         "url": '/getComment?rid=' + reports[current],
@@ -117,12 +121,14 @@ function displayReport(reportURL) {
     });
 }
 
+// 上一个按钮
 function previous() {
     if (current > 0) {
         displayReport("inlineDisplay?rid=" + reports[--current]);
     }
 }
 
+// 下一个按钮
 function next() {
     if (current < reports.length - 1) {
         displayReport("inlineDisplay?rid=" + reports[++current]);

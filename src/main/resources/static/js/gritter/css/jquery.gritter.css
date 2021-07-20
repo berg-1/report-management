@@ -1,3 +1,8 @@
+:root {
+    /*gritter-top gritter-bottom高度*/
+    --top-bottom-height: unset;
+}
+
 /* the norm */
 #gritter-notice-wrapper {
     position: fixed;
@@ -30,14 +35,11 @@
     position: relative;
     margin: 0 0 10px 0;
     /*background: url('../images/ie-spacer.gif'); !* ie7/8 fix *!*/
-    background: hsla(0, 0%, 100%, .3) left -30px;;
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(20px);
 }
 
 .gritter-top {
     /*background: url(../images/gritter.png) no-repeat left -30px;*/
-    height: 10px;
+    height: var(--top-bottom-height);
 }
 
 .hover .gritter-top {
@@ -46,7 +48,7 @@
 
 .gritter-bottom {
     /*background: url(../images/gritter.png) no-repeat left bottom;*/
-    height: 8px;
+    height: var(--top-bottom-height);
     margin: 0;
 }
 
@@ -65,7 +67,6 @@
     box-shadow: 0 0.9rem 1.7rem rgba(0, 0, 0, 0.25), 0 0.7rem 0.7rem rgba(0, 0, 0, 0.22);
     padding: 2px 11px 8px 11px;
     font-size: 11px;
-    font-family: verdana, monospace;
     border-radius: 5px;
 }
 
@@ -80,17 +81,27 @@
 }
 
 .gritter-close {
-    display: none;
     position: absolute;
-    top: 5px;
-    left: 3px;
-    /*background: url(../images/gritter.png) no-repeat left top;*/
-    background: hsla(0, 0%, 100%, .3) left top;
+    top: 10px;
+    right: 10px;
+    background: #5cb85c24 url(../images/close.svg) no-repeat center;
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(20px);
+    background-size: 80%;
     cursor: pointer;
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.5s ease-in-out;
+    display: unset !important;
+}
+
+div:hover > .gritter-close {
+    visibility: visible;
+    opacity: 1;
+    display: unset !important;
 }
 
 .gritter-title {
@@ -98,7 +109,7 @@
     font-weight: bold;
     padding: 0 0 7px 0;
     display: block;
-    text-shadow: 1px 1px 0 #000; /* Not supported by IE :( */
+    /*text-shadow: 0 0 1em #67b767; !* Not supported by IE :( *!*/
 }
 
 .gritter-image {
