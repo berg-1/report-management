@@ -68,13 +68,80 @@ a:visited {
     color: red;
 }
 
+/* LOGIN STYLE STARTS*/
 .login-container {
     height: 90%;
 }
 
+.login-title {
+    color: var(--white);
+    left: 0;
+    width: 100%;
+    padding-bottom: 10px;
+}
+
+.input-label {
+    line-height: 40px;
+    width: 15%;
+    float: left;
+    text-align: center;
+    margin-bottom: 0;
+    background: #fff;
+}
+
+.input-wrap {
+    height: 40px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.user-svg {
+    background: url("../svg/user.svg") center no-repeat;
+    background-size: 70%;
+    padding: 5px;
+    height: 40px;
+}
+
+.key-svg {
+    background: url("../svg/key.svg") center no-repeat;
+    transform: rotate(90deg);
+    background-size: 70%;
+    padding: 5px;
+    height: 40px;
+}
+
+.input-content {
+    width: 85%;
+    border: none !important;
+    border-radius: 5px !important;
+    background: none !important;
+    padding: 0 10px !important;
+    margin-bottom: unset !important;
+    line-height: 40px;
+    box-shadow: none;
+    font-size: 12px;
+    float: left;
+    position: relative;
+    display: block;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    color: var(--black);
+}
+
+
 .login-body {
     background: var(--bg-login);
 }
+
+.none-display {
+    display: none;
+}
+
+.form-signin .form-signin-heading {
+    padding: 10px 20px;
+    text-align: left;
+}
+
+/* LOGIN STYLE ENDS*/
 
 
 .frame-inline {

@@ -16,14 +16,30 @@
     <form class="form-signin" method="post" th:action="@{/login}">
         <div class="glass glass-login">
             <div class="form-signin-heading text-center">
-                <h1 class="sign-title">Sign In</h1>
-                <img src="images/login-logo.png" alt=""/>
+                <h1 class="login-title">Sign in</h1>
             </div>
             <div class="login-wrap">
-                <label style="color:red" th:text="${msg}"></label>
-                <label style="color:#4169E1" th:text="${success}"></label>
-                <input type="text" name="username" required class="form-control" placeholder="用户名" autofocus>
-                <input type="password" name="password" required class="form-control" placeholder="密码">
+                <div th:if="${msg != null}">
+                    <label class="error" th:text="${msg}"></label>
+                </div>
+                <div th:if="${success != null}">
+                    <label style="color:#4169E1" th:text="${success}"></label>
+                </div>
+                <div class="glass input-wrap">
+                    <label for="username"></label>
+                    <div class="input-label user-svg" onclick="location.href='#username';">
+                        <div style="padding: 5px;"></div>
+                    </div>
+                    <input id="username" type="text" name="username" class="input-content" placeholder="用户名"
+                           autofocus required>
+                </div>
+                <div class="glass input-wrap">
+                    <label for="passwd"></label>
+                    <div class="input-label key-svg" onclick="location.href='#passwd';">
+                        <div style="padding: 5px;"></div>
+                    </div>
+                    <input id="passwd" type="password" name="password" class="input-content" placeholder="密码" required>
+                </div>
                 <button class="btn btn-lg btn-login btn-block" type="submit" id="login" aria-label="LoginBtn">
                     <i class="fa fa-check"></i>
                 </button>
