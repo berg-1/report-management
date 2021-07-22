@@ -49,7 +49,8 @@ $('#comment').on(
                     title: '成功提交!',
                     text: '该评论已自动保存',
                     sticky: false,
-                    time: '2000'
+                    time: '2000',
+                    class_name: 'success'
                 });
             }
         });
@@ -72,7 +73,8 @@ $('.rating-loading').on(
                     title: '成功更新分数!',
                     text: "实验报告分数为<span class='red'>" + rate + '分</span>',
                     sticky: false,
-                    time: '2000'
+                    time: '2000',
+                    class_name: 'success'
                 });
             }
         });

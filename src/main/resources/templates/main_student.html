@@ -8,6 +8,8 @@
     <link rel="shortcut icon" href="#" type="image/png">
     <title th:inline="text">学生首页 - [[${session.loginUser.name}]]</title>
     <link th:replace="common::common_header">
+    <!--gritter css-->
+    <link rel="stylesheet" type="text/css" th:href="@{/js/gritter/css/jquery.gritter.css}"/>
     <!--file upload-->
     <link rel="stylesheet" type="text/css" href="css/bootstrap-fileupload.min.css"/>
 
@@ -97,29 +99,6 @@
                     <a href="#uploadNewReport" data-toggle="modal" class="btn custom-btn btn-4">
                         <i class="fa fa-upload"></i> 上传实验报告
                     </a>
-                    <div th:if="${message != null}">
-                        <div style="padding:20px 0">
-                            <div class="alert alert-block alert-danger fade in">
-                                <button type="button" class="close close-sm" data-dismiss="alert">
-                                    <i class="fa fa-times"></i>
-                                </button>
-                                <strong>Oh snap!</strong><span th:text="${messahe}" class="fa fa-warning"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div th:if="${success != null}">
-                        <div style="padding:20px 0">
-                            <div class="alert alert-success fade in">
-
-                                <button type="button" class="close close-sm" data-dismiss="alert">
-                                    <i class="fa fa-times"></i>
-                                </button>
-                                <strong>Well done!</strong> <span th:text="${success}"
-                                                                  class="fa fa-check-circle-o"></span>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1"
                      id="uploadNewReport"
@@ -214,14 +193,6 @@
                                             <a th:href="@{/downloadTemplate(id=${entry.key.templateId})}">
                                                 <span th:text="${entry.key.name}"></span>
                                             </a>
-                                            <div th:if="${success != null && entry.key.templateId == messageId}">
-                                                <span th:text="${success}" class="fa fa-check-circle-o"
-                                                      style="color: #4169E1"></span>
-                                            </div>
-                                            <div th:if="${message != null && entry.key.templateId == messageId}">
-                                                <span th:text="${message}" class="fa fa-check-circle-o"
-                                                      style="color: red"></span>
-                                            </div>
                                         </td>
                                         <td th:text="${entry.key.courseId}"></td>
                                         <td th:text="${#dates.format(entry.key.deadline,'yyyy-MM-dd HH:mm')}"></td>
@@ -278,6 +249,35 @@
 <div th:replace="common::#common_script"></div>
 <!--script for editable table-->
 <script th:src="@{/js/editable-table.js}"></script>
+<script src="js/gritter/js/jquery.gritter.min.js"></script>
+<!--file upload-->
+<script type="text/javascript" th:src="@{js/bootstrap-fileupload.min.js}"></script>
+
+<script th:inline="javascript">
+    $(document).ready(function () {
+        const message = [[${message}]];
+        const success = [[${success}]];
+        if (message) {
+            console.log(message);
+            $.gritter.add({
+                title: '提交失败!',
+                text: message,
+                sticky: false,
+                time: '2000',
+                class_name: 'failed'
+            });
+        } else if (success) {
+            console.log(success);
+            $.gritter.add({
+                title: '成功提交!',
+                text: success,
+                sticky: false,
+                time: '2000',
+                class_name: 'success'
+            });
+        }
+    })
+</script>
 
 </body>
 </html>

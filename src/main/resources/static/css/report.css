@@ -14,7 +14,7 @@
     --max-width: 758px;
     --max-height: 420px;
 
-    --bg-login: url("../images/bg/bg2.jpg") 0 / cover fixed;
+    --bg-login: url("../images/bg/bg2.jpg") 0 / cover;
     --bg-teacher-main: url("../images/bg/bg3.jpg") 0 / cover fixed;
     --bg-student-main: url("../images/bg/bg3.jpg") 0 / cover fixed;
 
@@ -69,6 +69,11 @@ a:visited {
 }
 
 /* LOGIN STYLE STARTS*/
+.form-signin {
+    margin: auto;
+    top: 25%;
+}
+
 .login-container {
     height: 90%;
 }
@@ -78,6 +83,12 @@ a:visited {
     left: 0;
     width: 100%;
     padding-bottom: 10px;
+    font-weight: bold;
+    text-shadow: 2px 3px #f5f5f736;
+}
+
+.login-message {
+    line-height: 16px;
 }
 
 .input-label {
@@ -105,7 +116,7 @@ a:visited {
 .key-svg {
     background: url("../svg/key.svg") center no-repeat;
     transform: rotate(90deg);
-    background-size: 70%;
+    background-size: 50%;
     padding: 5px;
     height: 40px;
 }
@@ -130,6 +141,8 @@ a:visited {
 
 .login-body {
     background: var(--bg-login);
+    background-size: cover;
+    background-position: center;
 }
 
 .none-display {
@@ -153,6 +166,27 @@ a:visited {
 .selected {
     color: #4169E1 !important;
 }
+
+/*COMMON STYLE STATRS*/
+/*导航栏渐变*/
+.nav-gradient {
+    background: #424f63;
+    background: linear-gradient(to right, #424f63, #3f4b87);
+}
+
+.success {
+    background: #65cea7;
+    border-radius: 5px;
+    color: darkslategrey;
+}
+
+.failed {
+    background: #d9534f;
+    border-radius: 5px;
+    color: antiquewhite;
+}
+
+/*COMMON STYLE ENDS*/
 
 .glass {
     background-color: hsla(0, 0%, 100%, .3);
@@ -204,9 +238,11 @@ a:visited {
 
 .glass-version {
     border-radius: 15px;
-    height: 50px;
+    height: 40px;
     text-align: center;
-    line-height: 50px;
+    line-height: 40px;
+    width: 120px;
+    margin: auto;
 }
 
 .upload-time {
@@ -219,10 +255,14 @@ a:visited {
 
 .student-page {
     background: var(--bg-student-main);
+    background-size: cover;
+    background-position: center;
 }
 
 .teacher-page {
     background: var(--bg-teacher-main);
+    background-size: cover;
+    background-position: center;
 }
 
 .glass-heading {
@@ -383,6 +423,10 @@ div.rating-container {
     outline: none;
 }
 
+.btn-lg {
+    width: 100%;
+}
+
 /* 1 */
 .btn-1 {
     background: rgb(6, 14, 131);
@@ -400,7 +444,7 @@ div.rating-container {
     color: #333333;
     background-color: #4dccc6;
     background-image: linear-gradient(315deg, #4dccc6 0%, #96e4df 74%);
-    line-height: 42px;
+    line-height: 40px;
     padding: 0;
     border: none;
 }
