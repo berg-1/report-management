@@ -13,7 +13,7 @@
     <link th:rel="stylesheet" th:href="@{/css/bootstrap.min.css} "/>
     <link th:rel="stylesheet" th:href="@{/js/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css}"/>
     <!--file upload-->
-    <link rel="stylesheet" type="text/css" href="css/bootstrap-fileupload.min.css"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-fileupload.min.css}"/>
     <!--gritter css-->
     <link rel="stylesheet" type="text/css" th:href="@{/js/gritter/css/jquery.gritter.css}"/>
     <link th:replace="common::common_header">
@@ -85,7 +85,7 @@
 
             <div>
                 <a href="#myModal" data-toggle="modal" class="btn custom-btn btn-4">
-                    发布新实验 <i class="fa fa-plus"></i>
+                    <span class="material-icons-outlined">post_add</span><span> 发布新实验</span>
                 </a>
 
                 <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="myModal"
@@ -221,6 +221,7 @@
                         <div class="modal-body">
                             <form role="form" th:action="@{/modifyTemplate(tno=${session.loginUser.tno})}"
                                   method="post" class="form-horizontal" enctype="multipart/form-data">
+                                <label for="templateIdUpdate" style="display: none"></label>
                                 <input style="display: none" id="templateIdUpdate" name="templateId"/>
                                 <div class="form-group">
                                     <label class="control-label col-md-3" for="templateNameUpdate">实验名称:</label>
@@ -303,7 +304,7 @@
 <!--data table-->
 <script type="text/javascript" th:src="@{/js/data-tables/jquery.dataTables.js}"></script>
 <script type="text/javascript" th:src="@{/js/data-tables/DT_bootstrap.js}"></script>
-<script src="js/gritter/js/jquery.gritter.min.js"></script>
+<script th:src="@{/js/gritter/js/jquery.gritter.min.js}"></script>
 <script th:inline="javascript">
     jQuery(document).ready(function () {
         const message = [[${message}]];
@@ -331,7 +332,7 @@
     });
 </script>
 <!--pickers initialization-->
-<script src="js/pickers-init.js"></script>
+<script th:src="@{/js/pickers-init.js}"></script>
 
 </body>
 </html>

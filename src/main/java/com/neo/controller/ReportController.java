@@ -3,7 +3,6 @@ package com.neo.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.neo.Utils.MimeTypes;
-import com.neo.domain.Comments;
 import com.neo.domain.Report;
 import com.neo.domain.Template;
 import com.neo.exception.LargeFileException;
@@ -57,7 +56,7 @@ public class ReportController {
      * @param sno                上传者id
      * @param templateId         模板id
      * @param redirectAttributes 重定向传值需要
-     * @return mian_student.html
+     * @return main_student.html
      */
     @PostMapping("/uploadReport")
     public String singleFileUpload(@RequestParam(value = "file") MultipartFile file,
@@ -107,7 +106,8 @@ public class ReportController {
             log.info("保存文件{}", savePath);
             if (!isLate) {
                 log.info("学生提交时间超出截至日期!id={},templateId={}", sno, templateId);
-                redirectAttributes.addFlashAttribute("message", "上传成功,但已过截至日期!");
+                redirectAttributes.addFlashAttribute("success",
+                        "<span class='error'>上传成功,但已过截至日期!</span>");
             } else {
                 redirectAttributes.addFlashAttribute("success",
                         "文件'" + file.getOriginalFilename() + "'上传成功!");
@@ -178,35 +178,6 @@ public class ReportController {
                 .eq("template_id", templateId);
         return templateService.getOne(wrapper);
     }
-
-    private String getClassIdByTemplateId(String templateId) {
-        QueryWrapper<Template> wrapper = new QueryWrapper<>();
-        wrapper.select("template_id", "class_id")
-                .eq("template_id", templateId);
-        return templateService.getOne(wrapper).getClassId();
-    }
-
-    private Date getDeadLineByTemplateId(String templateId) {
-        QueryWrapper<Template> wrapper = new QueryWrapper<>();
-        wrapper.select("template_id", "deadline")
-                .eq("template_id", templateId);
-        return templateService.getOne(wrapper).getDeadline();
-    }
-
-    private String getTemplateCourseByTemplateId(String templateId) {
-        QueryWrapper<Template> wrapper = new QueryWrapper<>();
-        wrapper.select("template_id", "courseId")
-                .eq("template_id", templateId);
-        return templateService.getById(templateId).getCourseId();
-    }
-
-    private String getTemplateNameByTemplateId(String templateId) {
-        QueryWrapper<Template> wrapper = new QueryWrapper<>();
-        wrapper.select("template_id", "name")
-                .eq("template_id", templateId);
-        return templateService.getOne(wrapper).getName();
-    }
-
 
     /**
      * 保存文件的路径

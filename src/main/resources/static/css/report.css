@@ -1,3 +1,5 @@
+@import url('../fonts/css/marterial-icon.css');
+
 :root {
     /* COLORS */
     --black: #1D1D1F;
@@ -97,28 +99,12 @@ a:visited {
     float: left;
     text-align: center;
     margin-bottom: 0;
-    background: #fff;
 }
 
 .input-wrap {
     height: 40px;
     border-radius: 5px;
     margin-bottom: 20px;
-}
-
-.user-svg {
-    background: url("../svg/user.svg") center no-repeat;
-    background-size: 70%;
-    padding: 5px;
-    height: 40px;
-}
-
-.key-svg {
-    background: url("../svg/key.svg") center no-repeat;
-    transform: rotate(90deg);
-    background-size: 50%;
-    padding: 5px;
-    height: 40px;
 }
 
 .input-content {
@@ -417,10 +403,8 @@ div.rating-container {
     transition: all 0.3s ease;
     position: relative;
     display: inline-block;
-    box-shadow: inset 2px 2px 2px 0 rgba(255, 255, 255, .5),
-    7px 7px 20px 0 rgba(0, 0, 0, .1),
-    4px 4px 5px 0 rgba(0, 0, 0, .1);
     outline: none;
+    box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12);
 }
 
 .btn-lg {
@@ -457,9 +441,8 @@ div.rating-container {
 
 .btn-4 span {
     position: relative;
-    display: block;
-    width: 100%;
-    height: 100%;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .btn-4:before,
@@ -468,10 +451,6 @@ div.rating-container {
     content: "";
     right: 0;
     top: 0;
-    box-shadow: 4px 4px 6px 0 rgba(255, 255, 255, .9),
-    -4px -4px 6px 0 rgba(116, 125, 136, .2),
-    inset -4px -4px 6px 0 rgba(200, 200, 200, .9),
-    inset 4px 4px 6px 0 rgba(116, 125, 136, .3);
     transition: all 0.3s ease;
 }
 
@@ -499,21 +478,19 @@ div.rating-container {
     content: "";
     left: 0;
     bottom: 0;
-    box-shadow: 4px 4px 6px 0 rgba(255, 255, 255, .9),
-    -4px -4px 6px 0 rgba(116, 125, 136, .2),
-    inset -4px -4px 6px 0 rgba(255, 255, 255, .9),
-    inset 4px 4px 6px 0 rgba(116, 125, 136, .3);
     transition: all 0.3s ease;
 }
 
 .btn-4 span:before {
-    width: .1px;
+    /*width: .1px;*/
+    width: 0;
     height: 0;
 }
 
 .btn-4 span:after {
     width: 0;
-    height: .1px;
+    /*height: .1px;*/
+    height: 0;
 }
 
 .btn-4 span:hover:before {
@@ -527,4 +504,11 @@ div.rating-container {
 .btn-4:active {
     margin-top: 10px;
     transition: all 0.3s ease;
+}
+
+.upload-button {
+    position: fixed;
+    right: 70px;
+    bottom: 80px;
+    border-radius: 25px;
 }

@@ -11,8 +11,8 @@
     <!--gritter css-->
     <link rel="stylesheet" type="text/css" th:href="@{/js/gritter/css/jquery.gritter.css}"/>
     <!--file upload-->
-    <link rel="stylesheet" type="text/css" href="css/bootstrap-fileupload.min.css"/>
-
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-fileupload.min.css}"/>
+</head>
 <body class="student-page horizontal-menu-page unselectable">
 
 <section>
@@ -21,6 +21,7 @@
     <div th:replace="common::#student_common_nav"></div>
     <!--nav section end-->
 
+    <!--content section start-->
     <div class="panel" style="background: none;">
         <!--body wrapper start-->
         <div class="wrapper">
@@ -41,7 +42,7 @@
             <!--        </div>-->
             <!--    </div>-->
             <!--</div>-->
-            <div class="col col-sm-5">
+            <div class="col col-md-5">
                 <div th:if="${unsubmitted.size() != 0}">
                     <section class="panel glass-content">
                         <header class="panel-heading">
@@ -68,7 +69,7 @@
                                         <td th:text="${stat.count}">Trident</td>
                                         <td>
                                             <a th:href="@{/downloadTemplate(id=${template.templateId})}">
-                                                <span th:text="${template.name}"></span>
+                                                <span th:text="${template.name}" title="下载实验模板"></span>
                                             </a>
                                         </td>
                                         <td th:text="${template.courseId}"></td>
@@ -77,7 +78,6 @@
                                     </tbody>
                                 </table>
                             </div>
-
                         </div>
 
                         <div class="panel-footer">
@@ -95,11 +95,7 @@
                         </header>
                     </section>
                 </div>
-                <div>
-                    <a href="#uploadNewReport" data-toggle="modal" class="btn custom-btn btn-4">
-                        <i class="fa fa-upload"></i> 上传实验报告
-                    </a>
-                </div>
+
                 <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1"
                      id="uploadNewReport"
                      class="modal fade" style="display: none;">
@@ -156,14 +152,14 @@
                     </div>
                 </div>
             </div>
-            <div class="col col-sm-7">
+            <div class="col col-md-7">
                 <div th:if="${submitted.size() != 0}">
                     <section class="panel glass-content">
                         <header class="panel-heading">
                             <span>已提交的实验报告</span>
                             <span class="tools pull-right">
                                 <a href="javascript:" class="fa fa-chevron-down"></a>
-                                <!--                                <a href="javascript:" class="fa fa-times"></a>-->
+                                <!--<a href="javascript:" class="fa fa-times"></a>-->
                             </span>
                         </header>
                         <div class="panel-body">
@@ -179,10 +175,10 @@
                                         <th>提交日期</th>
                                         <th>状态</th>
                                         <th>操作
-                                            <i data-original-title="下载实验 | 删除实验" type="button"
-                                               class="fa fa-question-circle tooltips" data-toggle="tooltip"
-                                               data-placement="top">
-                                            </i>
+                                            <!--<i data-original-title="下载实验 | 删除实验" type="button"-->
+                                            <!--   class="fa fa-question-circle tooltips" data-toggle="tooltip"-->
+                                            <!--   data-placement="top">-->
+                                            <!--</i>-->
                                         </th>
                                     </tr>
                                     </thead>
@@ -191,7 +187,7 @@
                                         <td th:text="${stat.count}">Trident</td>
                                         <td>
                                             <a th:href="@{/downloadTemplate(id=${entry.key.templateId})}">
-                                                <span th:text="${entry.key.name}"></span>
+                                                <span th:text="${entry.key.name}" title="下载实验模板"></span>
                                             </a>
                                         </td>
                                         <td th:text="${entry.key.courseId}"></td>
@@ -206,11 +202,13 @@
                                             <span class="label label-danger label-mini">迟交</span>
                                         </td>
                                         <td class="unselectable">
-                                            <a th:href="@{/downloadReport(reportId=${entry.value.rid})}">
-                                                <span class="fa fa-download"></span></a>
-                                            <span>&nbsp;|&nbsp;</span>
-                                            <a th:href="@{/deleteReport(reportId=${entry.value.rid})}">
-                                                <span class="fa fa-trash-o"></span></a>
+                                            <div style="width: 45px;">
+                                                <a th:href="@{/downloadReport(reportId=${entry.value.rid})}">
+                                                    <span class="fa fa-download" title="下载实验报告"></span></a>
+                                                <span>&nbsp;|&nbsp;</span>
+                                                <a th:href="@{/deleteReport(reportId=${entry.value.rid})}">
+                                                    <span class="fa fa-trash-o" title="删除实验报告"></span></a>
+                                            </div>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -218,8 +216,6 @@
                             </div>
                         </div>
                         <div class="panel-footer">
-                            <div>
-                            </div>
                         </div>
                     </section>
                 </div>
@@ -236,20 +232,26 @@
         </div>
         <!--body wrapper end-->
     </div>
+    <!--content section ends-->
 
+    <!--upload button-->
+    <a href="#uploadNewReport" data-toggle="modal" class="btn custom-btn btn-4 upload-button">
+        <span class="material-icons-outlined">post_add</span><span> 上传实验报告</span>
+    </a>
     <!--footer section start-->
     <div th:replace="common::#common_footer_shrink_left"></div>
     <!--footer section end-->
 
 </section>
 
+</body>
 <!--file upload-->
 <script type="text/javascript" th:src="@{js/bootstrap-fileupload.min.js}"></script>
 <!-- Placed js at the end of the document so the pages load faster -->
 <div th:replace="common::#common_script"></div>
 <!--script for editable table-->
 <script th:src="@{/js/editable-table.js}"></script>
-<script src="js/gritter/js/jquery.gritter.min.js"></script>
+<script th:src="@{/js/gritter/js/jquery.gritter.min.js}"></script>
 <!--file upload-->
 <script type="text/javascript" th:src="@{js/bootstrap-fileupload.min.js}"></script>
 
@@ -279,5 +281,4 @@
     })
 </script>
 
-</body>
 </html>
