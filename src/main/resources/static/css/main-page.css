@@ -1,0 +1,30 @@
+:root {
+    /* COLORS */
+    --white: #F5F5F7;
+}
+
+.state-overview {
+    line-height: 20px;
+}
+
+.state-overview .orange {
+    background: #fc8675;
+    box-shadow: 0 5px 0 #e29069;
+}
+
+ul.bar-legend {
+    line-height: 20px;
+}
+
+ul.bar-legend li {
+    margin-bottom: 20px;
+}
+
+a.statics-card {
+    color: antiquewhite;
+}
+
+a.statics-card:hover {
+    color: #353F4F;
+}
+

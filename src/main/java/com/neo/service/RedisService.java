@@ -7,7 +7,6 @@ import io.lettuce.core.support.ConnectionPoolSupport;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -15,14 +14,13 @@ import javax.annotation.PreDestroy;
 import java.util.Map;
 
 /**
- * 下一步，是
+ * RedisService 使用此类提供的方法 get 或 set Redis 内的数据
  */
 @Slf4j
 @Component
 public class RedisService {
 
-    @Autowired
-    RedisClient redisClient;
+    final RedisClient redisClient;
 
     /**
      * 引入了Commons Pool的一个对象池，用于缓存Redis连接。
@@ -31,6 +29,10 @@ public class RedisService {
      */
     GenericObjectPool<StatefulRedisConnection<String, String>> redisConnectionPool;
 
+    public RedisService(RedisClient redisClient) {
+        this.redisClient = redisClient;
+    }
+
     @PostConstruct
     public void init() {
         GenericObjectPoolConfig<StatefulRedisConnection<String, String>> poolConfig = new GenericObjectPoolConfig<>();
@@ -38,7 +40,7 @@ public class RedisService {
         poolConfig.setMaxIdle(5);
         poolConfig.setTestOnReturn(true);
         poolConfig.setTestWhileIdle(true);
-        this.redisConnectionPool = ConnectionPoolSupport.createGenericObjectPool(() -> redisClient.connect(), poolConfig);
+        this.redisConnectionPool = ConnectionPoolSupport.createGenericObjectPool(redisClient::connect, poolConfig);
     }
 
     @PreDestroy

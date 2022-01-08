@@ -6,7 +6,6 @@ import com.neo.service.ClassesService;
 import com.neo.service.CourseService;
 import com.neo.service.RedisService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
@@ -19,14 +18,17 @@ import java.util.List;
 @Slf4j
 public class RedisApplicationRunner implements ApplicationRunner {
 
-    @Autowired
-    RedisService redisService;
+    final RedisService redisService;
 
-    @Autowired
-    CourseService courseService;
+    final CourseService courseService;
 
-    @Autowired
-    ClassesService classesService;
+    final ClassesService classesService;
+
+    public RedisApplicationRunner(RedisService redisService, CourseService courseService, ClassesService classesService) {
+        this.redisService = redisService;
+        this.courseService = courseService;
+        this.classesService = classesService;
+    }
 
 
     @Override

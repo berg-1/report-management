@@ -63,10 +63,24 @@ public class TeacherController {
      * @return new_main_teacher.html
      */
     @GetMapping(value = {"mainTeacher", "mainTeacher.html"})
-    public String teacherPage(HttpSession session, Model model,
+    public String teacherPage(HttpSession session, Model model) {
+
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        Teacher teacher = (Teacher) session.getAttribute("loginUser");
+        HashMap<String, String> classesStringHashMap = getTeacherClasses(teacher.getTno());
+        stopWatch.stop();
+        log.info("Teacher index Initialing Time: {} ms", stopWatch.getLastTaskTimeMillis());
+        // 添加classes到model, 前端显示布置班级
+        model.addAttribute("classes", classesStringHashMap);
+        return "dashboard_teacher";
+    }
+
+    @GetMapping(value = "previewTeacher")
+    public String teacherMain(HttpSession session,
+                              Model model,
                               @RequestParam(defaultValue = "*") String classId,
                               @RequestParam(defaultValue = "*") String courseId) {
-
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 

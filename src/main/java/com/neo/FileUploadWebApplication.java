@@ -4,19 +4,17 @@ import org.apache.coyote.http11.AbstractHttp11Protocol;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 
 /**
- * @author Anonymous
+ * @author Berg
  */
 @SpringBootApplication
 @MapperScan("com.neo.mapper")
 public class FileUploadWebApplication {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         SpringApplication.run(FileUploadWebApplication.class, args);
     }
 

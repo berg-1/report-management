@@ -160,6 +160,10 @@ a:visited {
     background: linear-gradient(to right, #424f63, #3f4b87);
 }
 
+.dropdown-menu {
+    min-width: unset;
+}
+
 .success {
     background: #65cea7;
     border-radius: 5px;

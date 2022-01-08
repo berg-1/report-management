@@ -15,26 +15,50 @@
     <form class="form-signin" th:action="@{/updatePasswd}" method="post">
         <div class="glass glass-login">
             <div class="form-signin-heading text-center">
-                <h1 class="sign-title">修改你的密码</h1>
-                <img src="images/login-logo.png" alt=""/>
+                <h1 class="login-title">Reset PW</h1>
             </div>
-
             <div class="login-wrap">
-                <!--                <p> 在下方输入更改</p>-->
-                <label style="color:red" th:text="${msg}"></label>
-                <input required type="text" name="userId" autofocus="" placeholder="用户名" class="form-control"
-                       th:value="${id}">
-                <input required type="password" name="passwd" placeholder="原密码" class="form-control">
-                <input required type="password" id="passwd_new" name="passwdNew" onkeyup="validate()" placeholder="新密码"
-                       class="form-control">
+                <div th:if="${msg != null}" style="line-height: 10px">
+                    <label class="error" th:text="${msg}"></label>
+                </div>
+                <div th:if="${success != null}" style="line-height: 10px">
+                    <label style="color:#4169E1;" th:text="${success}"></label>
+                </div>
+                <div class="glass input-wrap">
+                    <label for="username"></label>
+                    <div class="input-label material-icons-outlined" onclick="location.href='#username';">
+                        account_circle
+                    </div>
+                    <input id="username" type="text" name="userId" class="input-content" placeholder="用户名"
+                           autofocus required th:value="${id}">
+                </div>
+                <div class="glass input-wrap">
+                    <label for="passwd"></label>
+                    <div class="input-label material-icons-outlined" onclick="location.href='#passwd';">
+                        pin
+                    </div>
+                    <input id="passwd" type="password" name="passwd" class="input-content" placeholder="原密码">
+                </div>
+                <div class="glass input-wrap">
+                    <label for="passwd_new"></label>
+                    <div class="input-label material-icons-outlined" onclick="location.href='#passwd_new';">
+                        restart_alt
+                    </div>
+                    <input id="passwd_new" type="password" name="passwdNew" class="input-content" placeholder="新密码"
+                           onkeyup="validate()">
+                </div>
+                <div class="glass input-wrap">
+                    <label for="passwd_retry"></label>
+                    <div class="input-label material-icons-outlined" onclick="location.href='#passwd_retry';">
+                        restart_alt
+                    </div>
+                    <input id="passwd_retry" type="password" name="passwd_retry" class="input-content"
+                           placeholder="重新输入密码" onkeyup="validate()">
+                </div>
                 <span id="notice"></span>
-                <input required type="password" id="passwd_retry" name="passwd_retry" onkeyup="validate()"
-                       placeholder="重新输入密码"
-                       class="form-control">
                 <button type="submit" class="btn btn-lg btn-login btn-block" id="submit">
                     <i class="fa fa-check"></i>
                 </button>
-
                 <div class="registration">
                     Already Registered.
                     <a th:href="@{/login}" class="">

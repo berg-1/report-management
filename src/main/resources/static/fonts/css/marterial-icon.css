@@ -1,9 +1,9 @@
-/* fallback */
 @font-face {
     font-family: 'Material Icons Outlined';
     font-style: normal;
     font-weight: 400;
-    src: url('../fonts/material-webfont.woff2') format('woff2'), url('../fonts/MaterialIconsOutlined-Regular.otf') format('otf');
+    src: url('../fonts/material-webfont.woff2') format('woff2'),
+    url('../fonts/MaterialIconsOutlined-Regular.otf') format('otf');
 }
 
 .material-icons-outlined {
