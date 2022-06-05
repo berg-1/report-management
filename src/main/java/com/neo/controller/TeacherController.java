@@ -114,7 +114,7 @@ public class TeacherController {
     private int getReportCountByTemplateId(String templateId) {
         QueryWrapper<Report> wrapper = new QueryWrapper<>();
         wrapper.eq("report_template", templateId);
-        return reportService.count(wrapper);
+        return (int) reportService.count(wrapper);
     }
 
     /**

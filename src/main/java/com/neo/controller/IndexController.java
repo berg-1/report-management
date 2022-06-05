@@ -3,7 +3,6 @@ package com.neo.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.neo.domain.*;
-import com.neo.mapper.StudentMapper;
 import com.neo.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -165,7 +164,7 @@ public class IndexController {
     private int getReportCountByTemplateId(String templateId) {
         QueryWrapper<Report> wrapper = new QueryWrapper<>();
         wrapper.eq("report_template", templateId);
-        return reportService.count(wrapper);
+        return (int) reportService.count(wrapper);
     }
 
 }

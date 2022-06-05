@@ -203,11 +203,10 @@
                                         <td th:if="${!entry.value.status}">
                                             <span class="label label-danger label-mini">迟交</span>
                                         </td>
-                                        <td class="unselectable">
+                                        <td class="unselectable" style="width: 30px">
                                             <div style="width: 45px;">
                                                 <a th:href="@{/downloadReport(reportId=${entry.value.rid})}">
                                                     <span class="fa fa-download" title="下载实验报告"></span></a>
-                                                <span>&nbsp;|&nbsp;</span>
                                                 <a th:href="@{/deleteReport(reportId=${entry.value.rid})}">
                                                     <span class="fa fa-trash-o" title="删除实验报告"></span></a>
                                             </div>
