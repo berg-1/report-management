@@ -19,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -47,7 +48,7 @@ public class ReportController {
      * 最大上传限制
      */
     private static final Long MAX_UPLOAD_SIZE = 2 * 10 * 1024 * 1024L;
-    private static final String ACCEPT_FORMAT = ".pdf";
+    private static final List<String> ACCEPT_FORMAT = List.of(".docx", ".pdf", ".dox");
 
     /**
      * 上传一个Report实体到数据库
@@ -69,7 +70,7 @@ public class ReportController {
             return "redirect:mainStudent";
         }
         assert file.getOriginalFilename() != null;
-        if (!ACCEPT_FORMAT.equalsIgnoreCase(
+        if (!ACCEPT_FORMAT.contains(
                 file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".")))) {
             redirectAttributes.addFlashAttribute("message", "请转换为PDF文件后再上传!");
             return "redirect:mainStudent";
