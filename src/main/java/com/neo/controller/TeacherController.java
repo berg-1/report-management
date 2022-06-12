@@ -62,7 +62,7 @@ public class TeacherController {
      * @param model   将教师所教班级存放到model中,方便前端显示
      * @return new_main_teacher.html
      */
-    @GetMapping(value = {"mainTeacher", "mainTeacher.html"})
+//    @GetMapping(value = {"mainTeacher", "mainTeacher.html"})
     public String teacherPage(HttpSession session, Model model) {
 
         StopWatch stopWatch = new StopWatch();
@@ -76,7 +76,8 @@ public class TeacherController {
         return "dashboard_teacher";
     }
 
-    @GetMapping(value = "previewTeacher")
+    //    @GetMapping(value = "previewTeacher")
+    @GetMapping(value = {"mainTeacher", "mainTeacher.html"})
     public String teacherMain(HttpSession session,
                               Model model,
                               @RequestParam(defaultValue = "*") String classId,
